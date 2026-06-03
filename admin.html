@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シフト管理画面</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #eef2f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .shift-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-left: 6px solid #007bff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .staff-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .date-list {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')">データを全削除</button>
+        <h1>📥 受信したシフト希望一覧（管理画面）</h1>
+        <div id="admin-history-container">
+        </div>
+    </div>
+
+    <script>
+        // 画面が開いたら自動でデータを読み込む
+        document.addEventListener('DOMContentLoaded', function () {
+            loadShifts();
+        });
+
+        function loadShifts() {
+            // 💡 通信成功したC#のポート「7123」に修正しました
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('データの取得に失敗しました。');
+                })
+                .then(allShifts => {
+                    // ⭕ ID名を「admin-history-container」に修正してガチッと一致させました！
+                    const container = document.getElementById('admin-history-container');
+                    container.innerHTML = '';
+
+                    if (allShifts.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:#999;">提出されたシフトはまだありません。</p>';
+                        return;
+                    }
+
+                    // 届いたシフト（配列）をループしてカードを作る
+                    allShifts.forEach(shift => {
+                        const card = document.createElement('div');
+                        card.className = 'shift-card';
+                        card.innerHTML = `
+                            <div class="staff-name">👤 ${shift.name}</div>
+                            <div class="date-list">
+                                <strong>希望日：</strong><br>
+                                ${shift.dates.map(date => `📅 ${date}`).join('<br>')}
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                    alert('シフトデータの読み込みに失敗しました。');
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シフト希望提出</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 10px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #user-info {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #06C755;
+        }
+
+        #calendar {
+            margin-bottom: 20px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #06C755;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="user-info">読み込み中...</div>
+        <h2>📅 シフト希望入力</h2>
+        <div id="calendar"></div>
+        <div id="selected-list"
+            style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
+            選択中の日付： なし</div>
+        <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script>
+        let selectedDates = [];
+        let userName = "ゲストユーザー";
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
+            liff.init({ liffId: "2010248077-69FEBbgt" })
+                .then(() => {
+                    if (!liff.isLoggedIn()) { liff.login(); }
+                    else {
+                        liff.getProfile().then(profile => {
+                            userName = profile.displayName;
+                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
+                        });
+                    }
+                })
+                .catch((err) => {
+                    document.getElementById('user-info').innerText = "※ブラウザモードで実行中（LINE外）";
+                });
+
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ja',
+                headerToolbar: { left: 'prev', center: 'title', right: 'next' },
+                selectable: true,
+                dateClick: function (info) {
+                    const clickedDate = info.dateStr;
+                    if (selectedDates.includes(clickedDate)) {
+                        selectedDates = selectedDates.filter(date => date !== clickedDate);
+                        info.dayEl.style.backgroundColor = '';
+                    } else {
+                        selectedDates.push(clickedDate);
+                        info.dayEl.style.backgroundColor = '#ffcccc';
+                    }
+
+                    const listEl = document.getElementById('selected-list');
+                    if (selectedDates.length > 0) {
+                        listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + [...selectedDates].sort().join(", ");
+                    } else {
+                        listEl.innerText = "選択中の日付： なし";
+                    }
+                }
+            });
+            calendar.render();
+        });
+
+        function submitData() {
+            if (selectedDates.length === 0) {
+                alert("日付が選択されていません！");
+                return;
+            }
+            const sortedDates = [...selectedDates].sort();
+
+            // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
+            const sendData = {
+                name: userName,    // C#の Name にマッピングされます
+                dates: sortedDates // C#の Dates にマッピングされます
+            };
+
+            // ⭕ C#のAPIへ送信
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('通信エラーが発生しました。');
+                })
+                .then(data => {
+                    // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
+                    alert(data.message);
+
+                    // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
+                    if (liff.isInClient()) {
+                        liff.sendMessages([{
+                            type: 'text',
+                            text: `【シフト希望】\n氏名: ${userName}\n${sortedDates.join("\n")}\n上記で申請します。`
+                        }]).then(() => { liff.closeWindow(); });
+                    }
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                    alert('送信に失敗しました。');
+                });
+        }
+
+    </script>
+</body>
+
+</html>
