@@ -20,10 +20,7 @@ var app = builder.Build();
 
 app.UseCors();
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
