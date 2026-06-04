@@ -14,6 +14,7 @@
 
         .container {
             max-width: 600px;
+            /* なにも指定しないと勝手にcontainaer文サイズが広がる */
             margin: 0 auto;
             background: white;
             padding: 15px;
@@ -50,6 +51,11 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        #palette-container {
+            border: 1px solid #e0e0e0;
+            background-color: #fcfcfc;
+        }
     </style>
 </head>
 
@@ -57,6 +63,9 @@
     <div class="container">
         <div id="user-info">読み込み中...</div>
         <h2>📅 シフト希望入力</h2>
+        <div id="palette-container">
+
+        </div>
         <div id="calendar"></div>
         <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
@@ -70,11 +79,11 @@
         let selectedDates = [];
         let userName = "ゲストユーザー";
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
-            liff.init({ liffId: "2010276207-ArHS36jI" })
-                .then(() => {
-                    if (!liff.isLoggedIn()) { liff.login(); }
+            liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID
+                .then(() => {//thenこれは.の前の処理が終わったら処理を実行するやつifの場合実行スピードが追い付かなく.thenにして終わったら次これをやっての処理が適している
+                    if (!liff.isLoggedIn()) { liff.login(); }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
                     else {
                         liff.getProfile().then(profile => {
                             userName = profile.displayName;
@@ -86,16 +95,23 @@
                     document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
                 });
 
-            const calendarEl = document.getElementById('calendar');
+            const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
             const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'ja',
-                headerToolbar: { left: 'prev', center: 'title', right: 'next' },
-                selectable: true,
+                initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
+                locale: 'ja',//言語
+                headerToolbar: { left: 'prev', center: 'title', right: 'next' },//カレンダーにどんなボタンを付けるかを指定できる
+                // left: 'prev' ＝ 左側に「前月へ戻る（<）」ボタンを置く。
+                // center: 'title' ＝ 中央に「2026年6月」のような「今何月か」のタイトルを置く。
+                // right: 'next' ＝ 右側に「次月へ進む（>）」ボタンを置く。
+                //validRange（選択できる日付の制限）
+                //businessHours: true（土日や夜間の色変え）
+                //unselectAuto: false（選択の維持）
+                //「月」以外に変える表示設定（views）
+                selectable: true,//カレンダーのマス目をたプできるようにする
                 dateClick: function (info) {
-                    const clickedDate = info.dateStr;
-                    if (selectedDates.includes(clickedDate)) {
-                        selectedDates = selectedDates.filter(date => date !== clickedDate);
+                    const clickedDate = info.dateStr;//日付をclickeDateに入れている
+                    if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
+                        selectedDates = selectedDates.filter(date => date !== clickedDate);//filetrが配列から削除
                         info.dayEl.style.backgroundColor = '';
                     } else {
                         selectedDates.push(clickedDate);
@@ -104,13 +120,14 @@
 
                     const listEl = document.getElementById('selected-list');
                     if (selectedDates.length > 0) {
-                        listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + [...selectedDates].sort().join(", ");
+                        listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + [...selectedDates].sort().join(", ");//...コピーの作成 sort並び替え joinくっつけている
+                        //コピーを作る理由sortをしてしまうと仮に変更したい場合でもsortの解除ができないそのためコピーを作成しているボタンを押して完了とか途中で変更がないものはやらなくてもOK
                     } else {
                         listEl.innerText = "選択中の日付： なし";
                     }
                 }
             });
-            calendar.render();
+            calendar.render();//これ最後に表示する
         });
 
         function submitData() {
@@ -130,7 +147,7 @@
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'//送る先にJSON形式だと教えるため
                 },
                 body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
             })
