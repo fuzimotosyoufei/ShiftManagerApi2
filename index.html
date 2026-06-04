@@ -14,10 +14,13 @@
 
         .container {
             max-width: 600px;
+            /* スマホで見るときは画面いっぱいに広がりそれ以外のpcなら600以上広がらない */
             /* なにも指定しないと勝手にcontainaer文サイズが広がる */
             margin: 0 auto;
+            /* 余白の均等 */
             background: white;
             padding: 15px;
+            /* これで中に白を作っている */
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -53,8 +56,19 @@
         }
 
         #palette-container {
+            /* 枠の大きさはあえて書かない中のボタンの要素で自動的に大きさが変わるから */
             border: 1px solid #e0e0e0;
             background-color: #fcfcfc;
+        }
+
+        .stamp-btn {
+            padding: 8px 16px;
+            /* ボタンの押しやすい大きさ */
+            font-size: 14px;
+            /* font-weight: bold; */
+            border: 1px solid #ccc;
+            background-color: white;
+            /* cursor: pointer; */
         }
     </style>
 </head>
@@ -64,7 +78,9 @@
         <div id="user-info">読み込み中...</div>
         <h2>📅 シフト希望入力</h2>
         <div id="palette-container">
-
+            <button class="stamp-btn" data-mode="日勤">日勤</button>
+            <button class="stamp-btn" data-mode="遅番">遅番</button>
+            <button class="stamp-btn" data-mode="休み">休み</button>
         </div>
         <div id="calendar"></div>
         <div id="selected-list"
