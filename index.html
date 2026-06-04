@@ -9,7 +9,7 @@
         body {
             font-family: sans-serif;
             margin: 10px;
-            background-color: hsl(299, 92%, 47%);
+            background-color: hsl(138, 92%, 45%);
         }
 
         .container {
@@ -75,6 +75,10 @@
             background-color: white;
             /* cursor: pointer; */
         }
+
+        .stamp-btn.UN {
+            background-color: darkgoldenrod;
+        }
     </style>
 </head>
 
@@ -98,7 +102,23 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script>
         let selectedDates = [];
+        let currentstamp = null;
         let userName = "ゲストユーザー";
+
+        function selectstamp(mode) {
+            currentstamp = mode;
+
+            document.querySelector('.stamp-btn').forEach(btn => {
+                btn.classList.remove('UN');
+            });
+
+            const clickedButton = document.querySelector('.stamp-btn[data-mode="${mode}"]');
+            if (clickedButton) {
+                clickedButton.classList.add('UN');
+            }
+
+
+        }
 
         document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
@@ -129,7 +149,9 @@
                 //unselectAuto: false（選択の維持）
                 //「月」以外に変える表示設定（views）
                 selectable: true,//カレンダーのマス目をたプできるようにする
+
                 dateClick: function (info) {
+                    // if
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
                     if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
                         selectedDates = selectedDates.filter(date => date !== clickedDate);//filetrが配列から削除
@@ -150,6 +172,8 @@
             });
             calendar.render();//これ最後に表示する
         });
+
+
 
         function submitData() {
             if (selectedDates.length === 0) {
