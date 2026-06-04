@@ -9,7 +9,7 @@
         body {
             font-family: sans-serif;
             margin: 10px;
-            background-color: hsl(270, 11%, 18%);
+            background-color: hsl(345, 73%, 50%);
         }
 
         .container {
@@ -106,13 +106,14 @@
         let userName = "ゲストユーザー";
 
         function selectstamp(mode) {
-            currentstamp = mode;
+
             alert("日付が選択されていません！");
             document.querySelectorAll('.stamp-btn').forEach(btn => {
                 btn.classList.remove('UN');
             });
 
-            const clickedButton = document.querySelector('.stamp-btn[data-mode="${mode}"]');
+            const clickedButton = document.querySelector(`.stamp-btn[data-mode="${mode}"]`);
+            /querySelectorを囲むときだけ@をshiftと一緒に押さなくてはいけない/
             if (clickedButton) {
                 clickedButton.classList.add('UN');
             }
