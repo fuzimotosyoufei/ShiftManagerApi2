@@ -9,7 +9,7 @@
         body {
             font-family: sans-serif;
             margin: 10px;
-            background-color: hsl(271, 95%, 46%);
+            background-color: hsl(270, 11%, 18%);
         }
 
         .container {
@@ -107,7 +107,7 @@
 
         function selectstamp(mode) {
             currentstamp = mode;
-
+            alert("日付が選択されていません！");
             document.querySelectorAll('.stamp-btn').forEach(btn => {
                 btn.classList.remove('UN');
             });
