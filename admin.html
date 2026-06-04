@@ -79,7 +79,12 @@
 
         function loadShifts() {
             // 💡 通信成功したC#のポート「7123」に修正しました
-            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift')
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
+                method: 'GET',
+                headers: {
+                    'ngrok-skip-browser-warning': 'true' // 👈 これを足すと、あの青い警告画面を強制スルーできます！
+                }
+            })
                 .then(response => {
                     if (response.ok) {
                         return response.json();
