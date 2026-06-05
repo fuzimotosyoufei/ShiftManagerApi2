@@ -192,7 +192,7 @@
                 alert("日付が選択されていません！");
                 return;
             }
-            const sortedDates = [...selectedDates].sort((a, b) => a.data.localeCompare(b.date));
+            const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
