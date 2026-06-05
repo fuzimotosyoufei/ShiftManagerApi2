@@ -9,7 +9,7 @@
         body {
             font-family: sans-serif;
             margin: 10px;
-            background-color: hsl(0, 0%, 28%);
+            background-color: hsl(226, 84%, 47%);
         }
 
         .container {
@@ -106,7 +106,7 @@
         let userName = "ゲストユーザー";
 
         function selectstamp(mode) {
-
+            currentstamp = mode;
             document.querySelectorAll('.stamp-btn').forEach(btn => {
                 btn.classList.remove('UN');
             });
@@ -151,9 +151,9 @@
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
                 dateClick: function (info) {
-                    // if (currentstamp == null) {
-                    //     return;
-                    // }
+                    if (currentstamp == null) {
+                        return;
+                    }
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
                     if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
                         selectedDates = selectedDates.filter(date => date !== clickedDate);//filetrが配列から削除
