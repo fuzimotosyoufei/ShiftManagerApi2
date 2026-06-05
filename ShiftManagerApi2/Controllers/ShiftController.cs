@@ -14,7 +14,7 @@ namespace ShiftManagerApi2.Controllers
 
         // ① シフト希望を「登録」する窓口（カレンダー画面用）
         [HttpPost]
-        public IActionResult SubmitShift([FromBody] ShiftSubmission data)
+        public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
             if (data == null || string.IsNullOrEmpty(data.Name) || data.Dates.Count == 0)
             {
