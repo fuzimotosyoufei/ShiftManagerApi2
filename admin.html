@@ -85,16 +85,16 @@
                     'ngrok-skip-browser-warning': 'true' // 👈 これを足すと、あの青い警告画面を強制スルーできます！
                 }
             })
-                .then(response => {
+                .then(response => {//fatchの後に.thenを書くことでプログラム側が自動的に判断し.then(response)の中にfetchの結果を入れてくれるそれに.thenが終わるまで待ちその下にthenがある場合自動的に実行し変数が別になっても内容自体は自動的に引き継がれる
                     if (response.ok) {
-                        return response.json();
+                        return response.json();//送られてきたデータをjson形式にしているこれをしないとうまく処理できない
                     }
                     throw new Error('データの取得に失敗しました。');
                 })
                 .then(allShifts => {
                     // ⭕ ID名を「admin-history-container」に修正してガチッと一致させました！
                     const container = document.getElementById('admin-history-container');
-                    container.innerHTML = '';
+                    container.innerHTML = '';//一回全部消している
 
                     if (allShifts.length === 0) {
                         container.innerHTML = '<p style="text-align:center; color:#999;">提出されたシフトはまだありません。</p>';
@@ -103,13 +103,18 @@
 
                     // 届いたシフト（配列）をループしてカードを作る
                     allShifts.forEach(shift => {
-                        const card = document.createElement('div');
-                        card.className = 'shift-card';
+                        const card = document.createElement('div');//四角い箱divを作り出している
+                        card.className = 'shift-card';//普通なら単に分かりやす要に名前を付けるだけだけど事前にdivを作っておきかつcssに同じ名前のcssがあるなら自動でdivの中にcssでカードデザインを適応してくれる
+
+                        const formattedDates = shift.dates.map(item => {
+                            return `${item.date} , (${item.stamp})`;
+                        }).join('<br>');
+
                         card.innerHTML = `
                             <div class="staff-name">👤 ${shift.name}</div>
                             <div class="date-list">
                                 <strong>希望日：</strong><br>
-                                ${shift.dates.map(date => `📅 ${date}`).join('<br>')}
+                                ${formattedDates}
                             </div>
                         `;
                         container.appendChild(card);
