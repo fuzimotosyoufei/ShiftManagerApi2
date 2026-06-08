@@ -86,11 +86,11 @@
     <div class="container">
         <div id="user-info">読み込み中...</div>
         <h2>📅 シフト希望入力</h2>
-        <div id="palette-container">
+        <!-- <div id="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
             <button class="stamp-btn" data-mode="休み" onclick="selectstamp('休み')">休み</button>
-        </div>
+        </div> -->
         <div id="calendar"></div>
         <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
@@ -103,7 +103,7 @@
     <script>
         let selectedDates = [];//リストはあらかじめ何を入れるかをしてしなくてもいいいざ入れるときにキーと一緒に項目を入れることでリストの中に項目と要素をセットで保存できる
         //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
-        let currentstamp = null;
+        let currentstamp = '休み';
         let userName = "ゲストユーザー";
 
         function selectstamp(mode) {
@@ -152,10 +152,10 @@
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
                 dateClick: function (info) {
-                    if (currentstamp == null) {
-                        return;
+                    // if (currentstamp == null) {
+                    //     return;
 
-                    }
+                    // }
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
                     const isAlreadySelected = selectedDates.some(item => item.date == clickedDate); //some判定オブジェクト配列のためif文でうまく判定できないため一度isAlreadyに入れている
 
