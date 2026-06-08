@@ -95,6 +95,23 @@
             box-sizing: border-box;
             /* padding（10px）のせいで右側にはみ出すのを防ぐ魔法 */
         }
+
+
+        .radio-sample-container {
+            display: flex;
+            /* ボタンを横一列に綺麗に並べる魔法 */
+            gap: 15px;
+            /* ボタンとボタンの間のスキマ */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .radio-label {
+            font-size: 14px;
+            color: #333;
+            cursor: default;
+            /* 表示だけなので、マウスを乗せても矢印のままにする */
+        }
     </style>
 </head>
 
@@ -110,12 +127,28 @@
         <div id="calendar"></div>
         <h2>備考欄</h2>
         <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
-        <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
-        <!-- <div id="selected-list"
+
+
+        <h2>イベント</h2>
+        <d id="palette-container">
+            <div class="radio-sample-container">
+                <label class="radio-label">
+                    <input type="radio" checked disabled> YES
+                </label>
+
+                <label class="radio-label">
+                    <input type="radio" disabled> NO
+                </label>
+            </div>
+    </div>
+
+
+    <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
+    <!-- <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
             選択中の日付： なし</div> -->
 
-        <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
+    <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
