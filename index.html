@@ -104,6 +104,7 @@
             /* ボタンとボタンの間のスキマ */
             margin-top: 10px;
             margin-bottom: 10px;
+            justify-content: center;
         }
 
         .radio-label {
@@ -118,7 +119,7 @@
 <body>
     <div class="container">
         <div id="user-info">読み込み中...</div>
-        <h2>📅 シフト希望入力</h2>
+        <h2>📅 シフト希望休申請</h2>
         <!-- <div id="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
@@ -129,15 +130,16 @@
         <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
 
 
-        <h2>イベント</h2>
+        <h2>行事</h2>
         <d id="palette-container">
+            <h2>15日は職員会議です</h2>
             <div class="radio-sample-container">
                 <label class="radio-label">
-                    <input type="radio" checked disabled> YES
+                    <input type="radio" checked disabled> はい
                 </label>
 
                 <label class="radio-label">
-                    <input type="radio" disabled> NO
+                    <input type="radio" disabled> いいえ
                 </label>
             </div>
     </div>
