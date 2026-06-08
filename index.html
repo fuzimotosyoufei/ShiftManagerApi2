@@ -109,7 +109,8 @@
         </div> -->
         <div id="calendar"></div>
         <h2>備考欄</h2>
-        <div type="text" id="Text-message" placeholder="ここに文字を入力"></div>
+        <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
+        <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
         <!-- <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
             選択中の日付： なし</div> -->
@@ -124,7 +125,7 @@
         //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
         let currentstamp = '休み';
         let userName = "ゲストユーザー";
-        let bikouText = document.getElementByID("Text-message").value;
+
         function selectstamp(mode) {
             currentstamp = mode;
             document.querySelectorAll('.stamp-btn').forEach(btn => {
@@ -211,6 +212,8 @@
                 alert("日付が選択されていません！");
                 return;
             }
+
+            const bikouText = document.getElementById("Text-message").value;
             const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
