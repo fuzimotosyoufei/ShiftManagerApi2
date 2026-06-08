@@ -64,6 +64,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            margin-top: 10px;
+            margin-bottom: 10px;
+
         }
 
         .stamp-btn {
@@ -117,7 +121,7 @@
 </head>
 
 <body>
-    <d class="container">
+    <div class="container">
         <div id="user-info">読み込み中...</div>
         <h2>📅 シフト希望休申請</h2>
         <!-- <div id="palette-container">
@@ -157,159 +161,159 @@
             </div>
         </div>
 
-        </div>
+    </div>
 
 
-        <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
-        <!-- <div id="selected-list"
+    <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
+    <!-- <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
             選択中の日付： なし</div> -->
 
-        <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
-        </div>
+    <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
+    </div>
 
-        <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-        <script>
-            let selectedDates = [];//リストはあらかじめ何を入れるかをしてしなくてもいいいざ入れるときにキーと一緒に項目を入れることでリストの中に項目と要素をセットで保存できる
-            //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
-            let currentstamp = '休み';
-            let userName = "ゲストユーザー";
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script>
+        let selectedDates = [];//リストはあらかじめ何を入れるかをしてしなくてもいいいざ入れるときにキーと一緒に項目を入れることでリストの中に項目と要素をセットで保存できる
+        //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
+        let currentstamp = '休み';
+        let userName = "ゲストユーザー";
 
-            function selectstamp(mode) {
-                currentstamp = mode;
-                document.querySelectorAll('.stamp-btn').forEach(btn => {
-                    btn.classList.remove('UN');
-                });
-
-                const clickedButton = document.querySelector(`.stamp-btn[data-mode="${mode}"]`);
-                // /querySelectorを囲むときだけ@をshiftと一緒に押さなくてはいけない/
-                if (clickedButton) {
-                    clickedButton.classList.add('UN');
-                }
-
-
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
-                // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
-                liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID
-                    .then(() => {//thenこれは.の前の処理が終わったら処理を実行するやつifの場合実行スピードが追い付かなく.thenにして終わったら次これをやっての処理が適している
-                        if (!liff.isLoggedIn()) { liff.login(); }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
-                        else {
-                            liff.getProfile().then(profile => {
-                                userName = profile.displayName;
-                                document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
-                    });
-
-                const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
-                    locale: 'ja',//言語
-                    headerToolbar: { left: 'prev', center: 'title', right: 'next' },//カレンダーにどんなボタンを付けるかを指定できる
-                    // left: 'prev' ＝ 左側に「前月へ戻る（<）」ボタンを置く。
-                    // center: 'title' ＝ 中央に「2026年6月」のような「今何月か」のタイトルを置く。
-                    // right: 'next' ＝ 右側に「次月へ進む（>）」ボタンを置く。
-                    //validRange（選択できる日付の制限）
-                    //businessHours: true（土日や夜間の色変え）
-                    //unselectAuto: false（選択の維持）
-                    //「月」以外に変える表示設定（views）
-                    selectable: true,//カレンダーのマス目をたプできるようにする
-
-                    dateClick: function (info) {
-                        // if (currentstamp == null) {
-                        //     return;
-
-                        // }
-                        const clickedDate = info.dateStr;//日付をclickeDateに入れている
-                        const isAlreadySelected = selectedDates.some(item => item.date == clickedDate); //some判定オブジェクト配列のためif文でうまく判定できないため一度isAlreadyに入れている
-
-                        if (isAlreadySelected) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
-                            selectedDates = selectedDates.filter(item => item.date !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
-                            info.dayEl.style.backgroundColor = '';
-                        } else {
-                            selectedDates.push({ date: clickedDate, stamp: currentstamp });
-                            info.dayEl.style.backgroundColor = '#ffcccc';
-                        }
-
-                        const listEl = document.getElementById('selected-list');
-                        if (selectedDates.length > 0) {
-                            //...コピーの作成 sort並び替え joinくっつけている
-                            //コピーを作る理由sortをしてしまうと仮に変更したい場合でもsortの解除ができないそのためコピーを作成しているボタンを押して完了とか途中で変更がないものはやらなくてもOK
-                            const displayText = [...selectedDates]
-                                .sort((a, b) => a.date.localeCompare(b.date)) // オブジェクトの日付で並び替え 要素がスタンプ、日付で成り立っているためどれを判定して並び替えをしたらいいか分からないなのでlocalCompareでdateリストの中の日付の要素で総当たりで判定するようにしている
-                                .map(item => `${item.date}(${item.stamp})`)    // 「2026-06-01(日勤)」という文字の形に変換
-                                .join(", ");                                  // カンマでくっつける
-
-                            listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + displayText;
-                        } else {
-                            listEl.innerText = "選択中の日付： なし";
-                        }
-                    }
-                });
-                calendar.render();//これ最後に表示する
+        function selectstamp(mode) {
+            currentstamp = mode;
+            document.querySelectorAll('.stamp-btn').forEach(btn => {
+                btn.classList.remove('UN');
             });
 
-
-
-            function submitData() {
-                if (selectedDates.length === 0) {
-                    alert("日付が選択されていません！");
-                    return;
-                }
-
-                const bikouText = document.getElementById("Text-message").value;
-                const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
-
-                // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
-                const sendData = {
-                    name: userName,    // C#の Name にマッピングされます
-                    dates: sortedDates, // C#の Dates にマッピングされます
-                    memo: bikouText
-                };
-
-                // ⭕ C#のAPIへ送信
-                fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'//送る先にJSON形式だと教えるため
-                    },
-                    body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        throw new Error('通信エラーが発生しました。');
-                    })
-                    .then(data => {
-                        // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
-                        alert(data.message);
-
-                        // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
-                        if (liff.isInClient()) {
-                            // ❹ 【修正】LINEに送る文字を「日付(スタンプ)」の形に変換する
-                            const formattedDatesForLine = sortedDates
-                                .map(item => `${item.date}(${item.stamp})`)
-                                .join("\n");
-
-                            liff.sendMessages([{
-                                type: 'text',
-                                text: `【シフト希望】\n氏名: ${userName}\n${formattedDatesForLine}\n上記で申請します。`
-                            }]).then(() => { liff.closeWindow(); });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('エラー:', error);
-                        alert('送信に失敗しました。');
-                    });
+            const clickedButton = document.querySelector(`.stamp-btn[data-mode="${mode}"]`);
+            // /querySelectorを囲むときだけ@をshiftと一緒に押さなくてはいけない/
+            if (clickedButton) {
+                clickedButton.classList.add('UN');
             }
-        </script>
+
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
+            // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
+            liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID
+                .then(() => {//thenこれは.の前の処理が終わったら処理を実行するやつifの場合実行スピードが追い付かなく.thenにして終わったら次これをやっての処理が適している
+                    if (!liff.isLoggedIn()) { liff.login(); }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
+                    else {
+                        liff.getProfile().then(profile => {
+                            userName = profile.displayName;
+                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
+                        });
+                    }
+                })
+                .catch((err) => {
+                    document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
+                });
+
+            const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
+                locale: 'ja',//言語
+                headerToolbar: { left: 'prev', center: 'title', right: 'next' },//カレンダーにどんなボタンを付けるかを指定できる
+                // left: 'prev' ＝ 左側に「前月へ戻る（<）」ボタンを置く。
+                // center: 'title' ＝ 中央に「2026年6月」のような「今何月か」のタイトルを置く。
+                // right: 'next' ＝ 右側に「次月へ進む（>）」ボタンを置く。
+                //validRange（選択できる日付の制限）
+                //businessHours: true（土日や夜間の色変え）
+                //unselectAuto: false（選択の維持）
+                //「月」以外に変える表示設定（views）
+                selectable: true,//カレンダーのマス目をたプできるようにする
+
+                dateClick: function (info) {
+                    // if (currentstamp == null) {
+                    //     return;
+
+                    // }
+                    const clickedDate = info.dateStr;//日付をclickeDateに入れている
+                    const isAlreadySelected = selectedDates.some(item => item.date == clickedDate); //some判定オブジェクト配列のためif文でうまく判定できないため一度isAlreadyに入れている
+
+                    if (isAlreadySelected) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
+                        selectedDates = selectedDates.filter(item => item.date !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
+                        info.dayEl.style.backgroundColor = '';
+                    } else {
+                        selectedDates.push({ date: clickedDate, stamp: currentstamp });
+                        info.dayEl.style.backgroundColor = '#ffcccc';
+                    }
+
+                    const listEl = document.getElementById('selected-list');
+                    if (selectedDates.length > 0) {
+                        //...コピーの作成 sort並び替え joinくっつけている
+                        //コピーを作る理由sortをしてしまうと仮に変更したい場合でもsortの解除ができないそのためコピーを作成しているボタンを押して完了とか途中で変更がないものはやらなくてもOK
+                        const displayText = [...selectedDates]
+                            .sort((a, b) => a.date.localeCompare(b.date)) // オブジェクトの日付で並び替え 要素がスタンプ、日付で成り立っているためどれを判定して並び替えをしたらいいか分からないなのでlocalCompareでdateリストの中の日付の要素で総当たりで判定するようにしている
+                            .map(item => `${item.date}(${item.stamp})`)    // 「2026-06-01(日勤)」という文字の形に変換
+                            .join(", ");                                  // カンマでくっつける
+
+                        listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + displayText;
+                    } else {
+                        listEl.innerText = "選択中の日付： なし";
+                    }
+                }
+            });
+            calendar.render();//これ最後に表示する
+        });
+
+
+
+        function submitData() {
+            if (selectedDates.length === 0) {
+                alert("日付が選択されていません！");
+                return;
+            }
+
+            const bikouText = document.getElementById("Text-message").value;
+            const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
+
+            // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
+            const sendData = {
+                name: userName,    // C#の Name にマッピングされます
+                dates: sortedDates, // C#の Dates にマッピングされます
+                memo: bikouText
+            };
+
+            // ⭕ C#のAPIへ送信
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'//送る先にJSON形式だと教えるため
+                },
+                body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('通信エラーが発生しました。');
+                })
+                .then(data => {
+                    // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
+                    alert(data.message);
+
+                    // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
+                    if (liff.isInClient()) {
+                        // ❹ 【修正】LINEに送る文字を「日付(スタンプ)」の形に変換する
+                        const formattedDatesForLine = sortedDates
+                            .map(item => `${item.date}(${item.stamp})`)
+                            .join("\n");
+
+                        liff.sendMessages([{
+                            type: 'text',
+                            text: `【シフト希望】\n氏名: ${userName}\n${formattedDatesForLine}\n上記で申請します。`
+                        }]).then(() => { liff.closeWindow(); });
+                    }
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                    alert('送信に失敗しました。');
+                });
+        }
+    </script>
 </body>
 
 </html>
