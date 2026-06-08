@@ -9,7 +9,7 @@
         body {
             font-family: sans-serif;
             margin: 10px;
-            background-color: hsl(0, 85%, 44%);
+            background-color: hsl(0, 0%, 100%);
         }
 
         .container {
@@ -77,7 +77,7 @@
         }
 
         .stamp-btn.UN {
-            background-color: rgb(12, 70, 231);
+            background-color: rgb(131, 252, 176);
         }
     </style>
 </head>
@@ -129,7 +129,7 @@
                     else {
                         liff.getProfile().then(profile => {
                             userName = profile.displayName;
-                            document.getElementById('user-info').innerText = "こんにちはhahaha、" + userName + " さん";
+                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
                         });
                     }
                 })
