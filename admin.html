@@ -60,6 +60,21 @@
             float: right;
             font-weight: bold;
         }
+
+        .text-message {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #555;
+
+            width: 100%;
+            /* 最初から横幅を画面いっぱいに広げる */
+            white-space: pre-wrap;
+            /* white-spaceこれ自動伸ばし */
+            box-sizing: border-box;
+        }
     </style>
 </head>
 
@@ -115,6 +130,9 @@
                             <div class="date-list">
                                 <strong>希望日：</strong><br>
                                 ${formattedDates}
+                            </div>
+                            <div class="text-message">
+                                ${shift.memo}
                             </div>
                         `;
                         container.appendChild(card);
