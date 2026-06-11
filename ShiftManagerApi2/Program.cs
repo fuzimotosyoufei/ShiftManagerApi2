@@ -5,7 +5,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("https://fuzimotosyoufei.github.io") 
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowGitHubPages");
 app.UseAuthorization();
 
 app.MapControllers();

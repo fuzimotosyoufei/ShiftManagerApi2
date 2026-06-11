@@ -11,6 +11,6 @@ namespace ShiftManagerApi2
         public string Memo { get; set; } = string.Empty;
 
         // 📅 選択された日付のリスト (sortedDates) を受け取る
-       public string Dates { get; set; } = string.Empty;
+        public List<string> Dates { get; set; }
     }
 }
