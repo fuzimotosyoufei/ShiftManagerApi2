@@ -1,13 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("https://fuzimotosyoufei.github.io") 
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.AllowAnyOrigin()   // 🌟すべてのドメイン（GitHub Pages含む）を許可
+                   .AllowAnyHeader()   // 🌟すべてのヘッダー（ngrok用ヘッダー含む）を許可
+                   .AllowAnyMethod();  // 🌟すべてのメソッド（POST, GET, OPTIONS）を許可
     });
 });
 
@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowGitHubPages");
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();
