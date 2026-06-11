@@ -21,6 +21,8 @@ namespace ShiftManagerApi2.Controllers
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
             string a = "d";
+            bool isExist = false;
+            int staffID = 0;
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
@@ -35,16 +37,13 @@ namespace ShiftManagerApi2.Controllers
                     using (var reader = cmd.ExecuteReader())
                     {
                         
-
                         while (reader.Read())//Readはデータを勝手に一つ進めてくれる
                         {
                             string DB_Lineid = reader.GetString(0);
+
                             if (DB_Lineid == data.id)
                             {
-                                // リストにデータを追加
-                                a = DB_Lineid;
-                                // HTML側の alert(data.message) に表示される文字をお返しする
-                             
+                                isExist = true;
                                 break;
                             }
                             else
@@ -55,9 +54,29 @@ namespace ShiftManagerApi2.Controllers
                         
                        
                     }
+                    if (isExist){
+                        string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                        using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
+                        {
+                            staff_cmd.Parameters.AddWithValue("@lineID", data.id);
+
+                            var c = staff_cmd.ExecuteScalar();
+                            staffID = Convert.ToInt32(c);
+                            a = "あるよ";
+                            
+                        }
+                    }
+                    else
+                    {
+                        a = "ないよ登録処理をしてね";
+                    }
+                   
                 }
+
+            
+
             }
-            catch(NpgsqlException ex)
+            catch (NpgsqlException ex)
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
             }
