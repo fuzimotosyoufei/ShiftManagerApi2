@@ -49,7 +49,7 @@ namespace ShiftManagerApi2.Controllers
                             }
                             else
                             {
-                                a = "ddddddddddddd";
+                                a = data.Lineid;
                             }
                         }
                         
