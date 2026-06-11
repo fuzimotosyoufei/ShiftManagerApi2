@@ -10,7 +10,11 @@ namespace ShiftManagerApi2
 
         public string Memo { get; set; } = string.Empty;
 
+        public string Lineid { get; set; } = string.Empty;
+
         // 📅 選択された日付のリスト (sortedDates) を受け取る
         public List<string> Dates { get; set; }
+
+        
     }
 }
