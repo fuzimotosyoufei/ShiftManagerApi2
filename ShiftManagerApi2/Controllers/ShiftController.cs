@@ -16,7 +16,7 @@ namespace ShiftManagerApi2.Controllers
         [HttpPost]
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
-            if (data == null || string.IsNullOrEmpty(data.Name) || data.Dates.Count == 0)
+            if (data == null || string.IsNullOrEmpty(data.Name) )
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
             }
