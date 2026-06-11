@@ -178,23 +178,12 @@
     <script>
         let selectedDates = [];//リストはあらかじめ何を入れるかをしてしなくてもいいいざ入れるときにキーと一緒に項目を入れることでリストの中に項目と要素をセットで保存できる
         //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
-        let currentstamp = '休み';
+
         let userName = "ゲストユーザー";
 
-        function selectstamp(mode) {
-            currentstamp = mode;
-            document.querySelectorAll('.stamp-btn').forEach(btn => {
-                btn.classList.remove('UN');
-            });
-
-            const clickedButton = document.querySelector(`.stamp-btn[data-mode="${mode}"]`);
-            // /querySelectorを囲むときだけ@をshiftと一緒に押さなくてはいけない/
-            if (clickedButton) {
-                clickedButton.classList.add('UN');
-            }
 
 
-        }
+
 
         document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
@@ -232,34 +221,18 @@
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
                 dateClick: function (info) {
-                    // if (currentstamp == null) {
-                    //     return;
 
-                    // }
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
-                    const isAlreadySelected = selectedDates.some(item => item.date == clickedDate); //some判定オブジェクト配列のためif文でうまく判定できないため一度isAlreadyに入れている
 
-                    if (isAlreadySelected) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
+
+                    if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
                         selectedDates = selectedDates.filter(item => item.date !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
                         info.dayEl.style.backgroundColor = '';
                     } else {
-                        selectedDates.push({ date: clickedDate, stamp: currentstamp });
+                        selectedDates.push(clickedDate);
                         info.dayEl.style.backgroundColor = '#ffcccc';
                     }
 
-                    const listEl = document.getElementById('selected-list');
-                    if (selectedDates.length > 0) {
-                        //...コピーの作成 sort並び替え joinくっつけている
-                        //コピーを作る理由sortをしてしまうと仮に変更したい場合でもsortの解除ができないそのためコピーを作成しているボタンを押して完了とか途中で変更がないものはやらなくてもOK
-                        const displayText = [...selectedDates]
-                            .sort((a, b) => a.date.localeCompare(b.date)) // オブジェクトの日付で並び替え 要素がスタンプ、日付で成り立っているためどれを判定して並び替えをしたらいいか分からないなのでlocalCompareでdateリストの中の日付の要素で総当たりで判定するようにしている
-                            .map(item => `${item.date}(${item.stamp})`)    // 「2026-06-01(日勤)」という文字の形に変換
-                            .join(", ");                                  // カンマでくっつける
-
-                        listEl.innerHTML = "<strong>選択中の日付：</strong><br>" + displayText;
-                    } else {
-                        listEl.innerText = "選択中の日付： なし";
-                    }
                 }
             });
             calendar.render();//これ最後に表示する
@@ -274,7 +247,7 @@
             }
 
             const bikouText = document.getElementById("Text-message").value;
-            const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
+            const sortedDates = [...selectedDates].sort((a, b) => a.localeCompare(b));
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
@@ -304,9 +277,7 @@
                     // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
                     if (liff.isInClient()) {
                         // ❹ 【修正】LINEに送る文字を「日付(スタンプ)」の形に変換する
-                        const formattedDatesForLine = sortedDates
-                            .map(item => `${item.date}(${item.stamp})`)
-                            .join("\n");
+                        const formattedDatesForLine = sortedDates.join("\n");
 
                         liff.sendMessages([{
                             type: 'text',
