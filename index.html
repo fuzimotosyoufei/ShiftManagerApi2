@@ -260,7 +260,8 @@
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'//送る先にJSON形式だと教えるため
+                    'Content-Type': 'application/json',//送る先にJSON形式だと教えるため
+                    'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
             })
