@@ -22,7 +22,8 @@ namespace ShiftManagerApi2.Controllers
         {
             string a = "d";//確かめるよう
             bool isExist = false;//ラインIDがあるかの判定
-            int staffID = 0;//スタッフIDの使いまわしのため
+            int staff_id = 0;//スタッフIDの使いまわしのため
+            int submiision_id = 0;
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
@@ -62,11 +63,30 @@ namespace ShiftManagerApi2.Controllers
                             staff_cmd.Parameters.AddWithValue("@lineID", data.id);
 
                             var c = staff_cmd.ExecuteScalar();
-                            staffID = Convert.ToInt32(c);
+                            staff_id = Convert.ToInt32(c);
                             a = "あるよ";
                             
                         }
-                        //string submiission_sql ="SELECT"
+                        string submiission_sql = "SELECT staff_id ,year ,month FROM shift_submissions WHERE staff_id = @staff_id AND year = @year AND month = @month";
+                        using (var submiision_cmd = new NpgsqlCommand(submiission_sql, conn))
+                        {
+
+                            submiision_cmd.Parameters.AddWithValue("@staff_id",staff_id);
+                            submiision_cmd.Parameters.AddWithValue("@year",data.Year);
+                            submiision_cmd.Parameters.AddWithValue("@month",data.Month);
+                            var submiision_DB = submiision_cmd.ExecuteScalar();
+                            if(submiision_DB != null)
+                            {
+                                submiision_id = Convert.ToInt32(submiision_DB);
+                                a = "登録してたよ";
+                            }
+                            else
+                            {
+                                a = "まだ登録してないよ";
+                            }
+
+
+                        }
 
                     }
                     ///3ラインのIDがないので登録処理に促す
