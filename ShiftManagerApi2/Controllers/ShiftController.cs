@@ -35,7 +35,7 @@ namespace ShiftManagerApi2.Controllers
                     {
                         bool isFound = false;
 
-                        while (reader.Read())
+                        while (reader.Read())//Readはデータを勝手に一つ進めてくれる
                         {
                             string DB_Lineid = reader.GetString(0);
                             if (DB_Lineid == data.Lineid)
@@ -43,6 +43,7 @@ namespace ShiftManagerApi2.Controllers
                                 // リストにデータを追加
                                 isFound = true;
                                 // HTML側の alert(data.message) に表示される文字をお返しする
+                                return Ok(new { message = $"🎉 {data.Name} {DB_Lineid} さんのシフト希望を登録しました！" });
                                 break;
                             }
                         }
