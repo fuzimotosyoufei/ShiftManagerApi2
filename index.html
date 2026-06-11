@@ -180,11 +180,11 @@
         //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
         let lineid = "";
         let userName = "ゲストユーザー";
+        let calendar;
 
 
 
-
-
+        ///ラインのログイン 名前とIDの取得処理
         document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
             liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID
@@ -202,9 +202,9 @@
                 .catch((err) => {
                     document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
                 });
-
+            //
             const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
-            const calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
                 headerToolbar: { left: 'prev', center: 'title', right: 'next' },//カレンダーにどんなボタンを付けるかを指定できる
@@ -228,7 +228,7 @@
 
 
                     if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
-                        selectedDates = selectedDates.filter(item => item.date !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
+                        selectedDates = selectedDates.filter(item => item !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
                         info.dayEl.style.backgroundColor = '';
                     } else {
                         selectedDates.push(clickedDate);
@@ -237,6 +237,8 @@
 
                 }
             });
+
+
             calendar.render();//これ最後に表示する
         });
 
@@ -248,14 +250,20 @@
                 return;
             }
 
+
             const bikouText = document.getElementById("Text-message").value;
             const sortedDates = [...selectedDates].sort((a, b) => a.localeCompare(b));
+            const calendData = calendar.getDate();
+            const calYear = calendData.getFullYear();
+            const calMonth = calendData.getMonth() + 1;
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
                 name: userName,    // C#の Name にマッピングされます
                 dates: sortedDates, // C#の Dates にマッピングされます
                 memo: bikouText,
+                year: calYear,
+                month: calMonth,
                 id: lineid
             };
 
