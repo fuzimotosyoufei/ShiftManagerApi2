@@ -178,7 +178,7 @@
     <script>
         let selectedDates = [];//リストはあらかじめ何を入れるかをしてしなくてもいいいざ入れるときにキーと一緒に項目を入れることでリストの中に項目と要素をセットで保存できる
         //入れる要素が一つの場合datesで取り出せるためpushの時に特に何も考えなくていい
-
+        let lineid = "";
         let userName = "ゲストユーザー";
 
 
@@ -193,9 +193,11 @@
                     else {
                         liff.getProfile().then(profile => {
                             userName = profile.displayName;
-                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
+                            lineid = profile.userId;
+                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
                         });
                     }
+                    //ここらへんで多分入れるらいんのID
                 })
                 .catch((err) => {
                     document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
