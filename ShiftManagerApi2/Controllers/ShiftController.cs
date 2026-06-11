@@ -39,7 +39,7 @@ namespace ShiftManagerApi2.Controllers
                         while (reader.Read())//Readはデータを勝手に一つ進めてくれる
                         {
                             string DB_Lineid = reader.GetString(0);
-                            if (DB_Lineid == data.Lineid)
+                            if (DB_Lineid == data.id)
                             {
                                 // リストにデータを追加
                                 a = DB_Lineid;
@@ -49,7 +49,7 @@ namespace ShiftManagerApi2.Controllers
                             }
                             else
                             {
-                                a = data.Lineid;
+                                a = data.id;
                             }
                         }
                         
@@ -65,7 +65,7 @@ namespace ShiftManagerApi2.Controllers
             _shiftList.Add(data);
 
             // HTML側の alert(data.message) に表示される文字をお返しする
-            return Ok(new { message = $"🎉 {data.Name}{data.Lineid} {a} さんのシフト希望を登録しました！555555555555" });
+            return Ok(new { message = $"🎉 {data.Name}{data.id} {a} さんのシフト希望を登録しました！555555555555" });
 
 
         }
