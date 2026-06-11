@@ -20,6 +20,7 @@ namespace ShiftManagerApi2.Controllers
         [HttpPost]
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
+            string a = null;
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
@@ -33,7 +34,7 @@ namespace ShiftManagerApi2.Controllers
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
-                        bool isFound = false;
+                        
 
                         while (reader.Read())//Readはデータを勝手に一つ進めてくれる
                         {
@@ -41,10 +42,14 @@ namespace ShiftManagerApi2.Controllers
                             if (DB_Lineid == data.Lineid)
                             {
                                 // リストにデータを追加
-                                isFound = true;
+                                a = DB_Lineid;
                                 // HTML側の alert(data.message) に表示される文字をお返しする
-                                return Ok(new { message = $"🎉 {data.Name} {DB_Lineid} さんのシフト希望を登録しました！" });
+                             
                                 break;
+                            }
+                            else
+                            {
+                                a = "ddddddddddddd";
                             }
                         }
                         
@@ -60,7 +65,7 @@ namespace ShiftManagerApi2.Controllers
             _shiftList.Add(data);
 
             // HTML側の alert(data.message) に表示される文字をお返しする
-            return Ok(new { message = $"🎉 {data.Name} さんのシフト希望を登録しました！" });
+            return Ok(new { message = $"🎉 {data.Name} {a} さんのシフト希望を登録しました！555555555555" });
 
 
         }
