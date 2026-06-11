@@ -20,15 +20,15 @@ namespace ShiftManagerApi2.Controllers
         [HttpPost]
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
-            string a = "d";
-            bool isExist = false;
-            int staffID = 0;
+            string a = "d";//確かめるよう
+            bool isExist = false;//ラインIDがあるかの判定
+            int staffID = 0;//スタッフIDの使いまわしのため
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
             }
-
-            try
+            //1ラインのIDがあるかを足し舞えている
+            try//データベースの処理
             {
                 using (var conn = _db.CreateConnection())
                 {
@@ -54,6 +54,7 @@ namespace ShiftManagerApi2.Controllers
                         
                        
                     }
+                    //2ラインのIDがあるならラインのIDからstaff_idを取得する
                     if (isExist){
                         string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
                         using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
@@ -65,7 +66,10 @@ namespace ShiftManagerApi2.Controllers
                             a = "あるよ";
                             
                         }
+                        //string submiission_sql ="SELECT"
+
                     }
+                    ///3ラインのIDがないので登録処理に促す
                     else
                     {
                         a = "ないよ登録処理をしてね";
@@ -76,6 +80,8 @@ namespace ShiftManagerApi2.Controllers
             
 
             }
+
+
             catch (NpgsqlException ex)
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
@@ -84,7 +90,7 @@ namespace ShiftManagerApi2.Controllers
             _shiftList.Add(data);
 
             // HTML側の alert(data.message) に表示される文字をお返しする
-            return Ok(new { message = $"🎉 {data.Name} {a} さんのシフト希望を登録しました！555555555555" });
+            return Ok(new { message = $"🎉 {data.Year}{data.Month} {a} さんのシフト希望を登録しました！555555555555" });
 
 
         }
