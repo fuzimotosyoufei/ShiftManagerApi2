@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Npgsql;
+using System.Security.Cryptography;
 namespace ShiftManagerApi2.Controllers
 {
     [ApiController]
@@ -13,32 +14,48 @@ namespace ShiftManagerApi2.Controllers
         private static readonly List<ShiftSubmission> _shiftList = new List<ShiftSubmission>();
 
         private readonly DatabaseConnection _db = new DatabaseConnection();
+       
 
         // ① シフト希望を「登録」する窓口（カレンダー画面用）
         [HttpPost]
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
+            if (data == null || string.IsNullOrEmpty(data.Name))
+            {
+                return BadRequest(new { message = "データが正しく送信されませんでした。" });
+            }
+
             try
             {
                 using (var conn = _db.CreateConnection())
                 {
-
+                    string sql = "SELECT line_id  FROM staff";
+                    using (var cmd = new NpgsqlCommand(sql, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        string DB_Lineid = reader.GetString(0);
+                        if(DB_Lineid == data.Lineid)
+                        {
+                            // リストにデータを追加
+                           
+                            // HTML側の alert(data.message) に表示される文字をお返しする
+                            return Ok(new { message = $"🎉 {data.Name} {DB_Lineid}さんのシフト希望を登録しました！" });
+                        }
+                       
+                    }
                 }
             }
             catch(NpgsqlException ex)
             {
-
+                return BadRequest(new { message = "データが正しく送信されませんでした。" });
             }
-                if (data == null || string.IsNullOrEmpty(data.Name))
-                {
-                    return BadRequest(new { message = "データが正しく送信されませんでした。" });
-                }
 
-                // リストにデータを追加
-                _shiftList.Add(data);
+            _shiftList.Add(data);
 
-                // HTML側の alert(data.message) に表示される文字をお返しする
-                return Ok(new { message = $"🎉 {data.Name} さんのシフト希望を登録しました！" });
+            // HTML側の alert(data.message) に表示される文字をお返しする
+            return Ok(new { message = $"🎉 {data.Name} さんのシフト希望を登録しました！" });
+
+
         }
 
             // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
