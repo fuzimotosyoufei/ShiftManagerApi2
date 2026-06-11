@@ -29,18 +29,24 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                    string sql = "SELECT line_id  FROM staff";
+                    string sql = "SELECT line_id FROM staff";
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
-                        string DB_Lineid = reader.GetString(0);
-                        if(DB_Lineid == data.Lineid)
+                        bool isFound = false;
+
+                        while (reader.Read())
                         {
-                            // リストにデータを追加
-                           
-                            // HTML側の alert(data.message) に表示される文字をお返しする
-                          
+                            string DB_Lineid = reader.GetString(0);
+                            if (DB_Lineid == data.Lineid)
+                            {
+                                // リストにデータを追加
+                                isFound = true;
+                                // HTML側の alert(data.message) に表示される文字をお返しする
+                                break;
+                            }
                         }
+                        
                        
                     }
                 }
