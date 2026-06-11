@@ -12,9 +12,9 @@ namespace ShiftManagerApi2
 
         public string id { get; set; } = string.Empty;
 
-        public string Year { get; set; } = string.Empty;
+        public int Year { get; set; } 
 
-        public string Month { get; set; } = string.Empty;
+        public int Month { get; set; } 
 
         // 📅 選択された日付のリスト (sortedDates) を受け取る
         public List<string> Dates { get; set; }
