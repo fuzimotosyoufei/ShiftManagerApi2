@@ -219,7 +219,9 @@
                         card.className = 'shift-card';
 
                         const formattedDates = shift.dates.map(item => {
-                            return `${item.date} , (${item.stamp})`;
+                            // もしC#からオブジェクトのまま（{date: "..."}）で来るなら item.date、
+                            // ただの文字列（"..."）として来るなら item そのものを使います
+                            return typeof item === 'object' ? item.date : item;
                         }).join('<br>');
 
                         card.innerHTML = `
