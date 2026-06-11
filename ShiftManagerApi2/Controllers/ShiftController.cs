@@ -65,7 +65,7 @@ namespace ShiftManagerApi2.Controllers
             _shiftList.Add(data);
 
             // HTML側の alert(data.message) に表示される文字をお返しする
-            return Ok(new { message = $"🎉 {data.Name}{data.id} {a} さんのシフト希望を登録しました！555555555555" });
+            return Ok(new { message = $"🎉 {data.Name} {a} さんのシフト希望を登録しました！555555555555" });
 
 
         }
