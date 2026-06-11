@@ -13,6 +13,7 @@
         }
 
         .container {
+            width: 100%;
             max-width: 600px;
             /* スマホで見るときは画面いっぱいに広がりそれ以外のpcなら600以上広がらない */
             /* なにも指定しないと勝手にcontainaer文サイズが広がる */
@@ -64,6 +65,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            margin-top: 10px;
+            margin-bottom: 10px;
+
         }
 
         .stamp-btn {
@@ -95,13 +100,31 @@
             box-sizing: border-box;
             /* padding（10px）のせいで右側にはみ出すのを防ぐ魔法 */
         }
+
+
+        .radio-sample-container {
+            display: flex;
+            /* ボタンを横一列に綺麗に並べる魔法 */
+            gap: 15px;
+            /* ボタンとボタンの間のスキマ */
+            margin-top: 10px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .radio-label {
+            font-size: 14px;
+            color: #333;
+            cursor: default;
+            /* 表示だけなので、マウスを乗せても矢印のままにする */
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div id="user-info">読み込み中...</div>
-        <h2>📅 シフト希望入力</h2>
+        <h2>📅 シフト希望休申請</h2>
         <!-- <div id="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
@@ -109,12 +132,45 @@
         </div> -->
         <div id="calendar"></div>
         <h2>備考欄</h2>
-        <div type="text" id="Text-message" placeholder="ここに文字を入力"></div>
-        <!-- <div id="selected-list"
+        <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
+
+
+        <h2>行事</h2>
+        <div id="palette-container">
+            <h2>15日は職員会議です。参加の意思を確認します。</h2>
+            <div class="radio-sample-container">
+                <label class="radio-label">
+                    <input type="radio" checked disabled> はい
+                </label>
+
+                <label class="radio-label">
+                    <input type="radio" disabled> いいえ
+                </label>
+            </div>
+        </div>
+
+        <div id="palette-container">
+            <h2>17日は交流会です。参加の意思を確認します。</h2>
+            <div class="radio-sample-container">
+                <label class="radio-label">
+                    <input type="radio" checked disabled> はい
+                </label>
+
+                <label class="radio-label">
+                    <input type="radio" disabled> いいえ
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- type="text"を使うためには枠自体に文字を打ち込める枠だと知らせなくてはいけないだからinputやtextareaにしなくてはいけないtextareaは改行ができる -->
+    <!-- <div id="selected-list"
             style="margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 14px; color: #555;">
             選択中の日付： なし</div> -->
 
-        <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
+    <button class="btn-submit" onclick="submitData()">この内容で申請する</button>
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -165,6 +221,11 @@
                 // center: 'title' ＝ 中央に「2026年6月」のような「今何月か」のタイトルを置く。
                 // right: 'next' ＝ 右側に「次月へ進む（>）」ボタンを置く。
                 //validRange（選択できる日付の制限）
+                validRange: {
+                    start: '2026-06-01',
+                    end: '2026-06-30'
+                },
+                contentHeight: 'auto',
                 //businessHours: true（土日や夜間の色変え）
                 //unselectAuto: false（選択の維持）
                 //「月」以外に変える表示設定（views）
@@ -211,12 +272,15 @@
                 alert("日付が選択されていません！");
                 return;
             }
+
+            const bikouText = document.getElementById("Text-message").value;
             const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
                 name: userName,    // C#の Name にマッピングされます
-                dates: sortedDates // C#の Dates にマッピングされます
+                dates: sortedDates, // C#の Dates にマッピングされます
+                memo: bikouText
             };
 
             // ⭕ C#のAPIへ送信
