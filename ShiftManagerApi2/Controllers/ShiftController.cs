@@ -39,7 +39,7 @@ namespace ShiftManagerApi2.Controllers
                             // リストにデータを追加
                            
                             // HTML側の alert(data.message) に表示される文字をお返しする
-                            return Ok(new { message = $"🎉 {data.Name} {DB_Lineid}さんのシフト希望を登録しました！" });
+                          
                         }
                        
                     }
