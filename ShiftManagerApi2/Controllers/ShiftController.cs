@@ -21,7 +21,6 @@ namespace ShiftManagerApi2.Controllers
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
             string a = "d";//確かめるよう
-            bool isExist = false;//ラインIDがあるかの判定
             int staff_id = 0;//スタッフIDの使いまわしのため
             int submiision_id = 0;
             if (data == null || string.IsNullOrEmpty(data.Name))
@@ -33,57 +32,43 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                    string sql = "SELECT line_id FROM staff";
-                    using (var cmd = new NpgsqlCommand(sql, conn))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        
-                        while (reader.Read())//Readはデータを勝手に一つ進めてくれる
-                        {
-                            string DB_Lineid = reader.GetString(0);
+                       string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                       using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
+                       {
+                           staff_cmd.Parameters.AddWithValue("@lineID", data.id);
 
-                            if (DB_Lineid == data.id)
-                            {
-                                isExist = true;
-                                break;
-                            }
-                            else
-                            {
-                                a = data.id;
-                            }
-                        }
-                        
-                       
-                    }
-                    //2ラインのIDがあるならラインのIDからstaff_idを取得する
-                    if (isExist){
-                        string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
-                        using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
-                        {
-                            staff_cmd.Parameters.AddWithValue("@lineID", data.id);
+                           var c = staff_cmd.ExecuteScalar();
 
-                            var c = staff_cmd.ExecuteScalar();
+                        if (c != null && c != DBNull.Value)
+                        {
                             staff_id = Convert.ToInt32(c);
-                            a = "あるよ";
-                            
                         }
-                        string submiission_sql = "SELECT staff_id ,year ,month FROM shift_submissions WHERE staff_id = @staff_id AND year = @year AND month = @month";
-                        using (var submiision_cmd = new NpgsqlCommand(submiission_sql, conn))
+                    }
+
+                    if (staff_id !=0)
+                    {
+                        a = "あるよ";
+                        string submiision_sql = "SELECT id FROM shift_submissions WHERE staff_id = @staff_id AND year = @year AND month = @month";
+                        using (var submiision_cmd = new NpgsqlCommand(submiision_sql, conn))
                         {
 
                             submiision_cmd.Parameters.AddWithValue("@staff_id",staff_id);
                             submiision_cmd.Parameters.AddWithValue("@year",data.Year);
                             submiision_cmd.Parameters.AddWithValue("@month",data.Month);
                             var submiision_DB = submiision_cmd.ExecuteScalar();
-                            if(submiision_DB != null)
+
+                            if(submiision_DB != null)//submiisionの提出日と備考欄の更新処理
                             {
                                 submiision_id = Convert.ToInt32(submiision_DB);
                                 a = "登録してたよ";
+
                             }
+                            //submiisionIDの作成
                             else
                             {
                                 a = "まだ登録してないよ";
                             }
+
 
 
                         }
