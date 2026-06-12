@@ -106,13 +106,15 @@ namespace ShiftManagerApi2.Controllers
 
                             }
                             string insert_sql = "INSERT INTO shift_dates (submission_id, date) VALUES (@submission_id, @date)";
+
                             using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
                             {
                                 foreach (var date in data.Dates)
                                 {
                                     insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
                                     insert_cmd.Parameters.AddWithValue("@submission_id", submiision_id);
-                                    insert_cmd.Parameters.AddWithValue("@date", date);
+                                    DateTime parsedDate = DateTime.Parse(date);
+                                    insert_cmd.Parameters.AddWithValue("@date", parsedDate);
                                     insert_cmd.ExecuteNonQuery();
                                 }
                                 a = "多分変更で来たよ";
