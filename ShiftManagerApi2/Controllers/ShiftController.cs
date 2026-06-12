@@ -32,9 +32,9 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                       string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
-                       using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
-                       {
+                     string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                     using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
+                     {
                            staff_cmd.Parameters.AddWithValue("@lineID", data.id);
 
                            var c = staff_cmd.ExecuteScalar();
@@ -43,7 +43,7 @@ namespace ShiftManagerApi2.Controllers
                         {
                             staff_id = Convert.ToInt32(c);
                         }
-                    }
+                     }
 
                     if (staff_id !=0)
                     {
@@ -62,6 +62,8 @@ namespace ShiftManagerApi2.Controllers
                                 submiision_id = Convert.ToInt32(submiision_DB);
                                 a = "登録してたよ";
 
+
+
                             }
                             //submiisionIDの作成
                             else
@@ -72,8 +74,26 @@ namespace ShiftManagerApi2.Controllers
 
 
                         }
+                        if(submiision_id != 0)//提出日と備考欄の更新処理
+                        {
+                            string update_sql = "UPDATE shift_submissions SET memo = @memo, created_at= NOW() WHERE id = @id";
+                            using (var update_cmd = new NpgsqlCommand(update_sql, conn))
+                            {
+                                update_cmd.Parameters.AddWithValue("@memo", data.Memo);
+                                update_cmd.Parameters.AddWithValue("@id",submiision_id);
+                                a = "変更したよ";
+
+                            }
+                        }
+                        else
+                        {
+                            ///ここに登録処理を入れる
+                               a = "追加する予定だよ";
+                        }
+
 
                     }
+                    
                     ///3ラインのIDがないので登録処理に促す
                     else
                     {
@@ -98,7 +118,9 @@ namespace ShiftManagerApi2.Controllers
             return Ok(new { message = $"🎉 {data.Year}{data.Month} {a} さんのシフト希望を登録しました！555555555555" });
 
 
-        }
+          }
+
+     
 
             // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
             [HttpGet]
