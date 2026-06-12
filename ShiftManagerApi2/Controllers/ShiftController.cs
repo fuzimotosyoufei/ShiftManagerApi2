@@ -150,7 +150,7 @@ namespace ShiftManagerApi2.Controllers
 
             catch (NpgsqlException ex)
             {
-                return BadRequest(new { message = "データが正しく送信されませんでした。" });
+                return BadRequest(new { message = "データが正しく送信されませんでした。{a}" });
             }
 
             _shiftList.Add(data);
