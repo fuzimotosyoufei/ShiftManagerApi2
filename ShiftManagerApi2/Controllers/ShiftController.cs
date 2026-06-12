@@ -81,6 +81,8 @@ namespace ShiftManagerApi2.Controllers
                             {
                                 update_cmd.Parameters.AddWithValue("@memo", data.Memo);
                                 update_cmd.Parameters.AddWithValue("@id",submiision_id);
+
+                                update_cmd.ExecuteNonQuery();
                                 a = "変更したよ";
 
                             }
