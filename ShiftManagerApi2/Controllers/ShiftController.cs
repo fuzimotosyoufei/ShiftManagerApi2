@@ -23,6 +23,7 @@ namespace ShiftManagerApi2.Controllers
             string a = "d";//確かめるよう
             int staff_id = 0;//スタッフIDの使いまわしのため
             int submiision_id = 0;
+
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。" });
@@ -92,17 +93,44 @@ namespace ShiftManagerApi2.Controllers
                                 update_cmd.Parameters.AddWithValue("@id", submiision_id);
                                 var submiision_DB = update_cmd.ExecuteScalar();
 
-                                string submission_text = submiision_DB.ToString();
+                                string submission_text = Convert.ToString(submiision_DB);
                                 a = "変更したよ"+ submission_text;
 
                             }
+                            string dlete_sql = "DELETE FROM shift_dates WHERE submission_id = @id";
+
+                            using(var dlete_cmd = new NpgsqlCommand(dlete_sql,conn))
+                            {
+                                dlete_cmd.Parameters.AddWithValue("@id", submiision_id);
+                                dlete_cmd.ExecuteNonQuery();
+
+                            }
+                            string insert_sql = "INSERT INTO shift_dates (submission_id, date) VALUES (@submission_id, @date)";
+                            using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+                            {
+                                foreach (var date in data.Dates)
+                                {
+                                    insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
+                                    insert_cmd.Parameters.AddWithValue("@submission_id", submiision_id);
+                                    insert_cmd.Parameters.AddWithValue("@date", date);
+                                    insert_cmd.ExecuteNonQuery();
+                                }
+                                a = "多分変更で来たよ";
+                            }
+                            
+
+                             
 
                         }
                         else
                         {
                             ///ここに登録処理を入れる
                                a = "追加する予定だよ";
+                                //登録したら削除せずにshift_datesに入れる処理を入れるよ
                         }
+
+                       
+                        
 
 
                     }
