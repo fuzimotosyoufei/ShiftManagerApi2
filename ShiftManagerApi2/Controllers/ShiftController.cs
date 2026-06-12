@@ -97,7 +97,7 @@ namespace ShiftManagerApi2.Controllers
                                 a = "変更したよ"+ req_text;
 
                             }
-                            string dlete_sql = "DELETE FROM shift_request_dates WHERE req_id = @id";
+                            string dlete_sql = "DELETE FROM shift_req_dates WHERE req_id = @id";
 
                             using (var dlete_cmd = new NpgsqlCommand(dlete_sql,conn))
                             {
@@ -105,7 +105,7 @@ namespace ShiftManagerApi2.Controllers
                                 dlete_cmd.ExecuteNonQuery();
 
                             }
-                            string insert_sql = "INSERT INTO shift_request_dates (req_id, date) VALUES (@req_id, @date)";
+                            string insert_sql = "INSERT INTO shift_req_dates (req_id, date) VALUES (@req_id, @date)";
                             using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
                             {
                                 foreach (var date in data.Dates)
