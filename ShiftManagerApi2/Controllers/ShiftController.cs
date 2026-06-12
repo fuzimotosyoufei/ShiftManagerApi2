@@ -86,7 +86,7 @@ namespace ShiftManagerApi2.Controllers
                                 a = "変更したよ";
 
                             }
-                            string update_sq = "SELECT memo FROM shift_submissions WHEREid = @id  ";
+                            string update_sq = "SELECT memo FROM shift_submissions WHERE id = @id  ";
                             using (var update_cmd = new NpgsqlCommand(update_sq, conn))
                             {
                                 update_cmd.Parameters.AddWithValue("@id", submiision_id);
