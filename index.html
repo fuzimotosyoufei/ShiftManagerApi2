@@ -125,11 +125,11 @@
     <div class="container">
         <div id="user-info">読み込み中...</div>
         <h2>📅 シフト希望休申請</h2>
-        <!-- <div id="palette-container">
+        <div id="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
             <button class="stamp-btn" data-mode="休み" onclick="selectstamp('休み')">休み</button>
-        </div> -->
+        </div>
         <div id="calendar"></div>
         <h2>備考欄</h2>
         <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
@@ -181,6 +181,20 @@
         let lineid = "";
         let userName = "ゲストユーザー";
         let calendar;
+        let selectstamps = "希望休";
+
+        // ここに内部の更新処理を書く
+        function selectstamp(mode) {
+            selectstamps = mode;
+
+            document.querySelectorAll('.stamp-btn').forEach(btn => {
+                //classList句を使うことでCSSの適応などができるようになる 
+                btn.classList.remove('active');
+            })
+            //event.targetで何が押されたかを指定できるonclickでどこの部分でボタンを押されているかを事前に聞いているから使える
+            event.target.classList.add('UN');
+
+        }
 
 
 
