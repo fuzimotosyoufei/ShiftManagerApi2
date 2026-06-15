@@ -196,6 +196,7 @@
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
                 method: 'GET',
                 headers: {
+
                     'ngrok-skip-browser-warning': 'true'
                 }
             })
@@ -219,22 +220,24 @@
                         card.className = 'shift-card';
 
                         const formattedDates = shift.dates.map(item => {
-                            // もしC#からオブジェクトのまま（{date: "..."}）で来るなら item.date、
-                            // ただの文字列（"..."）として来るなら item そのものを使います
-                            return typeof item === 'object' ? item.date : item;
+                            if (typeof item === 'object') {
+                                // C#のDateTime型は「2026-06-15T00:00:00」のように時間がくっついてくることがあるので、
+                                // .split('T')[0] を挟んで日付だけに整えてあげるとさらに見やすくなります！
+                                const cleanDate = item.date.split('T')[0];
+                                return `${cleanDate} (${item.mode})`; // 例：「2026-06-15 (休み)」
+                            }
+                            return item;
                         }).join('<br>');
 
                         card.innerHTML = `
-                        <div class="staff-name">👤 ${shift.name}</div>
-                        <div class="date-list">
-                            <strong>希望日：</strong><br>
-                            ${formattedDates}
-                        </div>
-                        <div class="text-name"> 備考欄</div>
-                        <div class="text-message">
-                            ${shift.memo}
-                        </div>
-                    `;
+                            <div class="staff-name">👤 ${shift.name} (${shift.year}年${shift.month}月分)</div>
+                            <div class="date-list">
+                                <strong>希望内容：</strong><br>
+                                ${formattedDates}
+                            </div>
+                            <div class="text-name">📝 備考欄</div>
+                            <div class="text-message">${shift.memo || '（なし）'}</div>
+                        `;
                         container.appendChild(card);
                     });
                 })
