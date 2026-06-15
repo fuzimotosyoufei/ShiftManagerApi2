@@ -48,6 +48,9 @@ namespace ShiftManagerApi2.Controllers
 
                     if (staff_id !=0)
                     {
+
+
+
                         a = "あるよ";
                         string req_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND year = @year AND month = @month";
                         using (var req_cmd = new NpgsqlCommand(req_sql, conn))
@@ -105,22 +108,21 @@ namespace ShiftManagerApi2.Controllers
                                 dlete_cmd.ExecuteNonQuery();
 
                             }
-                            string insert_sql = "INSERT INTO shift_req_dates (req_id, date) VALUES (@req_id, @date)";
+                            string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
                             using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
                             {
                                 foreach (var date in data.Dates)
                                 {
                                     insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
                                     insert_cmd.Parameters.AddWithValue("@req_id", req_id);
-                                    DateTime parsedDate = DateTime.Parse(date);
-                                    insert_cmd.Parameters.AddWithValue("@date", parsedDate);
+                                    //DateTime parsedDate = DateTime.Parse(date);
+                                    insert_cmd.Parameters.AddWithValue("@date", date.Date);
+                                    insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
                                     insert_cmd.ExecuteNonQuery();
                                 }
                                 a = "多分変更で来たよ";
                             }
-                            
 
-                             
 
                         }
                         else
@@ -129,10 +131,6 @@ namespace ShiftManagerApi2.Controllers
                                a = "追加する予定だよ";
                                 //登録したら削除せずにshift_datesに入れる処理を入れるよ
                         }
-
-                       
-                        
-
 
                     }
                     

@@ -2,6 +2,12 @@
 
 namespace ShiftManagerApi2
 {
+    public class ShiftDateItem
+    {
+        public DateTime Date { get; set; } 
+        public string Mode { get; set; } = string.Empty;
+    }
+    
 
     public class ShiftSubmission
     {
@@ -17,7 +23,7 @@ namespace ShiftManagerApi2
         public int Month { get; set; } 
 
         // 📅 選択された日付のリスト (sortedDates) を受け取る
-        public List<string> Dates { get; set; }
+        public List<ShiftDateItem> Dates { get; set; }
 
         
     }
