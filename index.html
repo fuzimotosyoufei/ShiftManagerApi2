@@ -128,7 +128,7 @@
         <div id="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
-            <button class="stamp-btn" data-mode="休み" onclick="selectstamp('休み')">休み</button>
+            <button class="stamp-btn UN" data-mode="休み" onclick="selectstamp('休み')">休み</button>
         </div>
         <div id="calendar"></div>
         <h2>備考欄</h2>
@@ -189,7 +189,7 @@
 
             document.querySelectorAll('.stamp-btn').forEach(btn => {
                 //classList句を使うことでCSSの適応などができるようになる 
-                btn.classList.remove('active');
+                btn.classList.remove('UN');
             })
             //event.targetで何が押されたかを指定できるonclickでどこの部分でボタンを押されているかを事前に聞いているから使える
             event.target.classList.add('UN');
