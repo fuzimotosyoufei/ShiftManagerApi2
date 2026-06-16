@@ -211,10 +211,13 @@
             { name: "佐藤", id: 2, currentMonthShifts: ["F", "D", "D", "E", "F", "D", "E" /* ...31日分 */] },
             { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
         ];
-
-        const tbody = document.getElementById('sss');
-        staffShifts.forEach(staff => {
-            const tr = document.createElement('tr')
+        document.addEventListener('DOMContentLoaded', function () {
+            const tbody = document.getElementById('sss');
+            tbody.innerHTML = ''; // 一度中身をクリア
+            staffShifts.forEach(staff => {
+                const tr = document.createElement('tr')
+                tbody.appendChild(tr)
+            });
             tbody.appendChild(tr)
         });
 
