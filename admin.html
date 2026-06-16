@@ -221,17 +221,24 @@
             tbody.innerHTML = ''; // 一度中身をクリア
 
             staffShifts.forEach(staff => {
-                const th = document.createElement('th')
+
                 const td = document.createElement('td')
                 const tr = document.createElement('tr')
 
-
-                tbody.appendChild(th);
                 tbody2.appendChild(tr);
                 tr.appendChild(td);
 
-                th.textContent = "h";
+
                 td.textContent = "だよ";
+
+
+            });
+
+            staffShifts.forEach(staff => {
+                const th = document.createElement('th')
+                tbody.appendChild(th);
+                th.textContent = "h";
+
 
 
             });
