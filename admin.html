@@ -212,9 +212,11 @@
             { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
         ];
 
-        staffShifts.forEach(staff =>
-            sss.document.createElement('tr')
-        );
+        const tbody = document.getElementById('sss');
+        staffShifts.forEach(staff => {
+            const tr = document.createElement('tr')
+            tbody.appendChild(tr)
+        });
 
 
         // 💡 画面を切り替えるためのJavaScriptスイッチ
