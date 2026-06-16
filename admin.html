@@ -220,21 +220,8 @@
             const tbody2 = document.getElementById('eeee');
             tbody.innerHTML = ''; // 一度中身をクリア
 
-            staffShifts.forEach(staff => {
 
-                const td = document.createElement('td')
-                const tr = document.createElement('tr')
-
-                tbody2.appendChild(tr);
-                tr.appendChild(td);
-
-
-                td.textContent = "だよ";
-
-
-            });
-
-            staffShifts.forEach(staff => {
+            staffShifts.forEach(staff => {//曜日の初期値作成
                 const th = document.createElement('th')
                 tbody.appendChild(th);
                 th.textContent = "h";
@@ -242,6 +229,28 @@
 
 
             });
+            staffShifts.forEach(staff => {//初期値がいる名前追加
+
+                const td = document.createElement('td')
+                const tr = document.createElement('tr')
+
+                tbody2.appendChild(tr);
+                tr.appendChild(td);
+                td.textContent = "だよ";
+                const count = tbody.childElementCount;
+                for (let i = 0; i < count; i + 1) {
+                    const shiftTd = document.createElement('td');
+
+                    shiftTd.textContent = "希望";
+                    tr.appendChild(shiftTd);
+
+                }
+
+
+
+            });
+
+
             // tbody.appendChild(tr)
         });
 
