@@ -182,6 +182,7 @@
 
 
                 <table class="design01">
+
                     <tr id="sss">
                         <th>名前</th>
 
@@ -215,9 +216,9 @@
             const tbody = document.getElementById('sss');
             tbody.innerHTML = ''; // 一度中身をクリア
             staffShifts.forEach(staff => {
-                const tr = document.createElement('tr')
-                tbody.appendChild(tr)
-                tbody.appendChild(tr)
+                const th = document.createElement('th')
+                tbody.appendChild(th)
+
             });
             tbody.appendChild(tr)
         });
