@@ -187,10 +187,7 @@
                         <th>名前</th>
 
                     </tr>
-                    <tr id="ssss">
-                        <td>名前</td>
 
-                    </tr>
 
 
                 </table>
@@ -212,30 +209,30 @@
     <script>
 
 
-        // const staffShifts = [
-        //     { name: "藤本", id: 1, currentMonthShifts: ["D", "D", "E", "E", "F", "F", "D" /* ...31日分 */] },
-        //     { name: "佐藤", id: 2, currentMonthShifts: ["F", "D", "D", "E", "F", "D", "E" /* ...31日分 */] },
-        //     { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
-        // ];
-        // document.addEventListener('DOMContentLoaded', function () {
+        const staffShifts = [
+            { name: "藤本", id: 1, currentMonthShifts: ["D", "D", "E", "E", "F", "F", "D" /* ...31日分 */] },
+            { name: "佐藤", id: 2, currentMonthShifts: ["F", "D", "D", "E", "F", "D", "E" /* ...31日分 */] },
+            { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
+        ];
+        document.addEventListener('DOMContentLoaded', function () {
 
-        //     const tbody = document.getElementById('sss');
-        //     const tbody2 = document.getElementById('eeee');
-        //     tbody.innerHTML = ''; // 一度中身をクリア
+            const tbody = document.getElementById('sss');
+            const tbody2 = document.getElementById('eeee');
+            tbody.innerHTML = ''; // 一度中身をクリア
 
-        //     staffShifts.forEach(staff => {
-        //         const th = document.createElement('th')
-        //         const td = document.createElement('td')
-        //         th.textContent = "h";
-        //         td.textContent = "だよ";
-        //         tbody.appendChild(th);
-        //         tbody.appendChild(td);
+            staffShifts.forEach(staff => {
+                const th = document.createElement('th')
+                const td = document.createElement('td')
+                th.textContent = "h";
+                td.textContent = "だよ";
+                tbody.appendChild(th);
+                tbody2.appendChild(td);
 
 
 
-        //     });
-        //     // tbody.appendChild(tr)
-        // });
+            });
+            // tbody.appendChild(tr)
+        });
 
 
         // 💡 画面を切り替えるためのJavaScriptスイッチ
