@@ -214,46 +214,46 @@
             { name: "佐藤", id: 2, currentMonthShifts: ["F", "D", "D", "E", "F", "D", "E" /* ...31日分 */] },
             { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
         ];
-        // document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-        //     const tbody = document.getElementById('sss');
-        //     const tbody2 = document.getElementById('eeee');
-        //     tbody.innerHTML = ''; // 一度中身をクリア
-
-
-        //     staffShifts.forEach(staff => {//曜日の初期値作成
-        //         const th = document.createElement('th')
-        //         tbody.appendChild(th);
-        //         th.textContent = "h";
+            const tbody = document.getElementById('sss');
+            const tbody2 = document.getElementById('eeee');
+            tbody.innerHTML = ''; // 一度中身をクリア
 
 
-
-        //     });
-        // staffShifts.forEach(staff => {//初期値がいる名前追加
-
-        //     const td = document.createElement('td')
-        //     const tr = document.createElement('tr')
-
-        //     tbody2.appendChild(tr);
-        //     tr.appendChild(td);
-        //     td.textContent = "だよ";
-        //     // const count = tbody.childElementCount;
-        //     // const count = 1;
-        //     // for (let i = 0; i < count; i + 1) {
-        //     //     const shiftTd = document.createElement('td');
-
-        //     //     shiftTd.textContent = "希望";
-        //     //     tr.appendChild(shiftTd);
-
-        //     // }
+            staffShifts.forEach(staff => {//曜日の初期値作成
+                const th = document.createElement('th')
+                tbody.appendChild(th);
+                th.textContent = "h";
 
 
 
-        // });
+            });
+            staffShifts.forEach(staff => {//初期値がいる名前追加
+
+                const td = document.createElement('td')
+                const tr = document.createElement('tr')
+
+                tbody2.appendChild(tr);
+                tr.appendChild(td);
+                td.textContent = "だよ";
+                // const count = tbody.childElementCount;
+                // const count = 1;
+                // for (let i = 0; i < count; i + 1) {
+                //     const shiftTd = document.createElement('td');
+
+                //     shiftTd.textContent = "希望";
+                //     tr.appendChild(shiftTd);
+
+                // }
 
 
-        // tbody.appendChild(tr)
-        // });
+
+            });
+
+
+            // tbody.appendChild(tr)
+        });
 
 
         // 💡 画面を切り替えるためのJavaScriptスイッチ
