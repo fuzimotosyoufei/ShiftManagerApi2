@@ -210,10 +210,43 @@
 
 
         const staffShifts = [
-            { name: "藤本", id: 1, currentMonthShifts: ["D", "D", "E", "E", "F", "F", "D" /* ...31日分 */] },
-            { name: "佐藤", id: 2, currentMonthShifts: ["F", "D", "D", "E", "F", "D", "E" /* ...31日分 */] },
-            { name: "田中", id: 3, currentMonthShifts: ["D", "F", "F", "D", "D", "F", "F" /* ...31日分 */] }
+            {
+                id: 1,
+                name: "藤本",
+                currentMonthShifts: [
+                    { date: "2026-06-01", mode: "D" }, // 6月1日：日勤
+                    { date: "2026-06-02", mode: "D" }, // 6月2日：日勤
+                    { date: "2026-06-03", mode: "E" }  // 6月3日：遅番
+                    // ...30日分続く
+                ]
+            },
+            {
+                id: 2,
+                name: "佐藤",
+                currentMonthShifts: [
+                    { date: "2026-06-01", mode: "F" }, // 6月1日：休み
+                    { date: "2026-06-02", mode: "D" }, // 6月2日：日勤
+                    { date: "2026-06-03", mode: "D" }  // 6月3日：日勤
+                ]
+            },
+            {
+                id: 3,
+                name: "田中",
+                currentMonthShifts: [
+                    { date: "2026-06-01", mode: "D" }, // 6月1日：日勤
+                    { date: "2026-06-02", mode: "F" }, // 6月2日：休み
+                    { date: "2026-06-03", mode: "F" }  // 6月3日：休み
+                ]
+            }
         ];
+        const shiftLookup = {};
+        const tanaka = staffShifts.find(staff => staff.id === 3);
+
+        tanaka.currentMonthShifts.forEach(shift => {
+            shiftLookup[shift.date] = shift.mode;
+        });
+
+
         document.addEventListener('DOMContentLoaded', function () {
 
             const tbody = document.getElementById('sss');
@@ -245,7 +278,10 @@
 
                 for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
                     const shiftTd = document.createElement('td');
-                    shiftTd.textContent = "希望";
+                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+
+                    const yer = staffShifts[dateStr] || "希望";
+                    shiftTd.textContent = yer;
                     tr.appendChild(shiftTd);
                 }
 
