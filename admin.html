@@ -239,7 +239,10 @@
                 td.textContent = "だよ";
                 const count = tbody.childElementCount;
 
-                for (let i = 0; i < count; i++) {
+
+                const days = new Date(2026, 6, 0).getDate();
+
+                for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
                     const shiftTd = document.createElement('td');
                     shiftTd.textContent = "希望";
                     tr.appendChild(shiftTd);
