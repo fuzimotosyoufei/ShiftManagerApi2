@@ -224,18 +224,18 @@
             const days = new Date(2026, 6, 0).getDate();
 
             for (let i = 1; i <= days; i++) {
-                // const th = document.createElement('th')
-                // tbody.appendChild(th);
-                // th.textContent = i;
-            }
-            staffShifts.forEach(staff => {//曜日の初期値作成
                 const th = document.createElement('th')
                 tbody.appendChild(th);
-                th.textContent = "h";
+                th.textContent = i;
+            }
+            // staffShifts.forEach(staff => {//曜日の初期値作成
+            //     const th = document.createElement('th')
+            //     tbody.appendChild(th);
+            //     th.textContent = "h";
 
 
 
-            });
+            // });
             staffShifts.forEach(staff => {//初期値がいる名前追加
 
                 const td = document.createElement('td')
