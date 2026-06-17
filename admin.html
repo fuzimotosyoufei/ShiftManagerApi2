@@ -237,14 +237,12 @@
                 tbody2.appendChild(tr);
                 tr.appendChild(td);
                 td.textContent = "だよ";
-                // const count = tbody.childElementCount;
-                const count = 1;
-                for (var i = 0; i < 2; i++) {
-                    // const shiftTd = document.createElement('td');
-
-                    // shiftTd.textContent = "希望";
-                    // tr.appendChild(shiftTd);
-
+                const count = tbody.childElementCount;
+                // const count = 1;
+                for (let i = 0; i < count - 1; i++) {
+                    const shiftTd = document.createElement('td');
+                    shiftTd.textContent = "希望";
+                    tr.appendChild(shiftTd);
                 }
 
 
