@@ -284,8 +284,9 @@
                     const shiftTd = document.createElement('td');
                     const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
                     const yer = shiftLookup[dateStr] || "希望";
-                    shiftTd.textContent = yer;
+
                     tr.appendChild(shiftTd);
+                    shiftTd.textContent = yer;
                 }
 
 
