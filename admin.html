@@ -277,16 +277,16 @@
 
 
                 for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
-                    // const shiftTd = document.createElement('td');
-                    // shiftTd.textContent = "希望";
-                    // tr.appendChild(shiftTd);
-
                     const shiftTd = document.createElement('td');
-                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-                    const yer = shiftLookup[dateStr] || "希望";
-
+                    shiftTd.textContent = "希望";
                     tr.appendChild(shiftTd);
-                    shiftTd.textContent = yer;
+
+                    // const shiftTd = document.createElement('td');
+                    // const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+                    // const yer = shiftLookup[dateStr] || "希望";
+
+                    // tr.appendChild(shiftTd);
+                    // shiftTd.textContent = yer;
                 }
 
 
