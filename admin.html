@@ -221,36 +221,43 @@
             tbody.innerHTML = ''; // 一度中身をクリア
 
 
-            staffShifts.forEach(staff => {//曜日の初期値作成
+            const days = new Date(2026, 6, 0).getDate();
+
+            for (let i = 1; i <= days; i++) {
                 const th = document.createElement('th')
                 tbody.appendChild(th);
-                th.textContent = "h";
+                th.textContent = i;
+            }
+            // staffShifts.forEach(staff => {//曜日の初期値作成
+            //     const th = document.createElement('th')
+            //     tbody.appendChild(th);
+            //     th.textContent = "h";
 
 
 
-            });
-            staffShifts.forEach(staff => {//初期値がいる名前追加
+        });
+        staffShifts.forEach(staff => {//初期値がいる名前追加
 
-                const td = document.createElement('td')
-                const tr = document.createElement('tr')
+            const td = document.createElement('td')
+            const tr = document.createElement('tr')
 
-                tbody2.appendChild(tr);
-                tr.appendChild(td);
-                td.textContent = "だよ";
-                const count = tbody.childElementCount;
-
-
-                const days = new Date(2026, 6, 0).getDate();
-
-                for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
-                    const shiftTd = document.createElement('td');
-                    shiftTd.textContent = "希望";
-                    tr.appendChild(shiftTd);
-                }
+            tbody2.appendChild(tr);
+            tr.appendChild(td);
+            td.textContent = "だよ";
+            const count = tbody.childElementCount;
 
 
 
-            });
+
+            for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
+                const shiftTd = document.createElement('td');
+                shiftTd.textContent = "希望";
+                tr.appendChild(shiftTd);
+            }
+
+
+
+        });
 
 
             // tbody.appendChild(tr)
