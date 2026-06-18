@@ -214,9 +214,9 @@
                 id: 1,
                 name: "藤本",
                 currentMonthShifts: [
-                    { date: "2026-06-01", mode: "D" }, // 6月1日：日勤
-                    { date: "2026-06-02", mode: "D" }, // 6月2日：日勤
-                    { date: "2026-06-03", mode: "E" }  // 6月3日：遅番
+                    { date: "2026-06-01", mode: "日勤" }, // 6月1日：日勤
+                    { date: "2026-06-06", mode: "遅番" }, // 6月2日：日勤
+                    { date: "2026-06-09", mode: "休み" }  // 6月3日：遅番
                     // ...30日分続く
                 ]
             },
@@ -224,18 +224,18 @@
                 id: 2,
                 name: "佐藤",
                 currentMonthShifts: [
-                    { date: "2026-06-01", mode: "F" }, // 6月1日：休み
-                    { date: "2026-06-02", mode: "D" }, // 6月2日：日勤
-                    { date: "2026-06-03", mode: "D" }  // 6月3日：日勤
+                    { date: "2026-06-04", mode: "休み" }, // 6月1日：休み
+                    { date: "2026-06-16", mode: "休み" }, // 6月2日：日勤
+                    { date: "2026-06-20", mode: "遅番" }  // 6月3日：日勤
                 ]
             },
             {
                 id: 3,
                 name: "田中",
                 currentMonthShifts: [
-                    { date: "2026-06-01", mode: "D" }, // 6月1日：日勤
-                    { date: "2026-06-02", mode: "F" }, // 6月2日：休み
-                    { date: "2026-06-03", mode: "F" }  // 6月3日：休み
+                    { date: "2026-06-09", mode: "日勤" }, // 6月1日：日勤
+                    { date: "2026-06-29", mode: "休み" }, // 6月2日：休み
+                    { date: "2026-06-31", mode: "遅番" }  // 6月3日：休み
                 ]
             }
         ];
@@ -267,7 +267,7 @@
                 td.textContent = staff.name;
 
                 const shiftLookup = {};
-                staff.currentMonthShifts.forEach(shift => {
+                staff.currentMonthShifts.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
                     shiftLookup[shift.date] = shift.mode;
                 });
 
@@ -287,7 +287,7 @@
 
                     const shiftTd = document.createElement('td');
                     const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-                    const yer = shiftLookup[dateStr] || "希望";
+                    const yer = shiftLookup[dateStr] || "";
                     shiftTd.textContent = yer;
                     tr.appendChild(shiftTd);
 
