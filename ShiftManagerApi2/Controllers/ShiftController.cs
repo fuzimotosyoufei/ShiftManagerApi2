@@ -34,20 +34,7 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                    //string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
-                    //using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
-                    //{
-                    //      staff_cmd.Parameters.AddWithValue("@lineID", data.id);
-
-                    //      var c = staff_cmd.ExecuteScalar();
-
-                    //   if (c != null && c != DBNull.Value)
-                    //   {
-                    //       staff_id = Convert.ToInt32(c);
-                    //   }
-                    //}
                     staff_id = GetID(data.id);
-
 
                     if (staff_id !=0)
                     {
@@ -165,22 +152,23 @@ namespace ShiftManagerApi2.Controllers
 
           }
 
-        public int? GetID(string GetLineId)
+        //メゾットをpublicにしたら外部に公開するメゾットだとプログラムが勘違いするからprivateにしてこのプログラムでしか使わないprivateにしなくてはいけない
+        private int? GetID(string lineId)
         {
             using (var conn = _db.CreateConnection())
             {
                 string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
                 using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
                 {
-                    staff_cmd.Parameters.AddWithValue("@lineID", GetLineId);
+                    staff_cmd.Parameters.AddWithValue("@lineID", lineId);
 
                     
-                     var LineId = staff_cmd.ExecuteScalar();
-                     if(LineId == null || LineId == DBNull.Value)
+                     var result = staff_cmd.ExecuteScalar();
+                     if(result == null || result == DBNull.Value)
                     {
                         return null;
                     }
-                    return Convert.ToInt32(LineId);
+                    return Convert.ToInt32(result);
                 }
                 
             }
