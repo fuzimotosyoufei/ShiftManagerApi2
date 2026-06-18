@@ -16,7 +16,7 @@
         .wrapper {
             display: flex;
             width: 100%;
-            max-width: 1200px;
+            /* max-width: 1200px; */
             /* パソコンで見やすいサイズ */
             margin: 0 auto;
             /* 画面の真ん中に寄せる */
@@ -27,9 +27,10 @@
            3. サイドバー（左側のリモコン領域）
         =========================================== */
         .plbutton-main {
-            width: 220px;
+            width: 30%;
             padding: 15px;
             background-color: #2c3e50;
+            max-width: 230px;
             /* 格好いい濃いネイビー */
             display: flex;
             flex-direction: column;
@@ -70,7 +71,7 @@
         =========================================== */
         .main-content {
             flex: 1;
-            /* ⭕️ width: 100pxは消去！残り幅を自動で使い切る */
+
             margin: 20px;
             padding: 20px;
             background: white;
@@ -143,6 +144,25 @@
             box-sizing: border-box;
             text-align: left;
         }
+
+        .design01 {
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+            /* 重なる線を１ピクセルで表示するために使用 */
+            border-spacing: 0;
+        }
+
+        .design01 th {
+            padding: 10px;
+            background: #e9faf9;
+            border: solid 1px #778ca3;
+        }
+
+        .design01 td {
+            padding: 10px;
+            border: solid 1px #006fe6;
+        }
     </style>
 </head>
 
@@ -159,6 +179,20 @@
 
             <div id="page-check" class="content-check">
                 <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')">データを全削除</button>
+
+
+                <table id="eeee" class="design01">
+
+                    <tr id="sss">
+                        <th>名前</th>
+
+                    </tr>
+
+
+
+                </table>
+
+
                 <h1>📥 受信したシフト希望一覧（管理画面）</h1>
                 <div id="admin-history-container"></div>
             </div>
@@ -173,6 +207,101 @@
     </div>
 
     <script>
+
+
+        const staffShifts = [
+            {
+                id: 1,
+                name: "藤本",
+                currentMonthShifts: [
+                    { date: "2026-06-01", mode: "日勤" }, // 6月1日：日勤
+                    { date: "2026-06-06", mode: "遅番" }, // 6月2日：日勤
+                    { date: "2026-06-09", mode: "休み" }  // 6月3日：遅番
+                    // ...30日分続く
+                ]
+            },
+            {
+                id: 2,
+                name: "佐藤",
+                currentMonthShifts: [
+                    { date: "2026-06-04", mode: "休み" }, // 6月1日：休み
+                    { date: "2026-06-16", mode: "休み" }, // 6月2日：日勤
+                    { date: "2026-06-20", mode: "遅番" }  // 6月3日：日勤
+                ]
+            },
+            {
+                id: 3,
+                name: "田中",
+                currentMonthShifts: [
+                    { date: "2026-06-09", mode: "日勤" }, // 6月1日：日勤
+                    { date: "2026-06-29", mode: "休み" }, // 6月2日：休み
+                    { date: "2026-06-31", mode: "遅番" }  // 6月3日：休み
+                ]
+            }
+        ];
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const tbody = document.getElementById('sss');
+            const tbody2 = document.getElementById('eeee');
+            tbody.innerHTML = ''; // 一度中身をクリア
+
+
+            const days = new Date(2026, 6, 0).getDate();
+
+            for (let i = 1; i <= days; i++) {
+                const th = document.createElement('th')
+                tbody.appendChild(th);
+                th.textContent = i;
+            }
+
+
+            staffShifts.forEach(staff => {//初期値がいる名前追加
+
+                const td = document.createElement('td')
+                const tr = document.createElement('tr')
+                td.textContent = staff.name;
+
+                const shiftLookup = {};
+                staff.currentMonthShifts.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+                    shiftLookup[shift.date] = shift.mode;
+                });
+
+                tbody2.appendChild(tr);
+                tr.appendChild(td);
+
+
+                const count = tbody.childElementCount;
+
+
+
+
+                for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
+                    // const shiftTd = document.createElement('td');
+                    // shiftTd.textContent = "希望";
+                    // tr.appendChild(shiftTd);
+
+                    const shiftTd = document.createElement('td');
+                    const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+                    const yer = shiftLookup[dateStr] || "";
+                    shiftTd.textContent = yer;
+                    tr.appendChild(shiftTd);
+
+                }
+
+
+
+            });
+
+
+            // tbody.appendChild(tr)
+        });
+
+
         // 💡 画面を切り替えるためのJavaScriptスイッチ
         function switchPage(pageName) {
             const checkPage = document.getElementById('page-check');
@@ -196,6 +325,7 @@
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
                 method: 'GET',
                 headers: {
+
                     'ngrok-skip-browser-warning': 'true'
                 }
             })
@@ -219,22 +349,24 @@
                         card.className = 'shift-card';
 
                         const formattedDates = shift.dates.map(item => {
-                            // もしC#からオブジェクトのまま（{date: "..."}）で来るなら item.date、
-                            // ただの文字列（"..."）として来るなら item そのものを使います
-                            return typeof item === 'object' ? item.date : item;
+                            if (typeof item === 'object') {
+                                // C#のDateTime型は「2026-06-15T00:00:00」のように時間がくっついてくることがあるので、
+                                // .split('T')[0] を挟んで日付だけに整えてあげるとさらに見やすくなります！
+                                const cleanDate = item.date.split('T')[0];
+                                return `${cleanDate} (${item.mode})`; // 例：「2026-06-15 (休み)」
+                            }
+                            return item;
                         }).join('<br>');
 
                         card.innerHTML = `
-                        <div class="staff-name">👤 ${shift.name}</div>
-                        <div class="date-list">
-                            <strong>希望日：</strong><br>
-                            ${formattedDates}
-                        </div>
-                        <div class="text-name"> 備考欄</div>
-                        <div class="text-message">
-                            ${shift.memo}
-                        </div>
-                    `;
+                            <div class="staff-name">👤 ${shift.name} (${shift.year}年${shift.month}月分)</div>
+                            <div class="date-list">
+                                <strong>希望内容：</strong><br>
+                                ${formattedDates}
+                            </div>
+                            <div class="text-name">📝 備考欄</div>
+                            <div class="text-message">${shift.memo || '（なし）'}</div>
+                        `;
                         container.appendChild(card);
                     });
                 })
