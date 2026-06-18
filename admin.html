@@ -239,12 +239,9 @@
                 ]
             }
         ];
-        const shiftLookup = {};
-        const tanaka = staffShifts.find(staff => staff.id === 3);
 
-        tanaka.currentMonthShifts.forEach(shift => {
-            shiftLookup[shift.date] = shift.mode;
-        });
+
+
 
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -267,9 +264,12 @@
 
                 const td = document.createElement('td')
                 const tr = document.createElement('tr')
-
-
                 td.textContent = staff.name;
+
+                const shiftLookup = {};
+                staff.currentMonthShifts.forEach(shift => {
+                    shiftLookup[staff.date] = staff.mode;
+                });
 
                 tbody2.appendChild(tr);
                 tr.appendChild(td);
