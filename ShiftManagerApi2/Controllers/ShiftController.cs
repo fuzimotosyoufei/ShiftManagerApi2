@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Npgsql;
+using System.Collections.Generic;
 using System.Security.Cryptography;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ShiftManagerApi2.Controllers
 {
     [ApiController]
@@ -21,7 +22,7 @@ namespace ShiftManagerApi2.Controllers
         public IActionResult SubmitShift([FromBody] ShiftSubmission data)//IActionResultは判定結果を返す、FromBodyは送られてきたデータを自動的にShiftSbmissonがたにしてdataに入れる役割になっている。
         {
             string a = "d";//確かめるよう
-            int staff_id = 0;//スタッフIDの使いまわしのため
+            int? staff_id = 0;//スタッフIDの使いまわしのため
             int req_id = 0;
 
             if (data == null || string.IsNullOrEmpty(data.Name))
@@ -33,18 +34,20 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                     string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
-                     using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
-                     {
-                           staff_cmd.Parameters.AddWithValue("@lineID", data.id);
+                    //string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                    //using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
+                    //{
+                    //      staff_cmd.Parameters.AddWithValue("@lineID", data.id);
 
-                           var c = staff_cmd.ExecuteScalar();
+                    //      var c = staff_cmd.ExecuteScalar();
 
-                        if (c != null && c != DBNull.Value)
-                        {
-                            staff_id = Convert.ToInt32(c);
-                        }
-                     }
+                    //   if (c != null && c != DBNull.Value)
+                    //   {
+                    //       staff_id = Convert.ToInt32(c);
+                    //   }
+                    //}
+                    staff_id = GetID(data.id);
+
 
                     if (staff_id !=0)
                     {
@@ -147,6 +150,8 @@ namespace ShiftManagerApi2.Controllers
             }
 
 
+            
+
             catch (NpgsqlException ex)
             {
                 return BadRequest(new { message = "データが正しく送信されませんでした。{a}" });
@@ -159,6 +164,27 @@ namespace ShiftManagerApi2.Controllers
 
 
           }
+
+        public int? GetID(string GetLineId)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
+                {
+                    staff_cmd.Parameters.AddWithValue("@lineID", GetLineId);
+
+                    
+                     var LineId = staff_cmd.ExecuteScalar();
+                     if(LineId == null || LineId == DBNull.Value)
+                    {
+                        return null;
+                    }
+                    return Convert.ToInt32(LineId);
+                }
+                
+            }
+        }
 
      
 
