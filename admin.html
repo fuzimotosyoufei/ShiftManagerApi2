@@ -268,7 +268,7 @@
 
                 const shiftLookup = {};
                 staff.currentMonthShifts.forEach(shift => {
-                    shiftLookup[staff.date] = staff.mode;
+                    shiftLookup[shift.date] = shift.mode;
                 });
 
                 tbody2.appendChild(tr);
