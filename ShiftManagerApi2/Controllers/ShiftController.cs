@@ -35,109 +35,111 @@ namespace ShiftManagerApi2.Controllers
                 using (var conn = _db.CreateConnection())
                 {
                     staff_id = GetID(data.id);
+                    req_id = GetReqID(staff_id ?? 0, data.Year, data.Month) ?? 0; //??idがnullのときは0を入れるようにしている、最後の??は結果がnullなら0を入れる処理。
+                                                                                  //if (staff_id !=0)
+                                                                                  //{
 
-                    if (staff_id !=0)
+
+
+                    //    a = "あるよ";
+                    //    string req_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND year = @year AND month = @month";
+                    //    using (var req_cmd = new NpgsqlCommand(req_sql, conn))
+                    //    {
+
+                    //        req_cmd.Parameters.AddWithValue("@staff_id",staff_id);
+                    //        req_cmd.Parameters.AddWithValue("@year",data.Year);
+                    //        req_cmd.Parameters.AddWithValue("@month",data.Month);
+                    //        var req_DB = req_cmd.ExecuteScalar();
+
+                    //        if(req_DB != null)//submiisionの提出日と備考欄の更新処理
+                    //        {
+                    //            req_id = Convert.ToInt32(req_DB);
+                    //            a = "登録してたよ";
+
+
+
+                    //        }
+                    //        //submiisionIDの作成
+                    //        else
+                    //        {
+                    //            a = "まだ登録してないよ";
+                    //        }
+
+
+
+
+                    if (req_id != 0)//提出日と備考欄の更新処理
                     {
-
-
-
-                        a = "あるよ";
-                        string req_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND year = @year AND month = @month";
-                        using (var req_cmd = new NpgsqlCommand(req_sql, conn))
+                        string update_sql = "UPDATE shift_reqs SET memo = @memo, created_at = NOW() WHERE id = @id";
+                        using (var update_cmd = new NpgsqlCommand(update_sql, conn))
                         {
+                            update_cmd.Parameters.AddWithValue("@memo", data.Memo);
+                            update_cmd.Parameters.AddWithValue("@id", req_id);
 
-                            req_cmd.Parameters.AddWithValue("@staff_id",staff_id);
-                            req_cmd.Parameters.AddWithValue("@year",data.Year);
-                            req_cmd.Parameters.AddWithValue("@month",data.Month);
-                            var req_DB = req_cmd.ExecuteScalar();
-
-                            if(req_DB != null)//submiisionの提出日と備考欄の更新処理
-                            {
-                                req_id = Convert.ToInt32(req_DB);
-                                a = "登録してたよ";
-
-
-
-                            }
-                            //submiisionIDの作成
-                            else
-                            {
-                                a = "まだ登録してないよ";
-                            }
-
-
+                            update_cmd.ExecuteNonQuery();
+                            a = "変更したよ";
 
                         }
-                        if(req_id != 0)//提出日と備考欄の更新処理
+                        string update_sq = "SELECT memo FROM shift_reqs WHERE id = @id";
+                        using (var update_cmd = new NpgsqlCommand(update_sq, conn))
                         {
-                            string update_sql = "UPDATE shift_reqs SET memo = @memo, created_at = NOW() WHERE id = @id";
-                            using (var update_cmd = new NpgsqlCommand(update_sql, conn))
-                            {
-                                update_cmd.Parameters.AddWithValue("@memo", data.Memo);
-                                update_cmd.Parameters.AddWithValue("@id",req_id);
+                            update_cmd.Parameters.AddWithValue("@id", req_id);
+                            var req_DB = update_cmd.ExecuteScalar();
 
-                                update_cmd.ExecuteNonQuery();
-                                a = "変更したよ";
-
-                            }
-                            string update_sq = "SELECT memo FROM shift_reqs WHERE id = @id";
-                            using (var update_cmd = new NpgsqlCommand(update_sq, conn))
-                            {
-                                update_cmd.Parameters.AddWithValue("@id", req_id);
-                                var req_DB = update_cmd.ExecuteScalar();
-
-                                string req_text = Convert.ToString(req_DB);
-                                a = "変更したよ"+ req_text;
-
-                            }
-                            string dlete_sql = "DELETE FROM shift_req_dates WHERE req_id = @id";
-
-                            using (var dlete_cmd = new NpgsqlCommand(dlete_sql,conn))
-                            {
-                                dlete_cmd.Parameters.AddWithValue("@id", req_id);
-                                dlete_cmd.ExecuteNonQuery();
-
-                            }
-                            string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
-                            using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
-                            {
-                                foreach (var date in data.Dates)
-                                {
-                                    insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
-                                    insert_cmd.Parameters.AddWithValue("@req_id", req_id);
-                                    //DateTime parsedDate = DateTime.Parse(date);
-                                    insert_cmd.Parameters.AddWithValue("@date", date.Date);
-                                    insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
-                                    insert_cmd.ExecuteNonQuery();
-                                }
-                                a = "多分変更で来たよ";
-                            }
-
+                            string req_text = Convert.ToString(req_DB);
+                            a = "変更したよ" + req_text;
 
                         }
-                        else
+                        string dlete_sql = "DELETE FROM shift_req_dates WHERE req_id = @id";
+
+                        using (var dlete_cmd = new NpgsqlCommand(dlete_sql, conn))
                         {
-                            ///ここに登録処理を入れる
-                               a = "追加する予定だよ";
-                                //登録したら削除せずにshift_datesに入れる処理を入れるよ
+                            dlete_cmd.Parameters.AddWithValue("@id", req_id);
+                            dlete_cmd.ExecuteNonQuery();
+
                         }
+                        string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
+                        using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+                        {
+                            foreach (var date in data.Dates)
+                            {
+                                insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
+                                insert_cmd.Parameters.AddWithValue("@req_id", req_id);
+                                //DateTime parsedDate = DateTime.Parse(date);
+                                insert_cmd.Parameters.AddWithValue("@date", date.Date);
+                                insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
+                                insert_cmd.ExecuteNonQuery();
+                            }
+                            a = "多分変更で来たよ";
+                        }
+
 
                     }
-                    
-                    ///3ラインのIDがないので登録処理に促す
                     else
                     {
-                        a = "ないよ登録処理をしてね";
+                        ///ここに登録処理を入れる
+                        a = "追加する予定だよ";
+                        //登録したら削除せずにshift_datesに入れる処理を入れるよ
                     }
-                   
                 }
-
-            
-
             }
 
+            //}
 
-            
+            ///3ラインのIDがないので登録処理に促す
+            //else
+            //{
+            //    a = "ないよ登録処理をしてね";
+            //}
+
+            //}
+
+
+
+
+
+
+
 
             catch (NpgsqlException ex)
             {
@@ -152,25 +154,45 @@ namespace ShiftManagerApi2.Controllers
 
           }
 
-        //メゾットをpublicにしたら外部に公開するメゾットだとプログラムが勘違いするからprivateにしてこのプログラムでしか使わないprivateにしなくてはいけない
-        private int? GetID(string lineId)
+        //コントローラーにメゾットをpublicにしたら外部に公開するメゾットだとプログラムが勘違いするからprivateにしてこのプログラムでしか使わないprivateにしなくてはいけない  [NonAction]とかしたらいいかも
+        private int? GetID(string line_id)
         {
             using (var conn = _db.CreateConnection())
             {
-                string staff_sql = "SELECT id FROM staff WHERE line_id = @lineID";
+                string staff_sql = "SELECT id FROM staff WHERE line_id = @lineid";
                 using (var staff_cmd = new NpgsqlCommand(staff_sql, conn))
                 {
-                    staff_cmd.Parameters.AddWithValue("@lineID", lineId);
+                    staff_cmd.Parameters.AddWithValue("@lineid", line_id);
 
-                    
-                     var result = staff_cmd.ExecuteScalar();
-                     if(result == null || result == DBNull.Value)
+                    var result = staff_cmd.ExecuteScalar();
+                    if(result == null || result == DBNull.Value)
                     {
                         return null;
                     }
                     return Convert.ToInt32(result);
                 }
+
                 
+            }
+        }
+        private int? GetReqID(int staff_id ,int year, int month)
+        {
+            using(var conn = _db.CreateConnection())
+            {
+                string reqs_sql = "SELECT id FROM shift_reqs WHERE staff_id=@staff_id AND year=@year AND month=@month";
+                using (var reqs_cmd = new NpgsqlCommand(reqs_sql,conn))
+                {
+                   reqs_cmd.Parameters.AddWithValue("@staff_id", staff_id);
+                   reqs_cmd.Parameters.AddWithValue("@year", year);   
+                   reqs_cmd.Parameters.AddWithValue("@month", month);
+    
+                      var result = reqs_cmd.ExecuteScalar();
+                      if(result == null || result == DBNull.Value)
+                      {
+                            return null;
+                      }
+                      return Convert.ToInt32(result);
+                }
             }
         }
 
