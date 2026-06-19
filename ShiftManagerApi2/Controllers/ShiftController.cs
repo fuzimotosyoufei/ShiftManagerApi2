@@ -80,13 +80,11 @@ namespace ShiftManagerApi2.Controllers
                     var result = staff_cmd.ExecuteScalar();
                     if(result == null || result == DBNull.Value)
                     {
-                        
                         return InsertLineId(line_id);
                     }
                     return Convert.ToInt32(result);
                 }
 
-                
             }
         }
         private int? GetReqID(int staff_id ,int year, int month)
@@ -103,9 +101,8 @@ namespace ShiftManagerApi2.Controllers
                       var result = reqs_cmd.ExecuteScalar();
                       if(result == null || result == DBNull.Value)
                       {
-                            
-                            return null;//reqs_idの登録処理に行く
-                    }
+                         return null;//reqs_idの登録処理に行く
+                    　}
                       return Convert.ToInt32(result);
                 }
             }
@@ -153,7 +150,7 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string insert_sql = "INSERT INTO staff (staff_name,line_id,role,position) VALUES ('なすび',@line_id'介護スタッフ','パート')";//選ばせる画面に遷移するようにする
+                string insert_sql = "INSERT INTO staff(staff_name,line_id,role,position) VALUES ('なすび',@line_id,'介護スタッフ','パート')";//選ばせる画面に遷移するようにする
                 using (var insert_cmd = new NpgsqlCommand(insert_sql,conn))
                 {
                     insert_cmd.Parameters.AddWithValue("@line_id", line_id);
