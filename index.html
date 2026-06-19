@@ -181,7 +181,7 @@
         let lineid = "";
         let userName = "ゲストユーザー";
         let calendar;
-        let selectstamps = "希望休";
+        let selectstamps = "休み";
 
         // ここに内部の更新処理を書く
         function selectstamp(mode) {
@@ -250,6 +250,13 @@
                             info.dayEl.style.backgroundColor = '#ffffff';
                         } else {
                             selectedDates[existsindex].mode = selectstamps;
+                            if (selectstamps = "休み") {
+                                info.dayEl.style.backgroundColor = '#a01616';
+                            } else if (selectstamps = "日勤") {
+                                info.dayEl.style.backgroundColor = '#06C755';
+                            } else {
+                                info.dayEl.style.backgroundColor = '#6700ce1a';
+                            }
                         }
                     } else {
                         selectedDates.push({
