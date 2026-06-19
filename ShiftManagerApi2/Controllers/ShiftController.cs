@@ -23,7 +23,7 @@ namespace ShiftManagerApi2.Controllers
         {
             string a = "d";//確かめるよう
             int? staff_id = 0;//スタッフIDの使いまわしのため
-            int req_id = 0;
+            int reqs_id = 0;
 
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
@@ -35,92 +35,18 @@ namespace ShiftManagerApi2.Controllers
                 using (var conn = _db.CreateConnection())
                 {
                     staff_id = GetID(data.id);
-                    req_id = GetReqID(staff_id ?? 0, data.Year, data.Month) ?? 0; //??idがnullのときは0を入れるようにしている、最後の??は結果がnullなら0を入れる処理。
+                    reqs_id = GetReqID(staff_id ?? 0, data.Year, data.Month) ?? 0; //??idがnullのときは0を入れるようにしている、最後の??は結果がnullなら0を入れる処理。
                                                                                   //if (staff_id !=0)
-                                                                                  //{
-
-
-
-                    //    a = "あるよ";
-                    //    string req_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND year = @year AND month = @month";
-                    //    using (var req_cmd = new NpgsqlCommand(req_sql, conn))
-                    //    {
-
-                    //        req_cmd.Parameters.AddWithValue("@staff_id",staff_id);
-                    //        req_cmd.Parameters.AddWithValue("@year",data.Year);
-                    //        req_cmd.Parameters.AddWithValue("@month",data.Month);
-                    //        var req_DB = req_cmd.ExecuteScalar();
-
-                    //        if(req_DB != null)//submiisionの提出日と備考欄の更新処理
-                    //        {
-                    //            req_id = Convert.ToInt32(req_DB);
-                    //            a = "登録してたよ";
-
-
-
-                    //        }
-                    //        //submiisionIDの作成
-                    //        else
-                    //        {
-                    //            a = "まだ登録してないよ";
-                    //        }
-
-
-
-
-                    if (req_id != 0)//提出日と備考欄の更新処理
+                    if (reqs_id != 0)
                     {
-                        string update_sql = "UPDATE shift_reqs SET memo = @memo, created_at = NOW() WHERE id = @id";
-                        using (var update_cmd = new NpgsqlCommand(update_sql, conn))
-                        {
-                            update_cmd.Parameters.AddWithValue("@memo", data.Memo);
-                            update_cmd.Parameters.AddWithValue("@id", req_id);
-
-                            update_cmd.ExecuteNonQuery();
-                            a = "変更したよ";
-
-                        }
-                        string update_sq = "SELECT memo FROM shift_reqs WHERE id = @id";
-                        using (var update_cmd = new NpgsqlCommand(update_sq, conn))
-                        {
-                            update_cmd.Parameters.AddWithValue("@id", req_id);
-                            var req_DB = update_cmd.ExecuteScalar();
-
-                            string req_text = Convert.ToString(req_DB);
-                            a = "変更したよ" + req_text;
-
-                        }
-                        string dlete_sql = "DELETE FROM shift_req_dates WHERE req_id = @id";
-
-                        using (var dlete_cmd = new NpgsqlCommand(dlete_sql, conn))
-                        {
-                            dlete_cmd.Parameters.AddWithValue("@id", req_id);
-                            dlete_cmd.ExecuteNonQuery();
-
-                        }
-                        string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
-                        using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
-                        {
-                            foreach (var date in data.Dates)
-                            {
-                                insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
-                                insert_cmd.Parameters.AddWithValue("@req_id", req_id);
-                                //DateTime parsedDate = DateTime.Parse(date);
-                                insert_cmd.Parameters.AddWithValue("@date", date.Date);
-                                insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
-                                insert_cmd.ExecuteNonQuery();
-                            }
-                            a = "多分変更で来たよ";
-                        }
-
-
+                        a = Update_Req_dates(reqs_id, data.Memo, data.Dates);//ここに更新処理を書く、提出日と備考欄の更新処理とshift_datesの削除とshift_datesへの新規登録の処理を書く
                     }
                     else
                     {
-                        ///ここに登録処理を入れる
-                        a = "追加する予定だよ";
-                        //登録したら削除せずにshift_datesに入れる処理を入れるよ
+                        a = "たぶんないよ";//新規に入れる処理を書く
                     }
+                 
+
                 }
             }
 
@@ -167,7 +93,7 @@ namespace ShiftManagerApi2.Controllers
                     var result = staff_cmd.ExecuteScalar();
                     if(result == null || result == DBNull.Value)
                     {
-                        return null;
+                        return null;//LineIdの登録処理に行く
                     }
                     return Convert.ToInt32(result);
                 }
@@ -189,14 +115,52 @@ namespace ShiftManagerApi2.Controllers
                       var result = reqs_cmd.ExecuteScalar();
                       if(result == null || result == DBNull.Value)
                       {
-                            return null;
-                      }
+                            return null;//reqs_idの登録処理に行く
+                    }
                       return Convert.ToInt32(result);
                 }
             }
         }
+        private string Update_Req_dates(int reqs_id, string Memo,List<ShiftDateItem> Dates)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string update_sql = "UPDATE shift_reqs SET memo = @memo, created_at = NOW() WHERE id = @id";
+                using (var update_cmd = new NpgsqlCommand(update_sql, conn))
+                {
+                    update_cmd.Parameters.AddWithValue("@memo",Memo);
+                    update_cmd.Parameters.AddWithValue("@id", reqs_id);
 
-     
+                    update_cmd.ExecuteNonQuery();
+                   
+
+                }
+                string dlete_sql = "DELETE FROM shift_req_dates WHERE req_id = @id";
+
+                using (var dlete_cmd = new NpgsqlCommand(dlete_sql, conn))
+                {
+                    dlete_cmd.Parameters.AddWithValue("@id", reqs_id);
+                    dlete_cmd.ExecuteNonQuery();
+
+                }
+                string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
+                using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+                {
+                    foreach (var date in Dates)
+                    {
+                        insert_cmd.Parameters.Clear(); // Parametersは@に対してどんどん追加していくので、ループの中で毎回クリアする必要がある
+                        insert_cmd.Parameters.AddWithValue("@req_id", reqs_id);
+                        //DateTime parsedDate = DateTime.Parse(date);
+                        insert_cmd.Parameters.AddWithValue("@date", date.Date);
+                        insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
+                        insert_cmd.ExecuteNonQuery();
+                    }
+                    return  "多分変更で来たよ";
+                }
+            }
+        }
+
+
 
             // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
             [HttpGet]
