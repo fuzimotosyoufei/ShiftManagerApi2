@@ -150,8 +150,8 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES ('なすび', @line_id, '介護スタッフ', 'パート')　RETURNING id";//選ばせる画面に遷移するようにする　決まった連番のIDを返してくれる
-                using (var insert_cmd = new NpgsqlCommand(insert_sql,conn))
+                string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES ('なすび', @line_id, '介護スタッフ', 'パート')RETURNING id";//選ばせる画面に遷移するようにする　RETURNINGは決まった連番のIDを返してくれる隙間を開けるとエラーが起きる
+                using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
                 {
                     insert_cmd.Parameters.AddWithValue("@line_id", line_id);
                     var newId = insert_cmd.ExecuteScalar();
@@ -163,8 +163,8 @@ namespace ShiftManagerApi2.Controllers
 
 
 
-            // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
-            [HttpGet]
+        // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
+        [HttpGet]
             public IActionResult GetAllShifts()
             {
                 // 管理画面の allShifts.forEach(...) に配列データをそのまま渡す
