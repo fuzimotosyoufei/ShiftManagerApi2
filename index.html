@@ -249,13 +249,12 @@
                             selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
                             info.dayEl.style.backgroundColor = '#ffffff';
                         } else {
-                            selectedDates[existsindex].mode = selectstamps;
-                            if (selectstamps = "休み") {
-                                info.dayEl.style.backgroundColor = '#a01616';
-                            } else if (selectstamps = "日勤") {
-                                info.dayEl.style.backgroundColor = '#06C755';
+                            if (selectstamps === "休み") {
+                                info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
+                            } else if (selectstamps === "日勤") {
+                                info.dayEl.style.backgroundColor = '#3498db'; // 🔵 爽やかなブルー
                             } else {
-                                info.dayEl.style.backgroundColor = '#6700ce1a';
+                                info.dayEl.style.backgroundColor = '#fef9e7'; // 🟡 優しい薄黄色
                             }
                         }
                     } else {
@@ -263,7 +262,13 @@
                             date: clickedDate,
                             mode: selectstamps
                         });
-                        info.dayEl.style.backgroundColor = '#ffcccc';
+                        if (selectstamps === "休み") {
+                            info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
+                        } else if (selectstamps === "日勤") {
+                            info.dayEl.style.backgroundColor = '#3498db'; // 🔵 爽やかなブルー
+                        } else {
+                            info.dayEl.style.backgroundColor = '#fef9e7'; // 🟡 優しい薄黄色
+                        }
                     }
 
 
