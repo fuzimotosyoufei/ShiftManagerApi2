@@ -150,13 +150,13 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string insert_sql = "INSERT INTO staff(staff_name,line_id,role,position) VALUES ('なすび',@line_id,'介護スタッフ','パート')";//選ばせる画面に遷移するようにする
+                string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES ('なすび', @line_id, '介護スタッフ', 'パート')　RETURNING id";//選ばせる画面に遷移するようにする　決まった連番のIDを返してくれる
                 using (var insert_cmd = new NpgsqlCommand(insert_sql,conn))
                 {
                     insert_cmd.Parameters.AddWithValue("@line_id", line_id);
-                    insert_cmd.ExecuteNonQuery();
+                    var newId = insert_cmd.ExecuteScalar();
 
-                    return GetID(line_id);
+                    return Convert.ToInt32(newId); // 💡 GetIDに戻らず、その場で新しいIDを返してあげるので100%安全！
                 }
             }
         }
