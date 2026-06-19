@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Npgsql;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -24,6 +25,7 @@ namespace ShiftManagerApi2.Controllers
             string a = "d";//確かめるよう
             int? staff_id = 0;//スタッフIDの使いまわしのため
             int reqs_id = 0;
+      
 
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
@@ -34,7 +36,7 @@ namespace ShiftManagerApi2.Controllers
             {
                 using (var conn = _db.CreateConnection())
                 {
-                    staff_id = GetID(data.id);
+                    staff_id = GetID(data.id,data.Name);
                     reqs_id = GetReqID(staff_id ?? 0, data.Year, data.Month) ?? 0; //??idがnullのときは0を入れるようにしている、最後の??は結果がnullなら0を入れる処理。
                                                                                   //if (staff_id !=0)
                     if (reqs_id != 0)
@@ -43,14 +45,12 @@ namespace ShiftManagerApi2.Controllers
                     }
                     else
                     {
+                        int newReqsId = InsertReqsId(staff_id ?? 0,data.Memo, data.Year, data.Month,data.Dates) ??0;//reqs_idの登録処理に行く
                         a = "たぶんないよ";//新規に入れる処理を書く
                     }
                  
-
                 }
             }
-
-            
 
             catch (NpgsqlException ex)
             {
@@ -68,7 +68,7 @@ namespace ShiftManagerApi2.Controllers
 
 
         //コントローラーにメゾットをpublicにしたら外部に公開するメゾットだとプログラムが勘違いするからprivateにしてこのプログラムでしか使わないprivateにしなくてはいけない  [NonAction]とかしたらいいかも
-        private int? GetID(string line_id)
+        private int? GetID(string line_id ,string name)//ラインIDがあるかどうかを確認する処理、なければ新規登録する処理に行く、あればそのIDを返す処理に行く
         {
             using (var conn = _db.CreateConnection())
             {
@@ -80,14 +80,29 @@ namespace ShiftManagerApi2.Controllers
                     var result = staff_cmd.ExecuteScalar();
                     if(result == null || result == DBNull.Value)
                     {
-                        return InsertLineId(line_id);
+                        return InsertLineId(line_id,name);//ラインIDの新規登録処理に行く
                     }
-                    return Convert.ToInt32(result);
+                    return Convert.ToInt32(result);//ラインIDがあった場合はそのIDを返す処理に行く
                 }
 
             }
         }
-        private int? GetReqID(int staff_id ,int year, int month)
+            private int? InsertLineId(string line_id, string name)//ラインIDの新規追加
+            {
+                using (var conn = _db.CreateConnection())
+                {
+                    string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES (@name, @line_id, '介護スタッフ', 'パート')RETURNING id";//選ばせる画面に遷移するようにする　RETURNINGは決まった連番のIDを返してくれる隙間を開けるとエラーが起きる
+                    using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+                    {
+                        insert_cmd.Parameters.AddWithValue("@line_id", line_id);
+                        insert_cmd.Parameters.AddWithValue("name" , name);  
+                        var newId = insert_cmd.ExecuteScalar();
+
+                        return Convert.ToInt32(newId); // 💡 GetIDに戻らず、その場で新しいIDを返してあげるので100%安全！
+                    }
+                }
+            }
+        private int? GetReqID(int staff_id ,int year, int month)//その月にすでに登録されているかどうかを確認する処理、なければ新規登録する処理に行く、あればそのIDを返す処理に行く
         {
             using(var conn = _db.CreateConnection())
             {
@@ -101,12 +116,45 @@ namespace ShiftManagerApi2.Controllers
                       var result = reqs_cmd.ExecuteScalar();
                       if(result == null || result == DBNull.Value)
                       {
-                         return null;//reqs_idの登録処理に行く
+                        return null;
                     　}
-                      return Convert.ToInt32(result);
+                      return Convert.ToInt32(result);//reqs_idがあった場合はそのIDを返す
                 }
             }
         }
+        private int? InsertReqsId(int staff_id,string memo, int year, int month, List<ShiftDateItem> dates)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string insert_sql = "INSERT INTO shift_reqs (staff_id, memo, year, month) VALUES (@staff_id, @memo, @year, @month)RETURNING id"; 
+                using(var insert_cmd = new NpgsqlCommand(insert_sql,conn))
+                {
+                    insert_cmd.Parameters.AddWithValue("@staff_id", staff_id);
+                    insert_cmd.Parameters.AddWithValue("@memo", memo);
+                    insert_cmd.Parameters.AddWithValue("@year", year);
+                    insert_cmd.Parameters.AddWithValue("@month", month);
+
+                    var req_id = insert_cmd.ExecuteScalar();
+
+                    return Convert.ToInt32(req_id);//次に登録する処理を書く
+                    //var dates_insert_sql = "INSERT INTO shift_req_dates (req_id, date, mode) VALUES (@req_id, @dates, @mode)";
+                    //using (var insert_dates__cmd = new NpgsqlCommand(dates_insert_sql, conn))
+                    //{
+                    //    foreach(var date in dates)
+                    //    {
+                    //        insert_cmd.Parameters.Clear();
+                    //        insert_cmd.Parameters.AddWithValue("@req_id", req_id);
+                    //        insert_cmd.Parameters.AddWithValue("@date", date.Date);
+                    //        insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
+                    //    }
+                       
+                    //}新規処理のエラーが治るまで封印
+                }
+               
+            }
+        }
+
+       
         private string Update_Req_dates(int reqs_id, string Memo,List<ShiftDateItem> Dates)
         {
             using (var conn = _db.CreateConnection())
@@ -145,21 +193,9 @@ namespace ShiftManagerApi2.Controllers
                 }
             }
         }
+        //private string insert_reqs
 
-        private int? InsertLineId(string line_id)
-        {
-            using (var conn = _db.CreateConnection())
-            {
-                string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES ('なすび', @line_id, '介護スタッフ', 'パート')RETURNING id";//選ばせる画面に遷移するようにする　RETURNINGは決まった連番のIDを返してくれる隙間を開けるとエラーが起きる
-                using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
-                {
-                    insert_cmd.Parameters.AddWithValue("@line_id", line_id);
-                    var newId = insert_cmd.ExecuteScalar();
-
-                    return Convert.ToInt32(newId); // 💡 GetIDに戻らず、その場で新しいIDを返してあげるので100%安全！
-                }
-            }
-        }
+        
 
 
 
