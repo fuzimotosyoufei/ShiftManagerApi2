@@ -50,22 +50,7 @@ namespace ShiftManagerApi2.Controllers
                 }
             }
 
-            //}
-
-            ///3ラインのIDがないので登録処理に促す
-            //else
-            //{
-            //    a = "ないよ登録処理をしてね";
-            //}
-
-            //}
-
-
-
-
-
-
-
+            
 
             catch (NpgsqlException ex)
             {
@@ -77,8 +62,10 @@ namespace ShiftManagerApi2.Controllers
             // HTML側の alert(data.message) に表示される文字をお返しする
             return Ok(new { message = $"🎉 {data.Year}{data.Month} {a} さんのシフト希望を登録しました！555555555555" });
 
-
           }
+
+
+
 
         //コントローラーにメゾットをpublicにしたら外部に公開するメゾットだとプログラムが勘違いするからprivateにしてこのプログラムでしか使わないprivateにしなくてはいけない  [NonAction]とかしたらいいかも
         private int? GetID(string line_id)
@@ -93,7 +80,8 @@ namespace ShiftManagerApi2.Controllers
                     var result = staff_cmd.ExecuteScalar();
                     if(result == null || result == DBNull.Value)
                     {
-                        return null;//LineIdの登録処理に行く
+                        
+                        return InsertLineId(line_id);
                     }
                     return Convert.ToInt32(result);
                 }
@@ -115,6 +103,7 @@ namespace ShiftManagerApi2.Controllers
                       var result = reqs_cmd.ExecuteScalar();
                       if(result == null || result == DBNull.Value)
                       {
+                            
                             return null;//reqs_idの登録処理に行く
                     }
                       return Convert.ToInt32(result);
@@ -156,6 +145,21 @@ namespace ShiftManagerApi2.Controllers
                         insert_cmd.ExecuteNonQuery();
                     }
                     return  "多分変更で来たよ";
+                }
+            }
+        }
+
+        private int? InsertLineId(string line_id)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string insert_sql = "INSERT INTO staff (staff_name,line_id,role,position) VALUES ('なすび',@line_id'介護スタッフ','パート')";//選ばせる画面に遷移するようにする
+                using (var insert_cmd = new NpgsqlCommand(insert_sql,conn))
+                {
+                    insert_cmd.Parameters.AddWithValue("@line_id", line_id);
+                    insert_cmd.ExecuteNonQuery();
+
+                    return GetID(line_id);
                 }
             }
         }
