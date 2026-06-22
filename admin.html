@@ -268,24 +268,30 @@
             tbody.innerHTML = ''; // 一度中身をクリア
 
 
+            const eventSetting = [
+                { key: 'isSubmitted', TrueText: OK, FalseText: NO },
+                { key: 'isApproved', TrueText: OK, FalseText: NO }
+            ];
+
+
             const days = new Date(2026, 6, 0).getDate();
             const thn = document.createElement('th')
-            tbody.appendChild(thn);
             thn.classList.add('name');
             thn.textContent = "名前";
+            tbody.appendChild(thn);
 
             for (let i = 1; i <= days; i++) {
                 const th = document.createElement('th')
-                tbody.appendChild(th);
                 th.textContent = i;
+                tbody.appendChild(th);
             }
 
-            for (let i = 1; i <= 2; i++) {
+            eventSetting.forEach(setting => {
                 const the = document.createElement('th')
-                tbody.appendChild(the);
                 the.classList.add('yasumi');
                 the.textContent = "sssssss";
-            }
+                tbody.appendChild(the);
+            });
 
 
             staffShifts.forEach(staff => {//初期値がいる名前追加
@@ -321,9 +327,19 @@
 
                 }
 
+                eventSetting.foreach(setting => {
+                    const eventTd = document.createElement('td');
 
+                    if (staff[setting.key] === true) {
+                        tr.textContent = setting.TrueText;
+                    } else {
+                        tr.textContent = setting.FalseText;
+                    }
+                    tr.appendChild(eventTd);
+                })
 
             });
+
 
 
             // tbody.appendChild(tr)
