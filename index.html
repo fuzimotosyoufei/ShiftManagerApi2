@@ -249,6 +249,11 @@
                             selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
                             info.dayEl.style.backgroundColor = '#ffffff';
                         } else {
+                            selectedDates.splice(existsindex, 1); // まず古いデータを消す
+                            selectedDates.push({
+                                date: clickedDate,
+                                mode: selectstamps
+                            });
                             if (selectstamps === "休み") {
                                 info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
                             } else if (selectstamps === "日勤") {
@@ -261,7 +266,7 @@
                         selectedDates.push({
                             date: clickedDate,
                             mode: selectstamps
-                        });
+                        });//何かが足りない
                         if (selectstamps === "休み") {
                             info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
                         } else if (selectstamps === "日勤") {
