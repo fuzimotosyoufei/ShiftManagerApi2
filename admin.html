@@ -330,11 +330,11 @@
                 eventSetting.forEach(setting => {
                     const eventTd = document.createElement('td');
 
-                    // if (staff[setting.key] === true) {
-                    //     tr.textContent = setting.TrueText;
-                    // } else {
-                    //     tr.textContent = setting.FalseText;
-                    // }
+                    if (staff[setting.key] === true) {
+                        eventTd.textContent = setting.TrueText;
+                    } else {
+                        eventTd.textContent = setting.FalseText;
+                    }
                     tr.appendChild(eventTd);
                 })
 
