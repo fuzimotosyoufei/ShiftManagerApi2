@@ -160,7 +160,7 @@
             border: solid 1px #778ca3;
         }
 
-        .design01 te {
+        .design01 th.yasumi {
             padding: 10px;
             background: #6ee70b;
             border: solid 1px #e90134;
@@ -273,6 +273,7 @@
             for (let i = 1; i <= 2; i++) {
                 const te = document.createElement('te')
                 tbody.appendChild(te);
+                te.classList.add('yasumi');
                 te.textContent = i;
             }
 
