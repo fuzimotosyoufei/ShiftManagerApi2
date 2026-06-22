@@ -166,6 +166,12 @@
             border: solid 1px #e90134;
         }
 
+        .design01 th.name {
+            padding: 10px;
+            background: #bd6c6c;
+            border: solid 1px #e90134;
+        }
+
         .design01 td {
             padding: 10px;
             border: solid 1px #006fe6;
@@ -263,12 +269,25 @@
 
 
             const days = new Date(2026, 6, 0).getDate();
+            const thn = document.createElement('th')
+            tbody.appendChild(thn);
+            thn.classList.add('name');
+            thn.textContent = "名前";
 
             for (let i = 1; i <= days; i++) {
                 const th = document.createElement('th')
                 tbody.appendChild(th);
                 th.textContent = i;
             }
+
+            for (let i = 1; i <= 2; i++) {
+                const the = document.createElement('th')
+                tbody.appendChild(the);
+                the.classList.add('yasumi');
+                the.textContent = "sssssss";
+            }
+
+
             staffShifts.forEach(staff => {//初期値がいる名前追加
 
                 const td = document.createElement('td')
@@ -289,7 +308,7 @@
 
 
 
-                for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
+                for (let i = 1; i < days; i++) {//曜日に出勤日と希望休を入れるところ
                     // const shiftTd = document.createElement('td');
                     // shiftTd.textContent = "希望";
                     // tr.appendChild(shiftTd);
@@ -305,16 +324,6 @@
 
 
             });
-
-
-            for (let i = 1; i <= 2; i++) {
-                const the = document.createElement('th')
-                tbody.appendChild(the);
-                the.classList.add('yasumi');
-                the.textContent = "sssssss";
-            }
-
-
 
 
             // tbody.appendChild(tr)
