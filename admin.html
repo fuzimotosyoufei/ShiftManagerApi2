@@ -269,15 +269,6 @@
                 tbody.appendChild(th);
                 th.textContent = i;
             }
-
-            for (let i = 1; i <= 2; i++) {
-                const the = document.createElement('th')
-                tbody.appendChild(the);
-                the.classList.add('yasumi');
-                the.textContent = "sssssss";
-            }
-
-
             staffShifts.forEach(staff => {//初期値がいる名前追加
 
                 const td = document.createElement('td')
@@ -314,6 +305,16 @@
 
 
             });
+
+
+            for (let i = 1; i <= 2; i++) {
+                const the = document.createElement('th')
+                tbody.appendChild(the);
+                the.classList.add('yasumi');
+                the.textContent = "sssssss";
+            }
+
+
 
 
             // tbody.appendChild(tr)
