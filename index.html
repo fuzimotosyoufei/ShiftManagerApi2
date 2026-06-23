@@ -56,7 +56,7 @@
             cursor: pointer;
         }
 
-        #palette-container {
+        .palette-container {
             /* 枠の大きさはあえて書かない中のボタンの要素で自動的に大きさが変わるから */
             border: 1px solid #e0e0e0;
             background-color: #fcfcfc;
@@ -140,7 +140,7 @@
 
 
         </div>
-        <div id="palette-container">
+        <div class="palette-container">
             <h2>15日は職員会議です。参加の意思を確認します。</h2>
             <div class="radio-sample-container">
                 <label class="radio-label">
@@ -153,7 +153,7 @@
             </div>
         </div>
 
-        <div id="palette-container">
+        <div class="palette-container">
             <h2>17日は交流会です。参加の意思を確認します。</h2>
             <div class="radio-sample-container">
                 <label class="radio-label">
@@ -204,7 +204,7 @@
             for (let i = 1; i <= 2; i++) {
 
                 const event_frame = document.createElement('div');
-                event_frame.id = 'palette-container';
+                event_frame.classList.add('palette-container')
                 event.appendChild(event_frame);
 
             }
