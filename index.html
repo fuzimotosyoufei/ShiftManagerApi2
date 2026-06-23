@@ -186,8 +186,10 @@
         let userName = "ゲストユーザー";
         let calendar;
         let selectstamps = "休み";
+        let Date_start;
 
         // ここに内部の更新処理を書く
+        //休みか、遅番、早番で何が押されたかの判定----------------------------------------------------------------------------------------------------------------------------------------
         function selectstamp(mode) {
             selectstamps = mode;
 
@@ -199,23 +201,30 @@
             event.target.classList.add('UN');
 
         }
-        document.addEventListener('DOMContentLoaded', function () {//イベント欄の作成
-            const event = document.getElementById('event_create');
-            for (let i = 1; i <= 2; i++) {
-
-                const event_frame = document.createElement('div');
-                event_frame.classList.add('palette-container')
-                event.appendChild(event_frame);
-
-            }
-
-        })
 
 
-        ///ラインのログイン 名前とIDの取得処理
+        //今の日付と年からカレンダーの作成ここは後で絶対変わる-----------------------------------------------------------------------------------------------------------------------------------------      
+        // 💡 1. 今日の日付情報を取得する（例：2026年6月23日だったとする）
+        const today = new Date();
+        const year = today.getFullYear();  // 👉 2026
+        const month = today.getMonth();    // 👉 5 (JavaScriptの月は0始まりなので、6月は5になります)
+
+        // 💡 2. 今月の「1日」の文字列を作る
+        // 月を2桁（06など）にするために padStart を使います
+        const startMonthStr = String(month + 1).padStart(2, '0');
+        const startDateStr = `${year}-${startMonthStr}-01`;
+        // 👉 結果： "2026-06-01"
+
+        // 💡 3. 今月の「末日」を自動計算する
+        // 日付に「0」を指定すると、前の月の末日（＝今月の最後の日にち）を自動計算してくれる裏技です！
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const endDateStr = `${year}-${startMonthStr}-${lastDay}`;
+        // 👉 結果： "2026-06-30" (うるう年や31日の月も自動で計算してくれます！)
+
+        //ラインのログイン 名前とIDの取得処理-----------------------------------------------------------------------------------------------------------------------------------------
         document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
-            liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID
+            liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID もうすこしべんきょうしたいいいいいいいいいいいいいいいい
                 .then(() => {//thenこれは.の前の処理が終わったら処理を実行するやつifの場合実行スピードが追い付かなく.thenにして終わったら次これをやっての処理が適している
                     if (!liff.isLoggedIn()) { liff.login(); }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
                     else {
@@ -230,27 +239,20 @@
                 .catch((err) => {
                     document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
                 });
-            //
+            //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
             const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
-                // headerToolbar: { left: 'prev', center: 'title', right: 'next' },//カレンダーにどんなボタンを付けるかを指定できる
-                // // left: 'prev' ＝ 左側に「前月へ戻る（<）」ボタンを置く。
-                // center: 'title' ＝ 中央に「2026年6月」のような「今何月か」のタイトルを置く。
-                // right: 'next' ＝ 右側に「次月へ進む（>）」ボタンを置く。
-                //validRange（選択できる日付の制限）
                 validRange: {
-                    start: '2026-06-01',
-                    end: '2026-06-30'
+                    start: startDateStr,
+                    end: endDateStr
                 },
                 contentHeight: 'auto',
-                //businessHours: true（土日や夜間の色変え）
-                //unselectAuto: false（選択の維持）
-                //「月」以外に変える表示設定（views）
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
 
+                //押された日付を保存する、削除、変更する処理----------------------------------------------------------------------------------------------------------------------------------------
                 dateClick: function (info) {
 
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
@@ -298,11 +300,26 @@
             calendar.render();//これ最後に表示する
         });
 
+        //イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
+
+        document.addEventListener('DOMContentLoaded', function () {//イベント欄の作成
+            const event = document.getElementById('event_create');
+            for (let i = 1; i <= 2; i++) {
+
+                const event_frame = document.createElement('div');
+                event_frame.classList.add('palette-container')
+                event.appendChild(event_frame);
+
+            }
+
+        })
 
 
 
 
 
+
+        //データをC#に渡しデータベースの処理を行う---------------------------------------------------------------------------------------------------------------------------------------
         function submitData() {
             if (selectedDates.length === 0) {
                 alert("日付が選択されていません！");
