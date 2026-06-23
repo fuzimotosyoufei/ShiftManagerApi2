@@ -32,6 +32,7 @@
             background-color: #2c3e50;
             max-width: 230px;
             /* 格好いい濃いネイビー */
+            min-width: 200px;
             display: flex;
             flex-direction: column;
             align-items: stretch;
@@ -122,6 +123,7 @@
             cursor: pointer;
             float: right;
             font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .text-name {
@@ -157,6 +159,18 @@
             padding: 10px;
             background: #e9faf9;
             border: solid 1px #778ca3;
+        }
+
+        .design01 th.yasumi {
+            padding: 10px;
+            background: #6ee70b;
+            border: solid 1px #e90134;
+        }
+
+        .design01 th.name {
+            padding: 10px;
+            background: #bd6c6c;
+            border: solid 1px #e90134;
         }
 
         .design01 td {
@@ -213,33 +227,37 @@
             {
                 id: 1,
                 name: "藤本",
+                isSubmitted: true,  // 💡 YES：シフト提出済み！
+                isApproved: true,   // 💡 YES：管理者も承認・確定済み！
                 currentMonthShifts: [
-                    { date: "2026-06-01", mode: "日勤" }, // 6月1日：日勤
-                    { date: "2026-06-06", mode: "遅番" }, // 6月2日：日勤
-                    { date: "2026-06-09", mode: "休み" }  // 6月3日：遅番
-                    // ...30日分続く
+                    { date: "2026-06-01", mode: "日勤" },
+                    { date: "2026-06-06", mode: "遅番" },
+                    { date: "2026-06-09", mode: "休み" }
                 ]
             },
             {
                 id: 2,
                 name: "佐藤",
+                isSubmitted: true,  // 💡 YES：シフトは提出してくれた！
+                isApproved: false,  // 💡 NO ：管理者がまだ調整中で未承認。
                 currentMonthShifts: [
-                    { date: "2026-06-04", mode: "休み" }, // 6月1日：休み
-                    { date: "2026-06-16", mode: "休み" }, // 6月2日：日勤
-                    { date: "2026-06-20", mode: "遅番" }  // 6月3日：日勤
+                    { date: "2026-06-04", mode: "休み" },
+                    { date: "2026-06-16", mode: "休み" },
+                    { date: "2026-06-20", mode: "遅番" }
                 ]
             },
             {
                 id: 3,
                 name: "田中",
+                isSubmitted: false, // 💡 NO ：そもそもまだ今月のシフトを出してない！
+                isApproved: false,  // 💡 NO ：出してないので、もちろん未承認。
                 currentMonthShifts: [
-                    { date: "2026-06-09", mode: "日勤" }, // 6月1日：日勤
-                    { date: "2026-06-29", mode: "休み" }, // 6月2日：休み
-                    { date: "2026-06-31", mode: "遅番" }  // 6月3日：休み
+                    { date: "2026-06-09", mode: "日勤" },
+                    { date: "2026-06-29", mode: "休み" },
+                    { date: "2026-06-30", mode: "遅番" } // ※6月は30日までなので、30日に修正しておきました！
                 ]
             }
         ];
-
 
 
 
@@ -251,13 +269,30 @@
             tbody.innerHTML = ''; // 一度中身をクリア
 
 
+            const eventSetting = [
+                { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
+                { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
+            ];
+
+
             const days = new Date(2026, 6, 0).getDate();
+            const thn = document.createElement('th')
+            thn.classList.add('name');
+            thn.textContent = "名前";
+            tbody.appendChild(thn);
 
             for (let i = 1; i <= days; i++) {
                 const th = document.createElement('th')
-                tbody.appendChild(th);
                 th.textContent = i;
+                tbody.appendChild(th);
             }
+
+            eventSetting.forEach(setting => {
+                const the = document.createElement('th')
+                the.classList.add('yasumi');
+                the.textContent = "sssssss";
+                tbody.appendChild(the);
+            });
 
 
             staffShifts.forEach(staff => {//初期値がいる名前追加
@@ -280,7 +315,7 @@
 
 
 
-                for (let i = 0; i < count - 1; i++) {//曜日に出勤日と希望休を入れるところ
+                for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ
                     // const shiftTd = document.createElement('td');
                     // shiftTd.textContent = "希望";
                     // tr.appendChild(shiftTd);
@@ -293,9 +328,19 @@
 
                 }
 
+                eventSetting.forEach(setting => {
+                    const eventTd = document.createElement('td');
 
+                    if (staff[setting.key] === true) {
+                        eventTd.textContent = setting.TrueText;
+                    } else {
+                        eventTd.textContent = setting.FalseText;
+                    }
+                    tr.appendChild(eventTd);
+                })
 
             });
+
 
 
             // tbody.appendChild(tr)
