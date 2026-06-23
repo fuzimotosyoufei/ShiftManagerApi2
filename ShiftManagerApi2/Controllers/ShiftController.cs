@@ -7,7 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ShiftManagerApi2.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] // api/shift というURLになります
+    [Route("api/[controller]")] // api/shift というURLこれでどこに送るかを指定している名前は自由だけどちゃんとしたやつが好ましい
     public class ShiftController : ControllerBase
 
     {
@@ -122,7 +122,8 @@ namespace ShiftManagerApi2.Controllers
                 }
             }
         }
-        private int? InsertReqsId(int staff_id,string memo, int year, int month, List<ShiftDateItem> dates)
+        private int? InsertReqsId(int staff_id,string memo, int year, int month, List<ShiftDateItem> dates)//新しいshift_reqsを追加する処理と新しいshift_req_data追加する処理
+               
         {
             using (var conn = _db.CreateConnection())
             {
@@ -149,13 +150,13 @@ namespace ShiftManagerApi2.Controllers
                     //    }
                        
                     //}新規処理のエラーが治るまで封印
-                }
+                }//新しいshift_req_data追加する処理
                
             }
         }
 
        
-        private string Update_Req_dates(int reqs_id, string Memo,List<ShiftDateItem> Dates)
+        private string Update_Req_dates(int reqs_id, string Memo,List<ShiftDateItem> Dates)//既存のshift_idを更新する処理と既存のshift_req_dataを削除して新しく作成する処理
         {
             using (var conn = _db.CreateConnection())
             {
@@ -195,9 +196,9 @@ namespace ShiftManagerApi2.Controllers
         }
         //private string insert_reqs
 
+
+
         
-
-
 
         // ② 登録されたシフトを「全件取得」する窓口（管理画面用）
         [HttpGet]
@@ -206,6 +207,21 @@ namespace ShiftManagerApi2.Controllers
                 // 管理画面の allShifts.forEach(...) に配列データをそのまま渡す
                 return Ok(_shiftList);
             }
+        [HttpGet("calendar")]
+            public IActionResult GetCalendar()
+            {
+                object result = null;
+            using (var conn = _db.CreateConnection())
+                {
+                    string calendar_sql = "SELECT year_month FROM shift_periods WHERE status = '配信中' ";
+                    using (var calendar_cmd = new NpgsqlCommand(calendar_sql, conn))
+                    {
+                         result = calendar_cmd.ExecuteScalar();
+                    }
+                }   
+                return Ok(result);//Okを付けることで成功の値200を返すようになりerrorの場合での適した番号を返すよ
+            }
+
     }
 }
 
