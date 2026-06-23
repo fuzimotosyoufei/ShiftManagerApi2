@@ -242,7 +242,7 @@
                 })
                 .then(data => {
                     console.log("C#から届いた生データはこれだ！:", data);
-                    const yearMonthStr = data;
+                    const yearMonthStr = data.yearMonth;
 
 
                     const [year, month] = yearMonthStr.split('-').map(Number);
