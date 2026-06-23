@@ -136,7 +136,10 @@
 
 
         <h2>行事</h2>
-        <div id="event_create"></div>
+        <div id="event_create">
+
+
+        </div>
         <div id="palette-container">
             <h2>15日は職員会議です。参加の意思を確認します。</h2>
             <div class="radio-sample-container">
@@ -196,7 +199,15 @@
             event.target.classList.add('UN');
 
         }
+        document.addEventListener('DOMContentLoaded', function () {//イベント欄の作成
+            for (let i = 1; i <= 2; i++) {
+                const event = document.getElementById('event_create');
+                const event_frame = document.createElement('palette-container');
+                event.appendChild(event_frame);
 
+            }
+
+        })
 
 
         ///ラインのログイン 名前とIDの取得処理
@@ -277,15 +288,6 @@
                             info.dayEl.style.backgroundColor = '#fef9e7'; // 🟡 優しい薄黄色
                         }
                     }
-
-
-                    // if (selectedDates.includes(clickedDate)) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
-                    //     selectedDates = selectedDates.filter(item => item !== clickedDate);//filetrが配列から削除()で選ばれているのはあくまでも条件式でfilterは要素をすべて消すため()の中身のデータだけを消すわけではない
-                    //     info.dayEl.style.backgroundColor = '';
-                    // } else {
-                    //     selectedDates.push(clickedDate);
-                    //     info.dayEl.style.backgroundColor = '#ffcccc';
-                    // }
 
                 }
             });
