@@ -200,9 +200,11 @@
 
         }
         document.addEventListener('DOMContentLoaded', function () {//イベント欄の作成
+            const event = document.getElementById('event_create');
             for (let i = 1; i <= 2; i++) {
-                const event = document.getElementById('event_create');
-                const event_frame = document.createElement('palette-container');
+
+                const event_frame = document.createElement('div');
+                event_frame.id = 'palette-container';
                 event.appendChild(event_frame);
 
             }
