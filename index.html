@@ -186,7 +186,7 @@
         let userName = "ゲストユーザー";
         let calendar;
         let selectstamps = "休み";
-        let Date_start;
+
 
         // ここに内部の更新処理を書く
         //休みか、遅番、早番で何が押されたかの判定----------------------------------------------------------------------------------------------------------------------------------------
@@ -203,35 +203,22 @@
         }
 
 
-        //今の日付と年からカレンダーの作成ここは後で絶対変わる-----------------------------------------------------------------------------------------------------------------------------------------      
-        // 💡 1. 今日の日付情報を取得する（例：2026年6月23日だったとする）
-        const today = new Date();
-        const year = today.getFullYear();  // 👉 2026
-        const month = today.getMonth();    // 👉 5 (JavaScriptの月は0始まりなので、6月は5になります)
-
-        // 💡 2. 今月の「1日」の文字列を作る
-        // 月を2桁（06など）にするために padStart を使います
-        const startMonthStr = String(month + 1).padStart(2, '0');
-        const startDateStr = `${year}-${startMonthStr}-01`;
-        // 👉 結果： "2026-06-01"
-
-        // 💡 3. 今月の「末日」を自動計算する
-        // 日付に「0」を指定すると、前の月の末日（＝今月の最後の日にち）を自動計算してくれる裏技です！
-        const lastDay = new Date(year, month + 1, 0).getDate();
-        const endDateStr = `${year}-${startMonthStr}-${lastDay}`;
-        // 👉 結果： "2026-06-30" (うるう年や31日の月も自動で計算してくれます！)
 
         //ラインのログイン 名前とIDの取得処理-----------------------------------------------------------------------------------------------------------------------------------------
         document.addEventListener('DOMContentLoaded', function () {//documentはHTMLのテキストボックスとかのコンテンツに関わるのに使うaddEventListenerは全てHTMLの読み込みが終わったら実行する
             // ⚠️ YOUR_LIFF_ID_HERE をご自身の LIFF ID に書き換えてください
             liff.init({ liffId: "2010276207-ArHS36jI" })//ログイン判定パスワードの代わりにID もうすこしべんきょうしたいいいいいいいいいいいいいいいい
                 .then(() => {//thenこれは.の前の処理が終わったら処理を実行するやつifの場合実行スピードが追い付かなく.thenにして終わったら次これをやっての処理が適している
-                    if (!liff.isLoggedIn()) { liff.login(); }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
+                    if (!liff.isLoggedIn()) {
+                        liff.login();
+                    }//liffはラインだけの特殊な奴loginは一度ログインの画面に行きもう一度ログインしてから戻ってくるような処理
                     else {
                         liff.getProfile().then(profile => {
                             userName = profile.displayName;
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
+
+                            CalendarData();
                         });
                     }
                     //ここらへんで多分入れるらいんのID
@@ -239,14 +226,52 @@
                 .catch((err) => {
                     document.getElementById('user-info').innerText = "※ブラウザモードで実行中2（LINE外）";
                 });
-            //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
+        });
+        //今配信しているカレンダーを選別し表示する処理-----------------------------------------------------------------------------------------------------------------------------------------      
+
+        function CalendarData() {
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('データの取得に失敗しました');
+                    return response.json(); // 💡 C#から届いたJSONをJavaScriptで使えるように変換少し勉強がいる
+
+                })
+                .then(data => {
+                    const yearMonthStr = data;
+
+
+                    const [year, month] = yearMonthStr.split('-').map(Number);
+
+
+
+                    const startMonthStr = String(month + 1).padStart(2, '0');
+                    startDateStr = `${year}-${startMonthStr}-01`;
+
+
+
+                    const lastDay = new Date(year, month + 1, 0).getDate();
+                    endDateStr = `${year}-${startMonthStr}-${lastDay}`;
+
+                    initCalendar(startDateStr, endDateStr);
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                })
+
+        }
+        //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
+        function initCalendar(start, end) {
             const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
                 validRange: {
-                    start: startDateStr,
-                    end: endDateStr
+                    start: start,
+                    end: end
                 },
                 contentHeight: 'auto',
                 selectable: true,//カレンダーのマス目をたプできるようにする
@@ -271,26 +296,14 @@
                                 date: clickedDate,
                                 mode: selectstamps
                             });
-                            if (selectstamps === "休み") {
-                                info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
-                            } else if (selectstamps === "日勤") {
-                                info.dayEl.style.backgroundColor = '#3498db'; // 🔵 爽やかなブルー
-                            } else {
-                                info.dayEl.style.backgroundColor = '#fef9e7'; // 🟡 優しい薄黄色
-                            }
+                            updateCellColor(info.dayEl, selectstamps);
                         }
                     } else {
                         selectedDates.push({
                             date: clickedDate,
                             mode: selectstamps
                         });//何かが足りない
-                        if (selectstamps === "休み") {
-                            info.dayEl.style.backgroundColor = '#ff4d4d'; // 🔴 明るい赤（文字は白にすると綺麗）
-                        } else if (selectstamps === "日勤") {
-                            info.dayEl.style.backgroundColor = '#3498db'; // 🔵 爽やかなブルー
-                        } else {
-                            info.dayEl.style.backgroundColor = '#fef9e7'; // 🟡 優しい薄黄色
-                        }
+                        updateCellColor(info.dayEl, selectstamps);
                     }
 
                 }
@@ -298,7 +311,16 @@
 
             // refreshCalendarEvents();
             calendar.render();//これ最後に表示する
-        });
+        };
+        function updateCellColor(element, stamp) {
+            if (stamp === "休み") {
+                element.style.backgroundColor = '#ff4d4d';
+            } else if (stamp === "日勤") {
+                element.style.backgroundColor = '#3498db';
+            } else {
+                element.style.backgroundColor = '#fef9e7';
+            }
+        }
 
         //イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
 
