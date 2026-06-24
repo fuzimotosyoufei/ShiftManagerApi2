@@ -362,8 +362,8 @@
                 const event_answer = document.createElement('div');//イベントエリアの解答欄を作成
                 event_answer.classList.add('radio-sample-container');
                 const event_label = document.createElement('label');//解答欄の枠組み
-                event_label = classList.add("radio-label");
-                const event_input = doucment.createElement('input');//解答欄のOKの部分を作成
+                event_label.classList.add("radio-label");
+                const event_input = document.createElement('input');//解答欄のOKの部分を作成
                 event_input.type = 'radio';
                 event_input.textContent = "OK";
                 event_label.appendChild(event_input);
