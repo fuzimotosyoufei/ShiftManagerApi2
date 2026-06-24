@@ -366,11 +366,12 @@
                 const event_input = document.createElement('input');//解答欄のOKの部分を作成
                 event_input.type = 'radio';
                 event_input.textContent = "OK";
-                event_label.appendChild(event_input);
-                event_answer.appendChild(event_label);
-                event_frame.appendChild(event_answer);
-                event_frame.appendChild(event_name);
-                event.appendChild(event_frame);
+                event_frame.appendChild(event_name);//イベント名
+                event_label.appendChild(event_input);//OKの解答欄
+                event_answer.appendChild(event_label);//イベントの解答欄をまとめるやつ
+                event_frame.appendChild(event_answer);//イベントの解答欄
+
+                event.appendChild(event_frame);//全体
 
             })
             // for (let i = 1; i <= 2; i++) {
