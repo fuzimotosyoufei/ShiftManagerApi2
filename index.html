@@ -355,11 +355,21 @@
         function initEvent(eventList) {//イベント欄の作成
             const event = document.getElementById('event_create');
             eventList.forEach(eventl => {
-                const event_frame = document.createElement('div');
+                const event_frame = document.createElement('div');//イベントエリアの枠組み作成
                 event_frame.classList.add('palette-container')
-                const event_name = document.createElement('h2');
-                event_name.textContent = "eventl.eventName";
-                event_frame.appendChild(event_name);
+                    const event_name = document.createElement('h2');//イベントエリアのイベント名作成
+                    event_name.textContent = "eventl.eventName";
+                    const event_answer = document.cretaeElement('div');//イベントエリアの解答欄を作成
+                    event_answer.classList.add('radio-sample-container');
+                        const event_label = document.createElement('label');//解答欄の枠組み
+                        event_label = classList.add("radio-label");
+                            const event_input = doucment.createElement('input');//解答欄のOKの部分を作成
+                            event_input.type = 'radio';
+                            event_input.textContent = "OK";
+                            event_label.appendChild(event_input);
+                        event_answer.appendChild(event_label);
+                    event_frame.appendChild(event_answer);
+                    event_frame.appendChild(event_name);
                 event.appendChild(event_frame);
 
             })
@@ -372,6 +382,17 @@
             // }
 
         }
+
+
+        // <div class="radio-sample-container">
+        //         <label class="radio-label">
+        //             <input type="radio" checked disabled> はい
+        //         </label>
+
+        //         <label class="radio-label">
+        //             <input type="radio" disabled> いいえ
+        //         </label>
+        //     </div>
 
 
 
