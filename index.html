@@ -258,6 +258,32 @@
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
+                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', {
+                        headers: {
+                            'ngrok-skip-browser-warning': 'true'
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error('データの取得に失敗しました');
+                            return response.joson();
+                        })
+                        .then(data => {
+                            let eventList = [];
+                            data.forEach(event => {
+                                const eventName = event.eventName;
+                                const eventContent = event.eventContent;
+                                eventList.push({
+                                    name: eventName,
+                                    content: eventContent
+                                })
+                            })
+                            initEvent(eventList);
+
+                        })
+                        .catch(error => {
+                            console.error('エラー', error);
+                        })
+
                 })
                 .catch(error => {
                     console.error('エラー:', error);
@@ -325,17 +351,22 @@
 
         //イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
 
-        document.addEventListener('DOMContentLoaded', function () {//イベント欄の作成
+        function initEvent(eventList) {//イベント欄の作成
             const event = document.getElementById('event_create');
-            for (let i = 1; i <= 2; i++) {
-
+            eventList.forEach(event => {
                 const event_frame = document.createElement('div');
                 event_frame.classList.add('palette-container')
                 event.appendChild(event_frame);
+            })
+            // for (let i = 1; i <= 2; i++) {
 
-            }
+            //     const event_frame = document.createElement('div');
+            //     event_frame.classList.add('palette-container')
+            //     event.appendChild(event_frame);
 
-        })
+            // }
+
+        }
 
 
 
