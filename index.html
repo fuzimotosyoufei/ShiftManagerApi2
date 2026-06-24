@@ -357,7 +357,10 @@
             eventList.forEach(eventl => {
                 const event_frame = document.createElement('div');
                 event_frame.classList.add('palette-container')
+                const event_name = document.createElement('h2');
+                event.textContent = eventl.eventName;
                 event.appendChild(event_frame);
+                event_frame.appendChild(event_name);
             })
             // for (let i = 1; i <= 2; i++) {
 
