@@ -101,10 +101,14 @@
             /* padding（10px）のせいで右側にはみ出すのを防ぐ魔法 */
         }
 
+        .event-name {
+            width: 60%;
+        }
 
         .radio-sample-container {
             display: flex;
             /* ボタンを横一列に綺麗に並べる魔法 */
+            width: 20%;
             gap: 15px;
             /* ボタンとボタンの間のスキマ */
             margin-top: 10px;
@@ -358,6 +362,7 @@
                 const event_frame = document.createElement('div');//イベントエリアの枠組み作成
                 event_frame.classList.add('palette-container');
                 const event_name = document.createElement('h2');//イベントエリアのイベント名作成
+                event_name.classList.add('event-name');
                 event_name.textContent = "eventl.eventName";
                 const event_answer = document.createElement('div');//イベントエリアの解答欄を作成
                 event_answer.classList.add('radio-sample-container');
