@@ -276,16 +276,16 @@
                         })
                         .then(data => {
                             console.log("データこれ", data);
-                            let eventList = [];
-                            data.forEach(event => {
-                                const eventName = event.eventName;
-                                const eventContent = event.eventContent;
-                                eventList.push({
-                                    name: eventName,
-                                    content: eventContent
-                                })
-                            })
-                            initEvent(eventList);
+                            // let eventList = [];
+                            // data.forEach(event => {
+                            //     const eventName = event.eventName;
+                            //     const eventContent = event.eventContent;
+                            //     eventList.push({
+                            //         name: eventName,
+                            //         content: eventContent
+                            //     })
+                            // })
+                            initEvent(data);
 
                         })
                         .catch(error => {
@@ -366,7 +366,7 @@
                 event_frame.classList.add('palette-container');
                 const event_name = document.createElement('event-name');//イベントエリアのイベント名作成
                 // event_name.classList.add('event-name');
-                event_name.textContent = eventl.name;
+                event_name.textContent = eventl.eventName;
                 const event_answer = document.createElement('div');//イベントエリアの解答欄を作成
                 event_answer.classList.add('radio-sample-container');
                 const event_label = document.createElement('label');//解答欄の枠組み
