@@ -349,50 +349,55 @@
 
         //イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
 
+     
+
         function initEvent(eventList) {//イベント欄の作成
-            const event = document.getElementById('event_create');
+            const event = document.getElementById('event_create');//おおもとの作成
+            event.innerHTML = '';//一度中を空にする
             eventList.forEach(eventl => {
-                const event_frame = document.createElement('div');//イベントエリアの枠組み作成
-                event_frame.classList.add('palette-container');
-                const event_name = document.createElement('event-name');//イベントエリアのイベント名作成
-                // event_name.classList.add('event-name');
-                event_name.textContent = eventl.eventName;
-                const event_answer = document.createElement('div');//イベントエリアの解答欄を作成
-                event_answer.classList.add('radio-sample-container');
-                const event_label = document.createElement('label');//解答欄の枠組み
-                event_label.classList.add("radio-label");
-                const event_input = document.createElement('input');//解答欄のOKの部分を作成
-                event_input.type = 'radio';
 
-                event_frame.appendChild(event_name);//イベント名
-                event_label.appendChild(event_input);//OKの解答欄
-                event_label.append("OK");
-                event_answer.appendChild(event_label);//イベントの解答欄をまとめるやつ
-                event_frame.appendChild(event_answer);//イベントの解答欄
+                const html = `
+                        <div class="palette-container">
+                            <event-name>${eventl.eventName}</event-name>
+                            <div class ="radio-sample-container">
+                                <label class="radio-label"> 
+                                    <input type="radio"> OK
+                                </label>
+                            </div>
 
-                event.appendChild(event_frame);//全体
-
-            })
-            // for (let i = 1; i <= 2; i++) {
-
-            //     const event_frame = document.createElement('div');
-            //     event_frame.classList.add('palette-container')
-            //     event.appendChild(event_frame);
-
-            // }
+                        </div>
+                    `;//HTMLのように各
+                event.insertAdjacentHTML('beforeend', html);//おおもとに追加beforeendで後ろから順に追加htmlでその中を
+            });
 
         }
 
+    // function initEvent(eventList) {//イベント欄の作成
+    //     const event = document.getElementById('event_create');
 
-        // <div class="radio-sample-container">
-        //         <label class="radio-label">
-        //             <input type="radio" checked disabled> はい
-        //         </label>
+    //     eventList.forEach(eventl => {
+    //         const event_frame = document.createElement('div');//イベントエリアの枠組み作成
+    //         event_frame.classList.add('palette-container');
+    //         const event_name = document.createElement('event-name');//イベントエリアのイベント名作成
+    //         // event_name.classList.add('event-name');
+    //         event_name.textContent = eventl.eventName;
+    //         const event_answer = document.createElement('div');//イベントエリアの解答欄を作成
+    //         event_answer.classList.add('radio-sample-container');
+    //         const event_label = document.createElement('label');//解答欄の枠組み
+    //         event_label.classList.add("radio-label");
+    //         const event_input = document.createElement('input');//解答欄のOKの部分を作成
+    //         event_input.type = 'radio';
 
-        //         <label class="radio-label">
-        //             <input type="radio" disabled> いいえ
-        //         </label>
-        //     </div>
+    //         event_frame.appendChild(event_name);//イベント名
+    //         event_label.appendChild(event_input);//OKの解答欄
+    //         event_label.append("OK");
+    //         event_answer.appendChild(event_label);//イベントの解答欄をまとめるやつ
+    //         event_frame.appendChild(event_answer);//イベントの解答欄
+
+    //         event.appendChild(event_frame);//全体
+
+    //     })
+
 
 
 
