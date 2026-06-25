@@ -276,17 +276,7 @@
                         })
                         .then(data => {
                             console.log("データこれ", data);
-                            // let eventList = [];
-                            // data.forEach(event => {
-                            //     const eventName = event.eventName;
-                            //     const eventContent = event.eventContent;
-                            //     eventList.push({
-                            //         name: eventName,
-                            //         content: eventContent
-                            //     })
-                            // })
                             initEvent(data);
-
                         })
                         .catch(error => {
                             console.error('エラー', error);
@@ -373,9 +363,10 @@
                 event_label.classList.add("radio-label");
                 const event_input = document.createElement('input');//解答欄のOKの部分を作成
                 event_input.type = 'radio';
-                event_input.textContent = "OK";
+
                 event_frame.appendChild(event_name);//イベント名
                 event_label.appendChild(event_input);//OKの解答欄
+                event_label.append("OK");
                 event_answer.appendChild(event_label);//イベントの解答欄をまとめるやつ
                 event_frame.appendChild(event_answer);//イベントの解答欄
 
