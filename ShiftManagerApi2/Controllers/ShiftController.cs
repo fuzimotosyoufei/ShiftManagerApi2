@@ -210,16 +210,28 @@ namespace ShiftManagerApi2.Controllers
         [HttpGet("calendar")]//いつのカレンダーを表示数かをindex.htmlに返す
         public IActionResult GetCalendar()
         {
-            object result = null;
+         
             using (var conn = _db.CreateConnection())
             {
-                string calendar_sql = "SELECT year_month FROM shift_periods WHERE status = '配信中'";
+               
+                string calendar_sql = "SELECT year,month FROM shift_periods WHERE status = '配信中'";
                 using (var calendar_cmd = new NpgsqlCommand(calendar_sql, conn))
                 {
-                    result = calendar_cmd.ExecuteScalar();
+                   using(var result = calendar_cmd.ExecuteReader())
+                    {
+                        if (result.Read())
+                        {
+                            var singleCalendar = new
+                            {
+                                year = Convert.ToInt32(result["year"]),
+                                month = Convert.ToInt32(result["month"])
+                            };
+                           return Ok(singleCalendar);
+                        }
+                    }
                 }
             }
-            return Ok(new { yearMonth = result }); // JSONオブジェクトの形に包んであげる！よ
+            return NotFound(); // 見つからなかった場合の処理404を返す
         }
         [HttpGet("event")]
         public IActionResult GetEvent()
