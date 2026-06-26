@@ -354,20 +354,19 @@
                 const html = `
                         <div class="palette-container">
                             <event-name>${eventl.eventName}</event-name>
-                            <div class ="radio-sample-container">
+                            <foram class ="radio-sample-container">
                                 <label class="radio-label"> 
                                     <input type="radio"> OK
                                 </label>
                                 <label class="radio-label"> 
                                     <input type="radio"> NO
                                 </label>
-                            </div>
+                            </foram>
 
                         </div>
                     `;//HTMLのように各
                 event.insertAdjacentHTML('beforeend', html);//おおもとに追加beforeendで後ろから順に追加htmlでその中を
             });
-
         }
 
         // function initEvent(eventList) {//イベント欄の作成
