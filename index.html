@@ -192,6 +192,7 @@
         let userName = "ゲストユーザー";
         let calendar;
         let selectstamps = "休み";
+        let event_ans = [];
 
 
         // ここに内部の更新処理を書く
@@ -207,7 +208,6 @@
             event.target.classList.add('UN');
 
         }
-
 
 
         //ラインのログイン 名前とIDの取得処理-----------------------------------------------------------------------------------------------------------------------------------------
@@ -349,7 +349,11 @@
         function initEvent(eventList) {//イベント欄の作成
             const event = document.getElementById('event_create');//おおもとの作成
             event.innerHTML = '';//一度中を空にする
+            event_ans =[];
             eventList.forEach(eventl => {
+                event_ans.push ({
+                    id: eventl.eventId,
+                    answer: null});
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class="palette-container">
@@ -362,13 +366,12 @@
                                     <input type="radio" name= ${eventl.eventId}> NO
                                 </label>
                             </div>
-
                         </div>
                     `;//HTMLのように各
                 event.insertAdjacentHTML('beforeend', html);//おおもとに追加beforeendで後ろから順に追加htmlでその中を
             });
         }
-
+//アンサーにあるいべんといidと同じやつにいれshift_reqsを作った後にreqsidを使い誰が答えたかの記録を行いanswer Booleanにfalseかtrueを入れる
         // function initEvent(eventList) {//イベント欄の作成
         //     const event = document.getElementById('event_create');
 
@@ -407,6 +410,12 @@
                 alert("日付が選択されていません！");
                 return;
             }
+            const isAllAnswer = event_ans.some(item => item.answer === null);//some一つでも条件に当てはまるやつがあるなら
+            if(isAllAnswer){
+                alert("イベントに未回答があります")
+            }
+
+            
 
 
             const bikouText = document.getElementById("Text-message").value;
