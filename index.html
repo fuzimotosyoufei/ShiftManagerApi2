@@ -349,21 +349,22 @@
         function initEvent(eventList) {//イベント欄の作成
             const event = document.getElementById('event_create');//おおもとの作成
             event.innerHTML = '';//一度中を空にする
-            event_ans =[];
+            event_ans = [];
             eventList.forEach(eventl => {
-                event_ans.push ({
+                event_ans.push({
                     id: eventl.eventId,
-                    answer: null});
+                    answer: null
+                });
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class="palette-container">
                             <event-name>${eventl.eventName}</event-name>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
-                                    <input type="radio" name= ${eventl.eventId} > OK
+                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, ture)" > OK
                                 </label>
                                 <label class="radio-label"> 
-                                    <input type="radio" name= ${eventl.eventId}> NO
+                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, false)"> NO
                                 </label>
                             </div>
                         </div>
@@ -371,7 +372,15 @@
                 event.insertAdjacentHTML('beforeend', html);//おおもとに追加beforeendで後ろから順に追加htmlでその中を
             });
         }
-//アンサーにあるいべんといidと同じやつにいれshift_reqsを作った後にreqsidを使い誰が答えたかの記録を行いanswer Booleanにfalseかtrueを入れる
+
+        function CheckEvent(event_id, Check) {
+            const target = event_ans.find(item => item.id === event_id);
+            if (target) {
+                target.answer = Check;
+                console.log("回答", event_ans);
+            }
+        }
+        //アンサーにあるいべんといidと同じやつにいれshift_reqsを作った後にreqsidを使い誰が答えたかの記録を行いanswer Booleanにfalseかtrueを入れる
         // function initEvent(eventList) {//イベント欄の作成
         //     const event = document.getElementById('event_create');
 
@@ -411,11 +420,11 @@
                 return;
             }
             const isAllAnswer = event_ans.some(item => item.answer === null);//some一つでも条件に当てはまるやつがあるなら
-            if(isAllAnswer){
+            if (isAllAnswer) {
                 alert("イベントに未回答があります")
             }
 
-            
+
 
 
             const bikouText = document.getElementById("Text-message").value;
