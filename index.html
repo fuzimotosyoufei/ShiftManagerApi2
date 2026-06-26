@@ -350,16 +350,16 @@
             const event = document.getElementById('event_create');//おおもとの作成
             event.innerHTML = '';//一度中を空にする
             eventList.forEach(eventl => {
-
+                //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class="palette-container">
                             <event-name>${eventl.eventName}</event-name>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
-                                    <input type="radio" value="male"> OK
+                                    <input type="radio" name=${eventl.eventId} > OK
                                 </label>
                                 <label class="radio-label"> 
-                                    <input type="radio" value="female"> NO
+                                    <input type="radio" ${eventl.eventId}> NO
                                 </label>
                             </div>
 
