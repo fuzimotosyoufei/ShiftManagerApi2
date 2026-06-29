@@ -41,7 +41,7 @@ namespace ShiftManagerApi2.Controllers
                                                                                    //if (staff_id !=0)
                     if (reqs_id != 0)
                     {
-                        a = Update_Req_dates(reqs_id, data.Memo, data.Dates);//ここに更新処理を書く、提出日と備考欄の更新処理とshift_datesの削除とshift_datesへの新規登録の処理を書く
+                        a = Update_Req_dates(reqs_id, data.Memo, data.Dates,data.Answer);//ここに更新処理を書く、提出日と備考欄の更新処理とshift_datesの削除とshift_datesへの新規登録の処理を書く
                     }
                     else
                     {
@@ -137,7 +137,8 @@ namespace ShiftManagerApi2.Controllers
 
                     var req_id = insert_cmd.ExecuteScalar();
 
-                    return Convert.ToInt32(req_id);//次に登録する処理を書く
+                    return Convert.ToInt32(req_id);
+                    //次に登録する処理を書く
                                                    //var dates_insert_sql = "INSERT INTO shift_req_dates (req_id, date, mode) VALUES (@req_id, @dates, @mode)";
                                                    //using (var insert_dates__cmd = new NpgsqlCommand(dates_insert_sql, conn))
                                                    //{
@@ -156,7 +157,7 @@ namespace ShiftManagerApi2.Controllers
         }
 
 
-        private string Update_Req_dates(int reqs_id, string Memo, List<ShiftDateItem> Dates)//既存のshift_idを更新する処理と既存のshift_req_dataを削除して新しく作成する処理
+        private string Update_Req_dates(int reqs_id, string Memo, List<ShiftDateItem> Dates,List<EventAnswerItem> Answer)//既存のshift_idを更新する処理と既存のshift_req_dataを削除して新しく作成する処理
         {
             using (var conn = _db.CreateConnection())
             {
@@ -176,6 +177,11 @@ namespace ShiftManagerApi2.Controllers
                 {
                     dlete_cmd.Parameters.AddWithValue("@id", reqs_id);
                     dlete_cmd.ExecuteNonQuery();
+                    foreach(var InAnswer in Answer)
+                    {
+                        InsertEvent_Answer(InAnswer.id, reqs_id, InAnswer.answer);//変更がまだ
+                    }
+                   
 
                 }
                 string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
@@ -190,12 +196,25 @@ namespace ShiftManagerApi2.Controllers
                         insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
                         insert_cmd.ExecuteNonQuery();
                     }
-                    return "多分変更で来たよ";
+                    return "多分変更で来たよyoyoyo";
                 }
             }
         }
-        //private string insert_reqs
-
+        private void InsertEvent_Answer(int event_id,int reqs_id, bool answer)//イベントの回答データベースに回答を入れる処理
+        {
+            using (var answer_conn = _db.CreateConnection())
+            {
+                string answer_sql = "INSERT INTO event_answer VALUES (@event_id,@reqs_id,@answer)";
+                using (var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
+                {
+                    answer_cmd.Parameters.AddWithValue("@event_id", event_id);
+                    answer_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
+                    answer_cmd.Parameters.AddWithValue("@answer", answer);
+                    answer_cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        
 
 
 
@@ -239,7 +258,7 @@ namespace ShiftManagerApi2.Controllers
             var eventList = new List<object>();
             using (var conn = _db.CreateConnection())
             {
-                string event_sql = "SELECT e.name, e.content FROM event e INNER JOIN (SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.id" ;
+                string event_sql = "SELECT e.id,e.name, e.content FROM event e INNER JOIN (SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.id" ;
                 using (var event_cmd = new NpgsqlCommand(event_sql, conn))
                 {
                     using (var result = event_cmd.ExecuteReader())
@@ -247,6 +266,7 @@ namespace ShiftManagerApi2.Controllers
                         while (result.Read())
                         {
                             var singleEvent = new{
+                                eventId = Convert.ToInt32(result["id"]),
                                 eventName = result["name"].ToString(),
                                 eventContent = result["content"].ToString()
                             };

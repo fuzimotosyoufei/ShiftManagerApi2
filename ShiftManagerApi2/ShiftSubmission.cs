@@ -7,8 +7,13 @@ namespace ShiftManagerApi2
         public DateTime Date { get; set; } 
         public string Mode { get; set; } = string.Empty;
     }
-    
+    public class EventAnswerItem
+    {
+        public int id { get; set; }
 
+        public bool answer { get; set; }
+    }
+    
     public class ShiftSubmission
     {
         // 👤 スタッフ名 (userName) を受け取る
@@ -25,6 +30,7 @@ namespace ShiftManagerApi2
         // 📅 選択された日付のリスト (sortedDates) を受け取る
         public List<ShiftDateItem> Dates { get; set; }
 
+        public List<EventAnswerItem> Answer { get; set; }
         
     }
 }
