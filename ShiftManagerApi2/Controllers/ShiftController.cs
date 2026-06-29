@@ -179,7 +179,7 @@ namespace ShiftManagerApi2.Controllers
                     dlete_cmd.ExecuteNonQuery();
                     foreach(var InAnswer in Answer)
                     {
-                        InsertEvent_Answer(InAnswer.id, reqs_id, InAnswer.answer);//変更がまだ
+                        InsertEvent_Answer(InAnswer.Id, reqs_id, InAnswer.Answer);//変更がまだ
                     }
                    
 
@@ -204,7 +204,7 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var answer_conn = _db.CreateConnection())
             {
-                string answer_sql = "INSERT INTO event_answer VALUES (@event_id,@reqs_id,@answer)";
+                string answer_sql = "INSERT INTO event_answer (event_id, req_id, answer) VALUES (@event_id,@reqs_id,@answer)";
                 using (var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
                 {
                     answer_cmd.Parameters.AddWithValue("@event_id", event_id);

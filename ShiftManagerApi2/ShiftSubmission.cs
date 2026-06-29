@@ -9,9 +9,9 @@ namespace ShiftManagerApi2
     }
     public class EventAnswerItem
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        public bool answer { get; set; }
+        public bool Answer { get; set; } = false;
     }
     
     public class ShiftSubmission
