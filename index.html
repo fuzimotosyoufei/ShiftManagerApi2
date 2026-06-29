@@ -421,7 +421,8 @@
             }
             const isAllAnswer = event_ans.some(item => item.answer === null);//some一つでも条件に当てはまるやつがあるなら
             if (isAllAnswer) {
-                alert("イベントに未回答があります")
+                alert("イベントに未回答があります");
+                return;
             }
 
 
@@ -441,7 +442,7 @@
                 year: calYear,
                 month: calMonth,
                 id: lineid,
-                Answer: event_ans
+                answer: event_ans
             };
 
             // ⭕ C#のAPIへ送信
