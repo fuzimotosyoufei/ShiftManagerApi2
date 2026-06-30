@@ -258,27 +258,12 @@
                     initCalendar(startDateStr, endDateStr);
 
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
-                        .then(response => {
-                            if (!response.ok) throw new Error('データの取得に失敗しました');
-                            return response.text(); // 💡 一度 json() ではなく text() で「生の文字」として取る！
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
+                        .then(data => {
+                            console.log("スタッフがすでにあるかのデータだよ", data);
                         })
-                        .then(text => {
-                            console.log("C#から届いた生の文字:", text);
 
-                            // 💡 中身が空っぽ、または "null" という文字だったら null として扱う
-                            const staffId = (text === "" || text === "null") ? null : Number(text);
 
-                            if (staffId === null) {
-                                console.log("スタッフIDは見つかりませんでした（新規登録画面などの処理へ）");
-                                // ここにIDがなかったときの処理を書く
-                            } else {
-                                console.log("スタッフIDを発見しました！ ID:", staffId);
-                                // ここにIDが見つかったときの処理（カレンダー初期化など）を書く
-                            }
-                        })
-                        .catch(error => {
-                            console.error('エラー:', error);
-                        });
                     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event/answers',{headers: {'ngrok-skip-browser-warning' : 'ture'}})
