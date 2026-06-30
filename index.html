@@ -224,7 +224,7 @@
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
 
-                            CalendarData();
+                            CalendarData(lineid);
                         });
                     }
                     //ここらへんで多分入れるらいんのID
@@ -235,7 +235,7 @@
         });
         //今配信しているカレンダーを選別し表示する処理-----------------------------------------------------------------------------------------------------------------------------------------      
 
-        function CalendarData() {
+        function CalendarData(lineid) {
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true'
@@ -261,17 +261,13 @@
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
-                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', {
-                        headers: {
-                            'ngrok-skip-browser-warning': 'true'
-                        }
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error('データの取得に失敗しましたたたた');
-                            return response.json();
-                        })
+                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
+                        // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event/answers',{headers: {'ngrok-skip-browser-warning' : 'ture'}})
+                        // .then(response => { if (!response.ok) throw new Error('データの取得に失敗したよ履歴の'); return response.json();})
                         .then(data => {
                             console.log("データこれ", data);
+                            // console.log("履歴のデータこれだよ" , data_answers);
                             initEvent(data);
                         })
                         .catch(error => {
