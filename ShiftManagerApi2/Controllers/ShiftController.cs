@@ -106,7 +106,8 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string reqs_sql = "SELECT id FROM shift_reqs WHERE staff_id=@staff_id AND year=@year AND month=@month";
+                string reqs_sql = "  SELECT shift_reqs.id FROM shift_reqs WHERE staff_id = @staff_id AND shift_reqs.periods_id = (SELECT shift_periods.id FROM shift_periods WHERE shift_periods.year = @year AND shift_periods.month = @month) ";
+              
                 using (var reqs_cmd = new NpgsqlCommand(reqs_sql, conn))
                 {
                     reqs_cmd.Parameters.AddWithValue("@staff_id", staff_id);
@@ -127,7 +128,7 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string insert_sql = "INSERT INTO shift_reqs (staff_id, memo, year, month) VALUES (@staff_id, @memo, @year, @month)RETURNING id";
+                string insert_sql = "INSERT INTO shift_reqs (staff_id,periods_id,memo) SELECT @staff_id, id, @memo FROM shift_periods WHERE year =@year AND month = @month RETURNING id";
                 using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
                 {
                     insert_cmd.Parameters.AddWithValue("@staff_id", staff_id);
@@ -204,7 +205,7 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var answer_conn = _db.CreateConnection())
             {
-                string answer_sql = "INSERT INTO event_answer (event_id, req_id, answer) VALUES (@event_id,@reqs_id,@answer)";
+                string answer_sql = "INSERT INTO event_answer (event_id, reqs_id, answer) VALUES (@event_id,@reqs_id,@answer)";
                 using (var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
                 {
                     answer_cmd.Parameters.AddWithValue("@event_id", event_id);
@@ -252,7 +253,7 @@ namespace ShiftManagerApi2.Controllers
             }
             return NotFound(); // 見つからなかった場合の処理404を返す
         }
-        [HttpGet("event")]
+        [HttpGet("event")]//その月に配信されているイベントを返す処理
         public IActionResult GetEvent()
         {
             var eventList = new List<object>();
@@ -279,7 +280,18 @@ namespace ShiftManagerApi2.Controllers
             return Ok(eventList); 
         
         }
+        //[HttpGet("event/answer")]//その月に配信されているイベントをすでに回答している場合、その回答を返す処理
+        //public IActionResult GetEventAnswer()
+        //{
+        //    var answerList = new List<object>();
+        //    using (var conn = _db.CreateConnection())
+        //    {
+        //        string answer_sql = ""
+        //    }
+        //}
 
     }
 }
+
+//SELECT date, mode FROM shift_req_dates INNER JOIN ; 
 
