@@ -248,19 +248,22 @@
                 })
                 .then(data => {
                     console.log("C#から届いた生データはこれだ！:", data);
-
                     const year = data.year;
                     const month = data.month;
-
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
-
-
-
                     const lastDay = new Date(year, month + 1, 0).getDate();
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
+
+                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid', { headers: { 'ngrok-skip-browser-warning': 'true' } })//line_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
+                        .then(data => {
+                            console.log("スタッフがすでにあるかのデータだよ", data);
+                        })
+
+
                     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event/answers',{headers: {'ngrok-skip-browser-warning' : 'ture'}})
