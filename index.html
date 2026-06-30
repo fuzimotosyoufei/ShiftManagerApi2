@@ -257,7 +257,7 @@
 
                     initCalendar(startDateStr, endDateStr);
 
-                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid', { headers: { 'ngrok-skip-browser-warning': 'true' } })//line_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
+                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}', { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         .then(data => {
                             console.log("スタッフがすでにあるかのデータだよ", data);
