@@ -265,7 +265,7 @@
                                 console.log("スタッフがまだ登録されてないよ")
                             } else {
                                 console.log("スタッフがすでにあるかのデータだよ", staff_id);
-                                fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'ture' } })
+                                fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
                                     .then(shift_reqs_id => {
                                         if (shift_reqs_id === null) {
