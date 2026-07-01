@@ -275,8 +275,8 @@
                                             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
-                                                    console.log("日付", dates.date);
-                                                    console.log("種類", dates.mode);
+                                                    console.log("日付", dates);
+
                                                     //ここで表示する処理に移動
                                                 })
 
