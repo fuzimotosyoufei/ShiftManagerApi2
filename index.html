@@ -257,18 +257,30 @@
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
-
+                    //すでにその月のカレンダーに入力していてそれを表示する処理-----------------------------------------------------------------------------------------------------------------------------------------    
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         .then(staff_id => {
-                            console.log("スタッフがすでにあるかのデータだよ", staff_id);
                             if (staff_id === null) {
                                 console.log("スタッフがまだ登録されてないよ")
                             } else {
+                                console.log("スタッフがすでにあるかのデータだよ", staff_id);
                                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'ture' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
                                     .then(shift_reqs_id => {
-                                        console.log("もうその月に作ってあるよ", shift_reqs_id);
+
+                                        if (shift_reqs_id === null) {
+                                            console.log("もうその月に作ってあるよ", shift_reqs_id);
+                                        } else {
+                                            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { header: { 'ngrok-skip-browser-warning': 'ture' } })
+                                                .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
+                                                .then(dates => {
+                                                    console.log("日付", dates.date);
+                                                    console.log("種類", dates.mode);
+                                                    //ここで表示する処理に移動
+                                                })
+
+                                        }
                                     })
                             }
 
