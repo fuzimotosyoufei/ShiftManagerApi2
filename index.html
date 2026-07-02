@@ -276,9 +276,48 @@
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
                                                     console.log("日付", dates);
-                                                    dates.forEach(element => {
-                                                        console.log("日付", element.date);
-                                                        console.log("種類", element.mode);
+                                                    dates.forEach(datesfor => {
+                                                        selectedDates.push({
+                                                            date: datesfor.date,
+                                                            mode: datesfor.mode
+                                                        });
+
+
+
+                                                        //      dateClick: function (info) {
+
+                                                        //         const clickedDate = info.dateStr;//日付をclickeDateに入れている
+                                                        //         console.log("データ", info.dateStr)
+                                                        //         console.log("データ", typeof info)
+                                                        //         const existsindex = selectedDates.findIndex(item =>//これには番号が入っている
+                                                        //             item.date == clickedDate
+
+                                                        //         );
+
+                                                        //         if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
+                                                        //             if (selectedDates[existsindex].mode == selectstamps) {
+                                                        //                 selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
+                                                        //                 info.dayEl.style.backgroundColor = '#ffffff';
+                                                        //             } else {
+                                                        //                 selectedDates.splice(existsindex, 1); // まず古いデータを消す
+                                                        //                 selectedDates.push({
+                                                        //                     date: clickedDate,
+                                                        //                     mode: selectstamps
+                                                        //                 });
+                                                        //                 updateCellColor(info.dayEl, selectstamps);
+                                                        //             }
+                                                        //         } else {
+                                                        //             selectedDates.push({
+                                                        //                 date: clickedDate,
+                                                        //                 mode: selectstamps
+                                                        //             });//何かが足りない
+                                                        //             updateCellColor(info.dayEl, selectstamps);
+                                                        //         }
+
+                                                        //     }
+                                                        // });
+
+
                                                     });
 
                                                     //ここで表示する処理に移動
@@ -461,6 +500,11 @@
             const calYear = calendData.getFullYear();
             const calMonth = calendData.getMonth() + 1;
 
+            sortedDates.forEach(element => {
+                console.log(element.date),
+                    console.log(element.mode)
+            });
+
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
                 name: userName,    // C#の Name にマッピングされます
@@ -471,6 +515,7 @@
                 id: lineid,
                 answer: event_ans
             };
+
 
             // ⭕ C#のAPIへ送信
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
