@@ -195,9 +195,9 @@
                 <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')">データを全削除</button>
 
 
-                <table id="eeee" class="design01">
+                <table id="shift_create" class="design01">
 
-                    <tr id="sss">
+                    <tr id="shift_name">
                         <th>名前</th>
 
                     </tr>
@@ -264,8 +264,8 @@
 
         document.addEventListener('DOMContentLoaded', function () {
 
-            const tbody = document.getElementById('sss');
-            const tbody2 = document.getElementById('eeee');
+            const tbody = document.getElementById('shift_name');
+            const tbody2 = document.getElementById('shift_create');
             tbody.innerHTML = ''; // 一度中身をクリア
 
 
@@ -275,19 +275,19 @@
             ];
 
 
-            const days = new Date(2026, 6, 0).getDate();
+            const days = new Date(2026, 7, 0).getDate();
             const thn = document.createElement('th')
             thn.classList.add('name');
             thn.textContent = "名前";
             tbody.appendChild(thn);
 
-            for (let i = 1; i <= days; i++) {
+            for (let i = 1; i <= days; i++) {//日を入れている
                 const th = document.createElement('th')
                 th.textContent = i;
                 tbody.appendChild(th);
             }
 
-            eventSetting.forEach(setting => {
+            eventSetting.forEach(setting => {//イベントの処理
                 const the = document.createElement('th')
                 the.classList.add('yasumi');
                 the.textContent = "sssssss";
@@ -328,7 +328,7 @@
 
                 }
 
-                eventSetting.forEach(setting => {
+                eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
                     const eventTd = document.createElement('td');
 
                     if (staff[setting.key] === true) {

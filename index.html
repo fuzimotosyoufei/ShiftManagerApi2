@@ -193,7 +193,8 @@
         let calendar;
         let selectstamps = "休み";
         let event_ans = [];
-
+        let periods_id;
+        const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
 
         // ここに内部の更新処理を書く
         //休みか、遅番、早番で何が押されたかの判定----------------------------------------------------------------------------------------------------------------------------------------
@@ -224,7 +225,7 @@
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
 
-                            CalendarData();
+                            CalendarData(lineid);
                         });
                     }
                     //ここらへんで多分入れるらいんのID
@@ -235,7 +236,7 @@
         });
         //今配信しているカレンダーを選別し表示する処理-----------------------------------------------------------------------------------------------------------------------------------------      
 
-        function CalendarData() {
+        function CalendarData(lineid) {
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true'
@@ -248,30 +249,58 @@
                 })
                 .then(data => {
                     console.log("C#から届いた生データはこれだ！:", data);
-
                     const year = data.year;
                     const month = data.month;
-
+                    periods_id = data.id;
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
-
-
-
                     const lastDay = new Date(year, month + 1, 0).getDate();
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
-                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', {
-                        headers: {
-                            'ngrok-skip-browser-warning': 'true'
-                        }
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error('データの取得に失敗しましたたたた');
-                            return response.json();
+                    //すでにその月のカレンダーに入力していてそれを表示する処理-----------------------------------------------------------------------------------------------------------------------------------------    
+                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
+                        .then(staff_id => {
+                            if (staff_id === null) {
+                                console.log("スタッフがまだ登録されてないよ")
+                            } else {
+                                console.log("スタッフがすでにあるかのデータだよ", staff_id);
+                                fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                                    .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
+                                    .then(shift_reqs_id => {
+                                        if (shift_reqs_id === null) {
+                                            console.log("まだ作ってないよ")
+                                        } else {
+                                            console.log("もうその月に作ってあるよ", shift_reqs_id);
+                                            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                                                .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
+                                                .then(dates => {
+                                                    console.log("日付", dates);
+                                                    dates.forEach(datesfor => {
+                                                        selectedDates.push({
+                                                            date: datesfor.date,
+                                                            mode: datesfor.mode,
+
+                                                        });
+                                                        HistoryDay(calendar, datesfor.date, datesfor.mode);
+                                                    });
+
+                                                    //ここで表示する処理に移動
+                                                })
+                                        }
+                                    })
+                            }
+
                         })
+
+                    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
+                        // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event/answers',{headers: {'ngrok-skip-browser-warning' : 'ture'}})
+                        // .then(response => { if (!response.ok) throw new Error('データの取得に失敗したよ履歴の'); return response.json();})
                         .then(data => {
                             console.log("データこれ", data);
+                            // console.log("履歴のデータこれだよ" , data_answers);
                             initEvent(data);
                         })
                         .catch(error => {
@@ -284,9 +313,13 @@
                 })
 
         }
+        function HistoryDay(calendar, date, mode) {
+            const dayEl = calendarEl.querySelector(`[data-date="${date}"]`);
+            updateCellColor(dayEl, mode);
+        }
         //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
         function initCalendar(start, end) {
-            const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
+
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
@@ -302,9 +335,11 @@
                 dateClick: function (info) {
 
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
-
+                    console.log("データ", info.dateStr)
+                    console.log("データ", typeof info)
                     const existsindex = selectedDates.findIndex(item =>//これには番号が入っている
                         item.date == clickedDate
+
                     );
 
                     if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
@@ -318,6 +353,7 @@
                                 mode: selectstamps
                             });
                             updateCellColor(info.dayEl, selectstamps);
+
                         }
                     } else {
                         selectedDates.push({
@@ -434,6 +470,11 @@
             const calYear = calendData.getFullYear();
             const calMonth = calendData.getMonth() + 1;
 
+            sortedDates.forEach(element => {
+                console.log(element.date),
+                    console.log(element.mode)
+            });//実験用
+
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
                 name: userName,    // C#の Name にマッピングされます
@@ -444,6 +485,7 @@
                 id: lineid,
                 answer: event_ans
             };
+
 
             // ⭕ C#のAPIへ送信
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
