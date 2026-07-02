@@ -276,6 +276,10 @@
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
                                                     console.log("日付", dates);
+                                                    dates.forEach(element => {
+                                                        console.log("日付", element.date);
+                                                        console.log("種類", element.mode);
+                                                    });
 
                                                     //ここで表示する処理に移動
                                                 })
