@@ -194,6 +194,7 @@
         let selectstamps = "休み";
         let event_ans = [];
         let periods_id;
+        const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
 
         // ここに内部の更新処理を書く
         //休みか、遅番、早番で何が押されたかの判定----------------------------------------------------------------------------------------------------------------------------------------
@@ -317,6 +318,17 @@
                                                         //     }
                                                         // });
 
+                                                        //  function updateCellColor(element, stamp) {
+                                                        //     if (stamp === "休み") {
+                                                        //         element.style.backgroundColor = '#ff4d4d';
+                                                        //     } else if (stamp === "日勤") {
+                                                        //         element.style.backgroundColor = '#3498db';
+                                                        //     } else {
+                                                        //         element.style.backgroundColor = '#fef9e7';
+                                                        //     }
+                                                        // }
+
+
 
                                                     });
 
@@ -350,7 +362,7 @@
         }
         //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
         function initCalendar(start, end) {
-            const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
+
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
@@ -384,6 +396,7 @@
                                 mode: selectstamps
                             });
                             updateCellColor(info.dayEl, selectstamps);
+
                         }
                     } else {
                         selectedDates.push({
@@ -503,7 +516,7 @@
             sortedDates.forEach(element => {
                 console.log(element.date),
                     console.log(element.mode)
-            });
+            });//実験用
 
             // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
             const sendData = {
