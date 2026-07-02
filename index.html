@@ -280,61 +280,14 @@
                                                     dates.forEach(datesfor => {
                                                         selectedDates.push({
                                                             date: datesfor.date,
-                                                            mode: datesfor.mode
+                                                            mode: datesfor.mode,
+
                                                         });
-
-
-
-                                                        //      dateClick: function (info) {
-
-                                                        //         const clickedDate = info.dateStr;//日付をclickeDateに入れている
-                                                        //         console.log("データ", info.dateStr)
-                                                        //         console.log("データ", typeof info)
-                                                        //         const existsindex = selectedDates.findIndex(item =>//これには番号が入っている
-                                                        //             item.date == clickedDate
-
-                                                        //         );
-
-                                                        //         if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
-                                                        //             if (selectedDates[existsindex].mode == selectstamps) {
-                                                        //                 selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
-                                                        //                 info.dayEl.style.backgroundColor = '#ffffff';
-                                                        //             } else {
-                                                        //                 selectedDates.splice(existsindex, 1); // まず古いデータを消す
-                                                        //                 selectedDates.push({
-                                                        //                     date: clickedDate,
-                                                        //                     mode: selectstamps
-                                                        //                 });
-                                                        //                 updateCellColor(info.dayEl, selectstamps);
-                                                        //             }
-                                                        //         } else {
-                                                        //             selectedDates.push({
-                                                        //                 date: clickedDate,
-                                                        //                 mode: selectstamps
-                                                        //             });//何かが足りない
-                                                        //             updateCellColor(info.dayEl, selectstamps);
-                                                        //         }
-
-                                                        //     }
-                                                        // });
-
-                                                        //  function updateCellColor(element, stamp) {
-                                                        //     if (stamp === "休み") {
-                                                        //         element.style.backgroundColor = '#ff4d4d';
-                                                        //     } else if (stamp === "日勤") {
-                                                        //         element.style.backgroundColor = '#3498db';
-                                                        //     } else {
-                                                        //         element.style.backgroundColor = '#fef9e7';
-                                                        //     }
-                                                        // }
-
-
-
+                                                        HistoryDay(calendar, datesfor.date, datesfor.mode);
                                                     });
 
                                                     //ここで表示する処理に移動
                                                 })
-
                                         }
                                     })
                             }
@@ -359,6 +312,10 @@
                     console.error('エラー:', error);
                 })
 
+        }
+        function HistoryDay(calendar, date, mode) {
+            const dayEl = calendarEl.querySelector(`[data-date="${date}"]`);
+            updateCellColor(dayEl, mode);
         }
         //カレンダーの作成処理----------------------------------------------------------------------------------------------------------------------------------------
         function initCalendar(start, end) {
