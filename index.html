@@ -194,6 +194,7 @@
         let selectstamps = "休み";
         let event_ans = [];
         let periods_id;
+        let shift_reqs_id;
         const calendarEl = document.getElementById('calendar');//calendarElにcalendarの場所を代入する理由はcalendarElをこの先使う可能性があるからgetElementByIdはその場所を代入する
 
         // ここに内部の更新処理を書く
@@ -268,11 +269,12 @@
                                 console.log("スタッフがすでにあるかのデータだよ", staff_id);
                                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
-                                    .then(shift_reqs_id => {
-                                        if (shift_reqs_id === null) {
+                                    .then(Shift_reqs_id => {
+                                        if (Shift_reqs_id === null) {
                                             console.log("まだ作ってないよ")
                                         } else {
-                                            console.log("もうその月に作ってあるよ", shift_reqs_id);
+                                            console.log("もうその月に作ってあるよ", Shift_reqs_id);
+                                            shift_reqs_id = Shift_reqs_id;
                                             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
@@ -283,25 +285,23 @@
                                                             mode: datesfor.mode,
 
                                                         });
-                                                        HistoryDay(calendar, datesfor.date, datesfor.mode);
+                                                        HistoryDay(calendar, datesfor.date, datesfor.mode);//メモがまだだよ
                                                     });
 
-                                                    //ここで表示する処理に移動
                                                 })
                                         }
                                     })
                             }
 
                         })
-
+                    // fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
-                        // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event/answers',{headers: {'ngrok-skip-browser-warning' : 'ture'}})
-                        // .then(response => { if (!response.ok) throw new Error('データの取得に失敗したよ履歴の'); return response.json();})
                         .then(data => {
                             console.log("データこれ", data);
-                            // console.log("履歴のデータこれだよ" , data_answers);
+
                             initEvent(data);
+
                         })
                         .catch(error => {
                             console.error('エラー', error);
@@ -313,6 +313,7 @@
                 })
 
         }
+        //カレンダーの履歴の色を変える処理作成処理----------------------------------------------------------------------------------------------------------------------------------------
         function HistoryDay(calendar, date, mode) {
             const dayEl = calendarEl.querySelector(`[data-date="${date}"]`);
             updateCellColor(dayEl, mode);
