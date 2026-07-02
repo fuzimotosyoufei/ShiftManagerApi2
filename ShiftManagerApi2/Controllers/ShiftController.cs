@@ -4,6 +4,7 @@ using Npgsql;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.ObjectiveC;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ShiftManagerApi2.Controllers
 {
@@ -215,6 +216,7 @@ namespace ShiftManagerApi2.Controllers
                     var result = Existence_cmd.ExecuteScalar();
                     if (result == null)
                     {
+                        Console.WriteLine("実行されたよ1（INSERTに入った！）");
                         isAlreadyExists = false;
                     }
                 }
@@ -226,16 +228,19 @@ namespace ShiftManagerApi2.Controllers
                         answer_cmd.Parameters.AddWithValue("@event_id", event_id);
                         answer_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
                         answer_cmd.Parameters.AddWithValue("@answer", answer);
+                        Console.WriteLine("実行されたよ2（INSERTに入った！）");
                         answer_cmd.ExecuteNonQuery();
                     }
                 }
                 else
                 {
-                    string answer_sql = "UPDATE event_answer SET answer = false WHERE event_id = @event_id AND reqs_id = @reqs_id";
+                    string answer_sql = "UPDATE event_answer SET answer = @answer WHERE event_id = @event_id AND reqs_id = @reqs_id";
                     using(var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
                     {
-                        answer_cmd.Parameters.AddWithValue("event_id", event_id);
-                        answer_cmd.Parameters.AddWithValue("resq_id", reqs_id);
+                        answer_cmd.Parameters.AddWithValue("@event_id", event_id);
+                        answer_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
+                        answer_cmd.Parameters.AddWithValue("@answer", answer);
+                        Console.WriteLine("実行されたよ3（INSERTに入った！）");
                         answer_cmd.ExecuteNonQuery();
                     }
                 }
