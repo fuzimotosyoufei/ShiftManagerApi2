@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using Npgsql;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Security.Cryptography;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ShiftManagerApi2.Controllers
@@ -203,19 +204,49 @@ namespace ShiftManagerApi2.Controllers
         }
         private void InsertEvent_Answer(int event_id,int reqs_id, bool answer)//イベントの回答データベースに回答を入れる処理
         {
+            bool isAlreadyExists = true;
             using (var answer_conn = _db.CreateConnection())
-            {
-                string answer_sql = "INSERT INTO event_answer (event_id, reqs_id, answer) VALUES (@event_id,@reqs_id,@answer)";
-                using (var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
+            { 
+                string answer_Existence_sql = "SELECT  a.answer FROM event e INNER JOIN(SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id LEFT JOIN(SELECT event_id, answer, reqs_id FROM event_answer WHERE reqs_id = @reqs_id)a ON a.event_id = e.id WHERE e.id =@event_id";
+                using (var Existence_cmd = new NpgsqlCommand(answer_Existence_sql,answer_conn))
                 {
-                    answer_cmd.Parameters.AddWithValue("@event_id", event_id);
-                    answer_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
-                    answer_cmd.Parameters.AddWithValue("@answer", answer);
-                    answer_cmd.ExecuteNonQuery();
+                    Existence_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
+                    Existence_cmd.Parameters.AddWithValue("@event_id", event_id);
+                    var result = Existence_cmd.ExecuteScalar();
+                    if (result == null)
+                    {
+                        isAlreadyExists = false;
+                    }
+                }
+                if (!isAlreadyExists)
+                {//データがまだない時
+                    string answer_sql = "INSERT INTO event_answer (event_id, reqs_id, answer) VALUES (@event_id,@reqs_id,@answer)";
+                    using (var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
+                    {
+                        answer_cmd.Parameters.AddWithValue("@event_id", event_id);
+                        answer_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
+                        answer_cmd.Parameters.AddWithValue("@answer", answer);
+                        answer_cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string answer_sql = "UPDATE event_answer SET answer = false WHERE event_id = @event_id AND reqs_id = @reqs_id";
+                    using(var answer_cmd = new NpgsqlCommand(answer_sql, answer_conn))
+                    {
+                        answer_cmd.Parameters.AddWithValue("event_id", event_id);
+                        answer_cmd.Parameters.AddWithValue("resq_id", reqs_id);
+                        answer_cmd.ExecuteNonQuery();
+                    }
                 }
             }
+              
         }
-        
+
+//SELECT e.id, e.name, e.content , a.answer FROM event e
+//INNER JOIN(SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id
+//LEFT JOIN(SELECT event_id, answer, reqs_id FROM event_answer WHERE reqs_id = 1)a ON a.event_id = e.id
+
 
 
 
@@ -234,7 +265,7 @@ namespace ShiftManagerApi2.Controllers
             using (var conn = _db.CreateConnection())
             {
                
-                string calendar_sql = "SELECT year,month FROM shift_periods WHERE status = '配信中'";
+                string calendar_sql = "SELECT id,year,month FROM shift_periods WHERE status = '配信中'";
                 using (var calendar_cmd = new NpgsqlCommand(calendar_sql, conn))
                 {
                    using(var result = calendar_cmd.ExecuteReader())
@@ -243,6 +274,7 @@ namespace ShiftManagerApi2.Controllers
                         {
                             var singleCalendar = new
                             {
+                                id = Convert.ToInt32(result["id"]),
                                 year = Convert.ToInt32(result["year"]),
                                 month = Convert.ToInt32(result["month"])
                             };
@@ -253,13 +285,32 @@ namespace ShiftManagerApi2.Controllers
             }
             return NotFound(); // 見つからなかった場合の処理404を返す
         }
+        [HttpGet("staffid")]
+        public IActionResult GetStaff_id([FromQuery(Name = "line_id")] string line_id)//FromQueryで何の名前で送られてくる その次にC#内で使う名前を指定している
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string staffid_sql = "SELECT id FROM staff WHERE line_id = @line_id";
+                using (var staffid_cmd = new NpgsqlCommand(staffid_sql,conn))
+                {
+                    staffid_cmd.Parameters.AddWithValue("@line_id", line_id);
+                    var result = staffid_cmd.ExecuteScalar();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        return Ok(null);
+                    }
+                    int staffId = Convert.ToInt32(result);//reqs_idがあった場合はそのIDを返す
+                    return Ok(staffId);
+                }
+            }
+        }
         [HttpGet("event")]//その月に配信されているイベントを返す処理
         public IActionResult GetEvent()
         {
             var eventList = new List<object>();
             using (var conn = _db.CreateConnection())
             {
-                string event_sql = "SELECT e.id,e.name, e.content FROM event e INNER JOIN (SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.id" ;
+                string event_sql = "SELECT e.id,e.name, e.content FROM event e INNER JOIN (SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id ";
                 using (var event_cmd = new NpgsqlCommand(event_sql, conn))
                 {
                     using (var result = event_cmd.ExecuteReader())
@@ -280,6 +331,54 @@ namespace ShiftManagerApi2.Controllers
             return Ok(eventList); 
         
         }
+        [HttpGet("shift_reqs")]
+        public IActionResult Getshift_reqs([FromQuery(Name ="staff_id")] int staff_id,[FromQuery(Name = "periods_id")] int periods_id)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string shift_reqs_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND periods_id = @periods_id";
+                using (var shift_reqs_cmd = new NpgsqlCommand(shift_reqs_sql, conn))
+                {
+                    shift_reqs_cmd.Parameters.AddWithValue("@staff_id", staff_id);
+                    shift_reqs_cmd.Parameters.AddWithValue("@periods_id", periods_id);
+                    var result = shift_reqs_cmd.ExecuteScalar();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        return Ok(null);
+                    }
+                    int shift_reqsId = Convert.ToInt32(result);
+                    return Ok(shift_reqsId);
+                }
+            }
+        }
+        [HttpGet("shift_dates")]
+        public IActionResult Getdates([FromQuery(Name = "shift_reqs_id")] int req_id)
+        {
+            var dates_List = new List<object> ();
+            using (var conn = _db.CreateConnection())
+            {
+                string shift_dates_sql = "SELECT date,mode FROM shift_req_dates WHERE req_id = @req_id";
+                using (var shift_dates_cmd = new NpgsqlCommand(shift_dates_sql,conn))
+                {
+                    shift_dates_cmd.Parameters.AddWithValue("@req_id", req_id);
+                    using (var result = shift_dates_cmd.ExecuteReader())
+                    {
+                        while (result.Read())
+                        {
+                            var SingreDates = new
+                            {
+                               
+                                date = (DateOnly)result["date"],
+                                mode = result["mode"].ToString()
+                            };
+                            dates_List.Add(SingreDates);
+                        }
+                    }
+                    
+                }
+            }
+            return Ok(dates_List);
+        }
         //[HttpGet("event/answer")]//その月に配信されているイベントをすでに回答している場合、その回答を返す処理
         //public IActionResult GetEventAnswer()
         //{
@@ -293,5 +392,4 @@ namespace ShiftManagerApi2.Controllers
     }
 }
 
-//SELECT date, mode FROM shift_req_dates INNER JOIN ; 
 
