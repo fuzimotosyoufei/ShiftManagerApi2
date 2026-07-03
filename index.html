@@ -307,6 +307,8 @@
         }
 
         function Event(shift_reqs_id) {
+            console.log("データこれ", shift_reqs_id);
+
             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                 // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
                 .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
