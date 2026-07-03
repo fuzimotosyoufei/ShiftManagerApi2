@@ -214,9 +214,10 @@ namespace ShiftManagerApi2.Controllers
                     Existence_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
                     Existence_cmd.Parameters.AddWithValue("@event_id", event_id);
                     var result = Existence_cmd.ExecuteScalar();
-                    if (result == null)
+                    // 💡 C#の null または データベースの NULL（DBNull.Value）だったらデータなし！
+                    if (result == null || result == DBNull.Value)
                     {
-                        Console.WriteLine("実行されたよ1（INSERTに入った！）");
+                        Console.WriteLine("実行されたよ1（データがないことを確認した！）");
                         isAlreadyExists = false;
                     }
                 }
@@ -310,23 +311,27 @@ namespace ShiftManagerApi2.Controllers
             }
         }
         [HttpGet("event")]//その月に配信されているイベントを返す処理
-        public IActionResult GetEvent()
+        public IActionResult GetEvent([FromQuery (Name = "shit_reqs_id")]  int? reqs_id)//ログインした瞬間にshit_reqs_idを作るようにするかもそしたら変わる
         {
             var eventList = new List<object>();
             using (var conn = _db.CreateConnection())
             {
-                string event_sql = "SELECT e.id,e.name, e.content FROM event e INNER JOIN (SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id ";
+                string event_sql = " SELECT e.id, e.name, e.content , a.answer FROM event e INNER JOIN(SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id LEFT JOIN(SELECT event_id, answer, reqs_id FROM event_answer WHERE reqs_id = @reqs_id)a ON a.event_id = e.id ";
                 using (var event_cmd = new NpgsqlCommand(event_sql, conn))
                 {
                     using (var result = event_cmd.ExecuteReader())
                     {
+                        event_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
                         while (result.Read())
                         {
-                            var singleEvent = new{
+                            var singleEvent = new {
                                 eventId = Convert.ToInt32(result["id"]),
                                 eventName = result["name"].ToString(),
-                                eventContent = result["content"].ToString()
-                            };
+                                eventContent = result["content"].ToString(),
+                                answer = result["answer"] == DBNull.Value ? (bool?)null : Convert.ToBoolean(result["answer"])
+
+                        }
+                        ;
                             eventList.Add(singleEvent);
                         }
                        
