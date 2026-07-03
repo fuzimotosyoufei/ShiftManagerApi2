@@ -275,8 +275,8 @@
                                             console.log("まだ作ってないよ")
                                             Event(null);
                                         } else {
-                                            console.log("もうその月に作ってあるよ", Shift_reqs_id);
-                                            Event(shift_reqs_id)
+                                            console.log("もうその月に作ってあるよ", shift_reqs_id);
+                                            Event(shift_reqs_id);
                                             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
