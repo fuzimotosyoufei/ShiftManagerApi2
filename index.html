@@ -400,15 +400,15 @@
             eventList.forEach(eventl => {
                 event_ans.push({
                     id: eventl.eventId,
-                    answer: eventList.answer
+                    answer: eventl.answer
                 });
-                var Okchecked = "";
+                var OKchecked = "";
                 var NOchecked = "";
 
                 if (eventList.answer == true) {
-                    OKchecked = checked;
+                    OKchecked = 'checked';
                 } else if (eventList.answer == false) {
-                    NOchecked = checked;
+                    NOchecked = 'checked';
                 }
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
