@@ -400,18 +400,26 @@
             eventList.forEach(eventl => {
                 event_ans.push({
                     id: eventl.eventId,
-                    answer: null
+                    answer: eventList.answer
                 });
+                var Okchecked = "";
+                var NOchecked = "";
+
+                if (eventList.answer == true) {
+                    OKchecked = checked;
+                } else if (eventList.answer == false) {
+                    NOchecked = checked;
+                }
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class="palette-container">
                             <event-name>${eventl.eventName}</event-name>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
-                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, true)" > OK
+                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, true)"  ${OKchecked}> OK
                                 </label>
                                 <label class="radio-label"> 
-                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, false)"> NO
+                                    <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, false)" ${NOchecked}> NO
                                 </label>
                             </div>
                         </div>
