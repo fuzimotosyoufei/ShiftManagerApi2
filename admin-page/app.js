@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
     tbody.innerHTML = ''; // 一度中身をクリア
 
 
-    const eventSetting = [
-        { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
-        { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
-    ];
+    // const eventSetting = [
+    //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
+    //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
+    // ];
 
 
     const days = new Date(2026, 6, 0).getDate();
@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
         tbody.appendChild(th);
     }
 
-    eventSetting.forEach(setting => {//イベントの処理
-        const the = document.createElement('th')
-        the.classList.add('yasumi');
-        the.textContent = "sssssss";
-        tbody.appendChild(the);
-    });
+    // eventSetting.forEach(setting => {//イベントの処理
+    //     const the = document.createElement('th')
+    //     the.classList.add('yasumi');
+    //     the.textContent = "sssssss";
+    //     tbody.appendChild(the);
+    // });
 
 
     staffShifts.forEach(staff => {//初期値がいる名前追加
@@ -103,16 +103,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
-        eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
-            const eventTd = document.createElement('td');
+        // eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+        //     const eventTd = document.createElement('td');
 
-            if (staff[setting.key] === true) {
-                eventTd.textContent = setting.TrueText;
-            } else {
-                eventTd.textContent = setting.FalseText;
-            }
-            tr.appendChild(eventTd);
-        })
+        //     if (staff[setting.key] === true) {
+        //         eventTd.textContent = setting.TrueText;
+        //     } else {
+        //         eventTd.textContent = setting.FalseText;
+        //     }
+        //     tr.appendChild(eventTd);
+        // })
 
     });
 
@@ -120,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // tbody.appendChild(tr)
 });
+
+
 
 
 // 💡 画面を切り替えるためのJavaScriptスイッチ
@@ -140,6 +142,16 @@ function switchPage(pageName) {
 document.addEventListener('DOMContentLoaded', function () {
     loadShifts();
 });
+
+
+
+
+
+
+
+
+
+
 
 function loadShifts() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
