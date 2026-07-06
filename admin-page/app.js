@@ -23,7 +23,7 @@ const staffShifts = [
     },
     {
         id: 3,
-        name: "田中",
+        name: "田中kkkkkkkkkkkkk",
         isSubmitted: false, // 💡 NO ：そもそもまだ今月のシフトを出してない！
         isApproved: false,  // 💡 NO ：出してないので、もちろん未承認。
         currentMonthShifts: [
