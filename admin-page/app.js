@@ -100,6 +100,7 @@ function CreateCalend(date) {
 
         const shiftLookup = {};
         if (staff.day != null) {
+            console.log("辞書処理");
             staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
                 shiftLookup[shift.date] = shift.mode;
             });
@@ -118,7 +119,8 @@ function CreateCalend(date) {
             // const shiftTd = document.createElement('td');
             // shiftTd.textContent = "希望";
             // tr.appendChild(shiftTd);
-
+            // console.log(i);
+            console.log(i);
             const shiftTd = document.createElement('td');
             const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
@@ -233,7 +235,20 @@ function loadShifts() {
         });
 }
 
+//開始日と終了日をshift_periodsからとってくる処理
+// const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+// const days = new Date(2026, 7, 0).getDate();
+// const thn = document.createElement('th')
+// thn.classList.add('name');
+// thn.textContent = "名前";
+// tbody.appendChild(thn);
 
+// for (let i = 1; i <= days; i++) {//日を入れている
+//     const th = document.createElement('th')
+//     th.textContent = i;
+//     tbody.appendChild(th);
+// }ここら辺
+//イベント追加処理
 
 
 
