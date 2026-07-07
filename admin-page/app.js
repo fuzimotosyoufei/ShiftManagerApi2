@@ -36,7 +36,8 @@ const staffShifts = [
 
 
 function CalendarData() {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/CalendarNau', {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
+
         headers: {
             'ngrok-skip-browser-warning': 'true'
 
@@ -52,17 +53,36 @@ function CalendarData() {
         })
         .then(date => {
             console.log('これデータ', date);
-            date.Day.Foreach(dates => {
-                console.log('日付', dates.date),
-                    console.log('種類', dates.mode)
+            // InCalendarNauList = [];
+            date.Foreach(datename => {
+                // SingreDate =[];
+                datename.Day.Foreach(dates => {
+                    console.log('日付', dates.date),
+                        console.log('種類', dates.mode)
+                    //     var InSingreDate = new
+                    //     {
+                    //         date = dates.date,
+                    //         mode = dates.mode
+                    //     } 
+                    // SingreDate.Add(InSingreDate) ;
+                })
+                // var SingreData = new{
+                //     name = datename.name,
+                //     date = InSingreDate 
+                // }
+                // InCalendarNauList.Add(SingreData)
+
             })
+
         })
+
 }
 
 //月の判定ができてないよ
 
 document.addEventListener('DOMContentLoaded', function () {
-    CalendarData();
+    // CalendarNauList = [];
+    // CalendarNaulist = CalendarData();
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
