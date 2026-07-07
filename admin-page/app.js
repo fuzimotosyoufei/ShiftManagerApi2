@@ -59,7 +59,7 @@ function CalendarData() {
 
 //月の判定ができてないよ
 
-function CrateCalend(date) {
+function CreateCalend(date) {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
