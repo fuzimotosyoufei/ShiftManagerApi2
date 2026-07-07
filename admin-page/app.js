@@ -40,7 +40,7 @@ function CalendarData() {
         headers: {
             'ngrok-skip-browser-warning': 'true'
 
-        },
+        }
     })
         .then(response => {
             if (response.ok) {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
-    console.log("できたよ１");
+    console.log("できたよ１1");
     console.log('できたよ２2');
 
     // const eventSetting = [
