@@ -72,7 +72,7 @@ function CreateCalend(date) {
     // ];
 
 
-    const days = new Date(2026, 6, 0).getDate();
+    const days = new Date(2026, 7, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
     thn.textContent = "名前";
