@@ -51,20 +51,7 @@ function CalendarData() {
         })
         .then(date => {
             console.log('これデータ', date);
-            // InCalendarNauList = [];
-            date.forEach(datename => {
-                // SingreDate =[];
-                const shifts = staff.day || staff.Day || [];
-                shifts.forEach(shift => {
-                    shiftLookup[shift.date] = shift.mode;
-                });
-                // var SingreData = new{
-                //     name = datename.name,
-                //     date = InSingreDate 
-                // }
-                // InCalendarNauList.Add(SingreData)
-
-            });
+            CreateCalend(date)
 
         })
 
@@ -72,10 +59,7 @@ function CalendarData() {
 
 //月の判定ができてないよ
 
-document.addEventListener('DOMContentLoaded', function () {
-    // CalendarNauList = [];
-    //CalendarNaulist = CalendarData();
-    CalendarData();
+function CrateCalend(date) {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
@@ -108,16 +92,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // });
 
 
-    staffShifts.forEach(staff => {//初期値がいる名前追加
+    date.forEach(staff => {//初期値がいる名前追加
 
         const td = document.createElement('td')
         const tr = document.createElement('tr')
         td.textContent = staff.name;
 
         const shiftLookup = {};
-        staff.currentMonthShifts.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
-            shiftLookup[shift.date] = shift.mode;
-        });
+        if (staff.day != null) {
+            staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+                shiftLookup[shift.date] = shift.mode;
+            });
+        }
 
         tbody2.appendChild(tr);
         tr.appendChild(td);
@@ -157,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // tbody.appendChild(tr)
-});
+}
 
 
 
@@ -179,6 +165,7 @@ function switchPage(pageName) {
 // 画面が開いたら自動でデータを読み込む（元のロジックそのまま）
 document.addEventListener('DOMContentLoaded', function () {
     loadShifts();
+    CalendarData();
 });
 
 
@@ -245,3 +232,151 @@ function loadShifts() {
             alert('シフトデータの読み込みに失敗しました。');
         });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function CalendarData() {
+//     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
+//         headers: {
+//             'ngrok-skip-browser-warning': 'true'
+//         }
+//     })
+//         .then(response => {
+//             if (response.ok) {
+//                 return response.json();
+//                 console.log("できたよ3");
+//             }
+//             throw new Error('通信エラー');
+//             console.log("できたよ4");
+//         })
+//         .then(date => {
+//             console.log('これデータ', date);
+//             // InCalendarNauList = [];
+//             date.forEach(datename => {
+//                 // SingreDate =[];
+
+//                 datename.day.forEach(dates => {
+//                     console.log('日付', dates.date),
+//                         console.log('種類', dates.mode)
+//                     //     var InSingreDate = new
+//                     //     {
+//                     //         date = dates.date,
+//                     //         mode = dates.mode
+//                     //     }
+//                     // SingreDate.Add(InSingreDate) ;
+//                 });
+//                 // var SingreData = new{
+//                 //     name = datename.name,
+//                 //     date = InSingreDate
+//                 // }
+//                 // InCalendarNauList.Add(SingreData)
+
+//             });
+
+//         })
+
+// }
+
+// //月の判定ができてないよ
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     // CalendarNauList = [];
+//     //CalendarNaulist = CalendarData();
+//     CalendarData();
+//     const tbody = document.getElementById('shift_name');
+//     const tbody2 = document.getElementById('shift_create');
+//     tbody.innerHTML = ''; // 一度中身をクリア
+//     console.log("できたよ１1");
+//     console.log('できたよ２2');
+
+//     // const eventSetting = [
+//     //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
+//     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
+//     // ];
+
+
+//     const days = new Date(2026, 6, 0).getDate();
+//     const thn = document.createElement('th')
+//     thn.classList.add('name');
+//     thn.textContent = "名前";
+//     tbody.appendChild(thn);
+
+//     for (let i = 1; i <= days; i++) {//日を入れている
+//         const th = document.createElement('th')
+//         th.textContent = i;
+//         tbody.appendChild(th);
+//     }
+
+//     // eventSetting.forEach(setting => {//イベントの処理
+//     //     const the = document.createElement('th')
+//     //     the.classList.add('yasumi');
+//     //     the.textContent = "sssssss";
+//     //     tbody.appendChild(the);
+//     // });
+
+
+//     staffShifts.forEach(staff => {//初期値がいる名前追加
+
+//         const td = document.createElement('td')
+//         const tr = document.createElement('tr')
+//         td.textContent = staff.name;
+
+//         const shiftLookup = {};
+//         staff.currentMonthShifts.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+//             shiftLookup[shift.date] = shift.mode;
+//         });
+
+//         tbody2.appendChild(tr);
+//         tr.appendChild(td);
+
+
+//         const count = tbody.childElementCount;
+
+
+
+
+//         for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ
+//             // const shiftTd = document.createElement('td');
+//             // shiftTd.textContent = "希望";
+//             // tr.appendChild(shiftTd);
+
+//             const shiftTd = document.createElement('td');
+//             const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+//             const yer = shiftLookup[dateStr] || "";
+//             shiftTd.textContent = yer;
+//             tr.appendChild(shiftTd);
+
+//         }
+
+//         // eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+//         //     const eventTd = document.createElement('td');
+
+//         //     if (staff[setting.key] === true) {
+//         //         eventTd.textContent = setting.TrueText;
+//         //     } else {
+//         //         eventTd.textContent = setting.FalseText;
+//         //     }
+//         //     tr.appendChild(eventTd);
+//         // })
+
+//     });
+
+
+
+//     // tbody.appendChild(tr)
+// });
