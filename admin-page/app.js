@@ -36,7 +36,7 @@ const staffShifts = [
 
 
 function CalendarData() {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/controller/CalendarNau', {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/CalendarNau', {
         headers: {
             'ngrok-skip-browser-warning': 'true'
 
