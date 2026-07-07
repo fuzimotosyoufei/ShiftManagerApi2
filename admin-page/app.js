@@ -93,7 +93,7 @@ function CreateCalend(date) {
 
 
     date.forEach(staff => {//初期値がいる名前追加
-
+        console.log(staff);
         const td = document.createElement('td')
         const tr = document.createElement('tr')
         td.textContent = staff.name;
