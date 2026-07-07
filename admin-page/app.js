@@ -65,14 +65,14 @@ function CalendarData() {
                     //         mode = dates.mode
                     //     } 
                     // SingreDate.Add(InSingreDate) ;
-                })
+                });
                 // var SingreData = new{
                 //     name = datename.name,
                 //     date = InSingreDate 
                 // }
                 // InCalendarNauList.Add(SingreData)
 
-            })
+            });
 
         })
 
