@@ -54,9 +54,9 @@ function CalendarData() {
         .then(date => {
             console.log('これデータ', date);
             // InCalendarNauList = [];
-            date.Foreach(datename => {
+            date.forEach(datename => {
                 // SingreDate =[];
-                datename.Day.Foreach(dates => {
+                datename.Day.forEach(dates => {
                     console.log('日付', dates.date),
                         console.log('種類', dates.mode)
                     //     var InSingreDate = new
