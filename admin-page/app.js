@@ -37,10 +37,8 @@ const staffShifts = [
 
 function CalendarData() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
-
         headers: {
             'ngrok-skip-browser-warning': 'true'
-
         }
     })
         .then(response => {
@@ -56,7 +54,8 @@ function CalendarData() {
             // InCalendarNauList = [];
             date.forEach(datename => {
                 // SingreDate =[];
-                datename.Day.forEach(dates => {
+
+                datename.day.forEach(dates => {
                     console.log('日付', dates.date),
                         console.log('種類', dates.mode)
                     //     var InSingreDate = new
