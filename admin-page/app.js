@@ -54,16 +54,9 @@ function CalendarData() {
             // InCalendarNauList = [];
             date.forEach(datename => {
                 // SingreDate =[];
-
-                datename.day.forEach(dates => {
-                    console.log('日付', dates.date),
-                        console.log('種類', dates.mode)
-                    //     var InSingreDate = new
-                    //     {
-                    //         date = dates.date,
-                    //         mode = dates.mode
-                    //     } 
-                    // SingreDate.Add(InSingreDate) ;
+                const shifts = staff.day || staff.Day || [];
+                shifts.forEach(shift => {
+                    shiftLookup[shift.date] = shift.mode;
                 });
                 // var SingreData = new{
                 //     name = datename.name,
