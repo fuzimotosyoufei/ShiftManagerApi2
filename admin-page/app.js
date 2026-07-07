@@ -39,13 +39,16 @@ function CalendarData() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/controller/CalendarNau', {
         headers: {
             'ngrok-skip-browser-warning': 'true'
+
         },
     })
         .then(response => {
             if (response.ok) {
                 return response.json();
+                console.log("できたよ3");
             }
             throw new Error('通信エラー');
+            console.log("できたよ4");
         })
         .then(date => {
             console.log('これデータ', date);
