@@ -35,6 +35,27 @@ const staffShifts = [
 ];
 
 
+function CalendarData() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/controller/CalendarNau', {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('通信エラー');
+        })
+        .then(date => {
+            console.log('これデータ', date);
+            date.Day.Foreach(dates => {
+                console.log('日付', dates.date),
+                    console.log('種類', dates.mode)
+            })
+        })
+}
+
 //月の判定ができてないよ
 
 document.addEventListener('DOMContentLoaded', function () {
