@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
     console.log("できたよ１");
-    console.log("できたよ２");
+    console.log('できたよ２');
 
     // const eventSetting = [
     //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
