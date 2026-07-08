@@ -52,12 +52,13 @@ function CalendarData() {
         .then(date => {
 
             console.log('これデータ', date);
-            CreateCalend(date, CalendarYearAndMonth())
+            CalendarYearAndMonth(date)
+
 
         })
 
 }
-function CalendarYearAndMonth() {
+function CalendarYearAndMonth(date) {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -69,13 +70,11 @@ function CalendarYearAndMonth() {
                 return response.json();
 
             }
-            console.log(response.json);
             throw new Error('通信エラー');
-
         })
-        .then(ym => {
-            console.log(ym);
-            return ym
+        .then(ymdata => {
+            console.log(ymdata);
+            CreateCalend(date, ymdata)
         })
 }
 
