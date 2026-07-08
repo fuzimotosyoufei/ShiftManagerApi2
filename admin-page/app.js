@@ -50,16 +50,36 @@ function CalendarData() {
             console.log("できたよ4");
         })
         .then(date => {
+
             console.log('これデータ', date);
-            CreateCalend(date)
+            CreateCalend(date, CalendarYearMonth())
 
         })
 
 }
+function CalendarYearAndMonth() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+        .then(response => {
+            if (response.oK) {
+                return response.json();
+                console.log("曜日OK");
+            }
+            throw new Error('通信エラー');
+            console.log("曜日エラー");
+        })
+        .then(ym => {
+            console.log(ym);
+            return ym
+        })
+}
 
 //月の判定ができてないよ
 
-function CreateCalend(date) {
+function CreateCalend(date, ym) {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
@@ -71,7 +91,7 @@ function CreateCalend(date) {
     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
     // ];
 
-
+    const days = CalendarDate();
     const days = new Date(2026, 7, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
@@ -120,7 +140,7 @@ function CreateCalend(date) {
             // shiftTd.textContent = "希望";
             // tr.appendChild(shiftTd);
             // console.log(i);
-            console.log(i);
+            // console.log(i);
             const shiftTd = document.createElement('td');
             const dateStr = `${2026}-${String(7).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
