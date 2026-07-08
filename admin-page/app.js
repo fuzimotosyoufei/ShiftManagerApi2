@@ -122,7 +122,7 @@ function CreateCalend(date) {
             // console.log(i);
             console.log(i);
             const shiftTd = document.createElement('td');
-            const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+            const dateStr = `${2026}-${String(7).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
             shiftTd.textContent = yer;
             tr.appendChild(shiftTd);
