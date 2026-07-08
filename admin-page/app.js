@@ -52,7 +52,7 @@ function CalendarData() {
         .then(date => {
 
             console.log('これデータ', date);
-            CreateCalend(date, CalendarYearMonth())
+            CreateCalend(date, CalendarYearAndMonth())
 
         })
 
@@ -91,7 +91,7 @@ function CreateCalend(date, ym) {
     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
     // ];
 
-  
+
     const days = new Date(2026, 7, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
