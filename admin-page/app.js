@@ -68,8 +68,9 @@ function CalendarYearAndMonth() {
                 return response.json();
                 console.log("曜日OK");
             }
+            console.log(response.json);
             throw new Error('通信エラー');
-            console.log("曜日エラー");
+
         })
         .then(ym => {
             console.log(ym);
