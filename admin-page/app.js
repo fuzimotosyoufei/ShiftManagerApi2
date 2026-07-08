@@ -91,7 +91,7 @@ function CreateCalend(date, ym) {
     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
     // ];
 
-    const days = CalendarDate();
+  
     const days = new Date(2026, 7, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
