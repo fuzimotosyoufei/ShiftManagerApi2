@@ -80,13 +80,13 @@ function CalendarYearAndMonth(date) {
 
 //月の判定ができてないよ
 
-function CreateCalend(date, ym) {
+function CreateCalend(date, ymdata) {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
     console.log("できたよ１1");
     console.log('できたよ２2');
-    console.log(ym);
+    console.log(ymdata);
 
 
     // const eventSetting = [
@@ -95,7 +95,7 @@ function CreateCalend(date, ym) {
     // ];
 
 
-    const days = new Date(2026, 7, 0).getDate();
+    const days = new Date(ymdata.year, ymdata.month, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
     thn.textContent = "名前";
@@ -145,7 +145,7 @@ function CreateCalend(date, ym) {
             // console.log(i);
             // console.log(i);
             const shiftTd = document.createElement('td');
-            const dateStr = `${2026}-${String(7).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+            const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
             shiftTd.textContent = yer;
             tr.appendChild(shiftTd);
