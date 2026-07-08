@@ -65,8 +65,9 @@ function CalendarYearAndMonth() {
     })
         .then(response => {
             if (response.ok) {
-                return response.json();
                 console.log("曜日OK");
+                return response.json();
+
             }
             console.log(response.json);
             throw new Error('通信エラー');
@@ -86,6 +87,8 @@ function CreateCalend(date, ym) {
     tbody.innerHTML = ''; // 一度中身をクリア
     console.log("できたよ１1");
     console.log('できたよ２2');
+    console.log(ym);
+
 
     // const eventSetting = [
     //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
