@@ -34,8 +34,25 @@ const staffShifts = [
     }
 ];
 
-
-function CalendarData() {
+function CalendarYearAndMonth() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("曜日OK");
+                return response.json();
+            }
+            throw new Error('通信エラー');
+        })
+        .then(ymdata => {
+            console.log(ymdata);
+            CalendarYearAndMonth(ymdata);
+        })
+}
+function CalendarData(ymdata) {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -52,32 +69,31 @@ function CalendarData() {
         .then(date => {
 
             console.log('これデータ', date);
-            CalendarYearAndMonth(date)
-
-
-        })
-
-}
-function CalendarYearAndMonth(date) {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
-        headers: {
-            'ngrok-skip-browser-warning': 'true'
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log("曜日OK");
-                return response.json();
-
-            }
-            throw new Error('通信エラー');
-        })
-        .then(ymdata => {
-            console.log(ymdata);
             CreateCalend(date, ymdata)
+
+
+
         })
+
 }
 
+// function CalendarEvetn(){
+//     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/Event',{
+//         headers: {
+//             'ngrok-skip-browser-warning' : 'true'
+//         }
+//     })
+//         .then(response => {
+//             if (response.ok){
+//                 return response.json();
+//             }
+//             throw new Error('通信エラー');
+//         })
+//         .then(event => {
+//             console.log(event);
+
+//         })
+// }
 //月の判定ができてないよ
 
 function CreateCalend(date, ymdata) {
@@ -190,7 +206,7 @@ function switchPage(pageName) {
 // 画面が開いたら自動でデータを読み込む（元のロジックそのまま）
 document.addEventListener('DOMContentLoaded', function () {
     loadShifts();
-    CalendarData();
+    CalendarYearAndMonth();
 });
 
 
