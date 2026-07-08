@@ -64,7 +64,7 @@ function CalendarYearAndMonth() {
         }
     })
         .then(response => {
-            if (response.oK) {
+            if (response.ok) {
                 return response.json();
                 console.log("曜日OK");
             }
