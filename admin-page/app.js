@@ -53,7 +53,7 @@ function CalendarYearAndMonth() {
         })
 }
 function CalendarData(ymdata) {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau?periods_id=${ymdata.id}`, {
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
