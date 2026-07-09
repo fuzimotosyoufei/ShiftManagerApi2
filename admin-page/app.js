@@ -48,7 +48,7 @@ function CalendarYearAndMonth() {
             throw new Error('通信エラー');
         })
         .then(ymdata => {
-            console.log(ymdata);
+            console.log(ymdata.id);
             CalendarData(ymdata);
         })
 }
