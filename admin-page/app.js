@@ -182,19 +182,17 @@ function CreateCalend(date, ymdata) {
         eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
             const eventTd = document.createElement('td');
             console.log(staff.event[setting.key]);
-            console.log(staff.event.find(e => e[setting.key] === setting.key));
-            const currentEventData = staff.event.find(e => e.name === setting.key);
-
+            const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
             // 🎯 2. 見つかったデータの中から、イベント名をキーにして true / false / null を直撃で引っこ抜く！
             const currentAnswer = currentEventData ? currentEventData[setting.key] : null;
 
             console.log("取り出したanswer:", currentAnswer); // ➔ true や false がバッチリ出ます！
 
-            
+
             console.log(staff.event[name]);
-            if (staff.event[setting.key] === true) {
+            if (currentEventData[setting.key] === true) {
                 eventTd.textContent = setting.TrueText;
-            } else if (staff.event[setting.Key] === false) {
+            } else if (currentEventData[setting.key] === false) {
                 eventTd.textContent = setting.FalseText;
             } else {
                 eventTd.textContent = setting.NullText
