@@ -183,7 +183,7 @@ function CreateCalend(date, ymdata) {
             const eventTd = document.createElement('td');
             console.log(staff.event[setting.key]);
             console.log(staff.event);
-            console.log(staff.event.name);
+            console.log(staff.event[name]);
             if (staff.event[setting.key] === true) {
                 eventTd.textContent = setting.TrueText;
             } else if (staff.event[setting.Key] === false) {
