@@ -106,12 +106,17 @@ function CreateCalend(date, ymdata) {
     //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
     // ];
-    const eventSetting = {};
-    date[0].forEach(event => {
-        eventSetting[key] = event.name;
-        eventSetting[TrueText] = 'OK';
-        eventSetting[FalseText] = 'NO';
-        eventSetting[NullText] = '未入力';
+    const eventSetting = [];
+    date[0].event.forEach(event => {
+
+        const setting = {
+            key = event.name,
+            TrueText = 'OK',
+            FalseText = 'NO',
+            NullText = '未入力'
+        }
+        eventSetting.push(setting);
+        console.log(setting);
     })
 
 
