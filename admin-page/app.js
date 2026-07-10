@@ -109,13 +109,13 @@ function CreateCalend(date, ymdata) {
     const eventSetting = [];
     date[0].event.forEach(event => {
 
-        // const setting = {
-        //     key = event.name,
-        //     TrueText = 'OK',
-        //     FalseText = 'NO',
-        //     NullText = '未入力'
-        // }
-        // eventSetting.push(setting);
+        const setting = {
+            key: event.name,
+            TrueText: 'OK',
+            FalseText: 'NO',
+            NullText: '未入力'
+        }
+        eventSetting.push(setting);
         console.log(event);
     })
 
@@ -133,12 +133,12 @@ function CreateCalend(date, ymdata) {
         tbody.appendChild(th);
     }
 
-    // eventSetting.forEach(setting => {//イベントの処理
-    //     const the = document.createElement('th')
-    //     the.classList.add('yasumi');
-    //     the.textContent = setting.key;
-    //     tbody.appendChild(the);
-    // });
+    eventSetting.forEach(setting => {//イベントの処理
+        const the = document.createElement('th')
+        the.classList.add('yasumi');
+        the.textContent = setting.key;
+        tbody.appendChild(the);
+    });
 
 
     date.forEach(staff => {//初期値がいる名前追加
@@ -178,18 +178,18 @@ function CreateCalend(date, ymdata) {
 
         }
 
-        // eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
-        //     const eventTd = document.createElement('td');
+        eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+            const eventTd = document.createElement('td');
 
-        //     if (staff[setting.key] === true) {
-        //         eventTd.textContent = setting.TrueText;
-        //     } else if (staff[setting.Key] === false) {
-        //         eventTd.textContent = setting.FalseText;
-        //     } else {
-        //         eventTd.textContent = setting.NullText
-        //     }
-        //     tr.appendChild(eventTd);
-        // })
+            if (staff[setting.key] === true) {
+                eventTd.textContent = setting.TrueText;
+            } else if (staff[setting.Key] === false) {
+                eventTd.textContent = setting.FalseText;
+            } else {
+                eventTd.textContent = setting.NullText
+            }
+            tr.appendChild(eventTd);
+        })
 
     });
 
