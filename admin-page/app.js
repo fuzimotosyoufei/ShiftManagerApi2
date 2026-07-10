@@ -180,10 +180,10 @@ function CreateCalend(date, ymdata) {
 
         eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
             const eventTd = document.createElement('td');
-            console.log(staff[setting.key]);
-            if (staff[setting.key] === true) {
+            console.log(staff.event[setting.key]);
+            if (staff.event[setting.key] === true) {
                 eventTd.textContent = setting.TrueText;
-            } else if (staff[setting.Key] === false) {
+            } else if (staff.event[setting.Key] === false) {
                 eventTd.textContent = setting.FalseText;
             } else {
                 eventTd.textContent = setting.NullText
