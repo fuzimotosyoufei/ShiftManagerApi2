@@ -182,7 +182,7 @@ function CreateCalend(date, ymdata) {
         eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
             const eventTd = document.createElement('td');
             console.log(staff.event[setting.key]);
-            console.log(staff.event);
+            console.log(staff.event.find(e => e[setting.key] === setting.key));
             console.log(staff.event[name]);
             if (staff.event[setting.key] === true) {
                 eventTd.textContent = setting.TrueText;
