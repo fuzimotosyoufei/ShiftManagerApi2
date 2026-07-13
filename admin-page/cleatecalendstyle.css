@@ -4,3 +4,7 @@
     border-bottom: 2px solid blue;
     /* 下線もつけて分かりやすく */
 }
+
+#calendar {
+    margin-bottom: 20px;
+}
