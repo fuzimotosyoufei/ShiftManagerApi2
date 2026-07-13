@@ -183,11 +183,6 @@ function CreateCalend(date, ymdata) {
             const eventTd = document.createElement('td');
             console.log(staff.event[setting.key]);
             const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
-            // 🎯 2. 見つかったデータの中から、イベント名をキーにして true / false / null を直撃で引っこ抜く！
-            const currentAnswer = currentEventData ? currentEventData[setting.key] : null;
-
-            console.log("取り出したanswer:", currentAnswer); // ➔ true や false がバッチリ出ます！
-
 
             console.log(staff.event[name]);
             if (currentEventData[setting.key] === true) {
