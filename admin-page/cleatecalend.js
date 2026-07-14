@@ -34,6 +34,13 @@ function initCalendar(start, end) {
             start: start,
             end: end
         },
+        initialView: 'dayGridMonth',//何を最初に表示するかの初期値最初は月
+        // カレンダー上部のヘッダー設定
+        headerToolbar: {
+            left: 'prev,next today', // 左側に「前月」「翌月」「今日」ボタン
+            center: 'title',         // 中央に「2026年7月」などのタイトル
+            right: 'dayGridMonth,timeGridWeek' // 右側に「月」「週」の切り替えボタン
+        },
         contentHeight: 'auto',
         selectable: true,//カレンダーのマス目をたプできるようにする
     }
