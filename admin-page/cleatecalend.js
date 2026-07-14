@@ -30,10 +30,7 @@ function initCalendar(start, end) {
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
         locale: 'ja',//言語
-        validRange: {
-            start: start,
-            end: end
-        },
+        initialDate: start,
         // カレンダー上部のヘッダー設定
         headerToolbar: {
             left: 'prev,next today', // 左側に「前月」「翌月」「今日」ボタン
