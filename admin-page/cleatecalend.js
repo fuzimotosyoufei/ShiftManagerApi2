@@ -37,6 +37,13 @@ function initCalendar(start, end) {
             center: 'title',         // 中央に「2026年7月」などのタイトル
             right: 'dayGridMonth,timeGridWeek' // 右側に「月」「週」の切り替えボタン
         },
+        datasSet: function (info) {
+            const carendDate = calendar.getDate();
+
+            const carendYear = carendDate.getFullYear();
+            const carendMonth = carendDate.getFullMonth() + 1;
+            console.log(carendYear, carendMonth)
+        },
         contentHeight: 'auto',
         selectable: true,//カレンダーのマス目をたプできるようにする
     });
