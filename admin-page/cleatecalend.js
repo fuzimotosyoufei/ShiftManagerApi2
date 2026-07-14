@@ -22,7 +22,7 @@ function StartCalendar() {
             const lastDay = new Date(year, month + 1, 0).getDate();
             endDateStr = `${year}-${startMonthStr}-${lastDay}`;
             console.log("C#から届いた生データはこれだ！:", startDateStr);
-            initCalendar(startDateStr, endDateStr);
+            InitCalendar(startDateStr, endDateStr);
         })
 }
 function InitCalendar(start, end) {
