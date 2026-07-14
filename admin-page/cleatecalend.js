@@ -41,7 +41,7 @@ function initCalendar(start, end) {
             const carendDate = calendar.getDate();
 
             const carendYear = carendDate.getFullYear();
-            const carendMonth = carendDate.getFullMonth() + 1;
+            const carendMonth = carendDate.getMonth() + 1;
             console.log(carendYear, carendMonth)
         },
         contentHeight: 'auto',
