@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    startCalendar();
+    StartCalendar();
 
 });
 
 const calendarEl = document.getElementById('calendar')
 
-function startCalendar() {
+function StartCalendar() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/calendar', { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok)
@@ -25,7 +25,7 @@ function startCalendar() {
             initCalendar(startDateStr, endDateStr);
         })
 }
-function initCalendar(start, end) {
+function InitCalendar(start, end) {
 
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
@@ -39,13 +39,24 @@ function initCalendar(start, end) {
         },
         datesSet: function (info) {
             const carendDate = calendar.getDate();
-
             const carendYear = carendDate.getFullYear();
             const carendMonth = carendDate.getMonth() + 1;
-            console.log(carendYear, carendMonth)
+            console.log(carendYear, carendMonth);
+            GetCalendar(carendYear, carendMonth);
         },
         contentHeight: 'auto',
         selectable: true,//カレンダーのマス目をたプできるようにする
     });
     calendar.render();//これ最後に表示する
+}
+function GetCalendar(Year, Month) {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok)
+                throw new Error('データの取得に失敗したよ');
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
 }
