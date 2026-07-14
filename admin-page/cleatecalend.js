@@ -1,10 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
-    initCalendar('2026-07-01', '2026-07-30');
+    startCalendar();
+
 });
 
 const calendarEl = document.getElementById('calendar')
 
-
+function startCalendar() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/calendar', { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok)
+                throw new Error('データの取得に失敗したよ');
+            return response.json();
+        })
+        .then(data => {
+            console.log("C#から届いた生データはこれだ！:", data);
+            const year = data.year;
+            const month = data.month;
+            periods_id = data.id;
+            const startMonthStr = String(month).padStart(2, '0');
+            startDateStr = `${year}-${startMonthStr}-01`;
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            endDateStr = `${year}-${startMonthStr}-${lastDay}`;
+            initCalendar(startDatestr, endDatestr);
+        })
+}
 function initCalendar(start, end) {
 
     calendar = new FullCalendar.Calendar(calendarEl, {
