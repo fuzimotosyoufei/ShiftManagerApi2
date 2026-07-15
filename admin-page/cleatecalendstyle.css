@@ -5,6 +5,22 @@
     /* 下線もつけて分かりやすく */
 }
 
+.content-build h3 {
+    color: red;
+}
+
+.calendar-container {
+    display: flex;
+    width: 100%;
+
+
+}
+
 #calendar {
+    flex: 7;
     margin-bottom: 20px;
+}
+
+.event-list {
+    flex: 3;
 }
