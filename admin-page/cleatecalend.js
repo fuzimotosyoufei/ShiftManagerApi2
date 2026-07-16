@@ -40,9 +40,9 @@ function InitCalendar(start, end) {
                     const button = document.querySelector('.fc-myCustomButton-button');//いま画面にあるボタンの要素を取得する
                     if (button) {//そもそもbuttonが画面上にない可能性があるからifをしている
                         if (button.innerText === 'カレンダー作成') {
-                            alert('自作のシフト申請画面を開くなどの処理をここに書きます！');
-                        } else if (button.innerText === 'カレンダー未作成') {
-                            alert('まだ作成してないよ')
+                            alert('まだ作ってないよ');
+                        } else if (button.innerText === 'カレンダー編集') {
+                            alert('もう作ってるよ')
                         }
 
                     }
@@ -90,7 +90,7 @@ function GetCalendar(Year, Month) {
                 CreateEvent(nullevent);
             } else {
                 if (button) {
-                    button.innerText = 'カレンダー未作成';
+                    button.innerText = 'カレンダー編集';
                 }
                 GetEvent(data.id)
             }
