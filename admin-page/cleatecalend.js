@@ -8,8 +8,8 @@ const calendarEl = document.getElementById('calendar')
 function StartCalendar() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/calendar', { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
-            if (!response.ok){
-                throw new Error('データの取得に失敗したよ');   
+            if (!response.ok) {
+                throw new Error('データの取得に失敗したよ');
             }
             return response.json();
         })
@@ -53,7 +53,7 @@ function InitCalendar(start, end) {
 function GetCalendar(Year, Month) {
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
-            if (!response.ok){
+            if (!response.ok) {
                 throw new Error('データの取得に失敗したよ');
             }
             return response.json();
@@ -90,7 +90,7 @@ function CreateEvent(Event) {//イベントの枠を作成
     eventList.innerHTML = '';//一度中を空にする
     Event.forEach(item => {
         const html = `
-        <div class="event-list-mein">
+        <div id="event-list-mein">
             <h3>${item.name}</h3>
         </div>
         `;
