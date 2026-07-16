@@ -74,7 +74,7 @@ function GetEvent(Id) {//カレンダーのidからイベントを探す
         .then(response => {
             if (!response.ok)
                 console.log(response);
-            throw new Error(`データの取得に失敗したよイベントの${response.status} エラー:${resonse.statusText}`);
+            throw new Error(`データの取得に失敗したよイベントの${response.status} エラー:${response.statusText}`);
             return response.json();
         })
         .then(date => {
