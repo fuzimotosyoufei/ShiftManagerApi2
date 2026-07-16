@@ -75,11 +75,12 @@ function GetEvent(Id) {
 
 function CreateEvent(Event) {
     const EventList = document.getElementById('event-list')
-    Event.foreach(event => {
+    Event.forEach(event => {
         const html = `
         <div id="event-list-mein">
             <h3>${event.name}</h3>
         </div>
         `;
+        event.insertAdjacentHTML('beforeend', html);
     });
 }
