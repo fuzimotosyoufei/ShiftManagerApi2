@@ -33,11 +33,20 @@ function InitCalendar(start, end) {
         locale: 'ja',//言語
         initialDate: start,
         // カレンダー上部のヘッダー設定
-        customButtons: {
+        customButtons: {//この下に書いたやつは全部ボタンになる
             myCustomButton: {
                 text: 'カレンダー作成',
                 click: function () {
-                    alert('自作のシフト申請画面を開くなどの処理をここに書きます！');
+                    const button = document.querySelector('.fc-myCustomButton-button');//いま画面にあるボタンの要素を取得する
+                    if (button) {//そもそもbuttonが画面上にない可能性があるからifをしている
+                        if (button.innerText === 'カレンダー作成') {
+                            alert('自作のシフト申請画面を開くなどの処理をここに書きます！');
+                        } else if (button.innerText === 'カレンダー未作成') {
+                            alert('まだ作成してないよ')
+                        }
+
+                    }
+
                 }
             }
         },
@@ -58,6 +67,7 @@ function InitCalendar(start, end) {
     });
     calendar.render();//これ最後に表示する
 }
+
 function GetCalendar(Year, Month) {
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
@@ -67,14 +77,21 @@ function GetCalendar(Year, Month) {
             return response.json();
         })
         .then(data => {
+            const button = document.querySelector('.fc-myCustomButton-button');
             console.log(data);
             if (data.id === null) {
                 console.log("カレンダーIDがnull（未作成）なので、イベントの取得はしません！");
+                if (button) {
+                    button.innerText = 'カレンダー作成';
+                }
                 const nullevent = [
                     { name: '未作成' }
                 ];
-                CreateEvent(nullevent); // 画面を空にして終了
+                CreateEvent(nullevent);
             } else {
+                if (button) {
+                    button.innerText = 'カレンダー未作成';
+                }
                 GetEvent(data.id)
             }
         })
