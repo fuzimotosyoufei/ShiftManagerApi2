@@ -58,15 +58,24 @@ function GetCalendar(Year, Month) {
         })
         .then(data => {
             console.log(data);
-            GetEvent(data.id)
+            if (data.id === null) {
+                console.log("カレンダーIDがnull（未作成）なので、イベントの取得はしません！");
+                const nullevent = [
+                    { name: '未作成' }
+                ];
+                CreateEvent(nullevent); // 画面を空にして終了
+            } else {
+                GetEvent(data.id)
+            }
         })
 }
 function GetEvent(Id) {
+
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok)
                 console.log(response);
-                throw new Error('データの取得に失敗したよイベントの');
+            throw new Error('データの取得に失敗したよイベントの');
             return response.json()
         })
         .then(date => {
