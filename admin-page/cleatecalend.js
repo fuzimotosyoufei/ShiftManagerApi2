@@ -78,7 +78,7 @@ function CreateEvent(Event) {
     Event.foreach(event => {
         const html = `
         <div id="event-list-mein">
-            <h3>${Event.name}</h3>
+            <h3>${event.name}</h3>
         </div>
         `;
     });
