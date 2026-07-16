@@ -20,10 +20,11 @@
     margin-bottom: 20px;
 }
 
-.event-list {
+#event-list {
     flex: 3;
 }
-#event-list-mein{
-    border-radius : blue;
-    margin-bottom : 10px;
+
+#event-list-mein {
+    border-radius: blue;
+    margin-bottom: 10px;
 }
