@@ -13,8 +13,6 @@
     display: flex;
     flex-flow: column;
     width: 100%;
-
-
 }
 
 #calendar {
@@ -24,4 +22,7 @@
 
 .event-list {
     flex: 3;
+}
+#event-list-mein{
+    
 }

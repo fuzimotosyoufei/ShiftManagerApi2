@@ -58,5 +58,28 @@ function GetCalendar(Year, Month) {
         })
         .then(data => {
             console.log(data);
+            GetEvent(data.id)
         })
+}
+function GetEvent(Id) {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok)
+                throw new Error('データの取得に失敗したよイベントの');
+            return response.json()
+        })
+        .then(date => {
+            CreateEvent(date)
+        })
+}
+
+function CreateEvent(Event) {
+    const EventList = document.getElementById('event-list')
+    Event.foreach(event => {
+        const html = `
+        <div id="event-list-mein">
+            <h3>${Event.name}</h3>
+        </div>
+        `;
+    });
 }
