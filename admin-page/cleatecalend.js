@@ -73,8 +73,7 @@ function GetEvent(Id) {//カレンダーのidからイベントを探す
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok)
-                console.log(response);
-            throw new Error(`データの取得に失敗したよイベントの${response.status} エラー:${response.statusText}`);
+                throw new Error(`データの取得に失敗したよイベントの${response.status} エラー:${response.statusText}`);
             return response.json();
         })
         .then(date => {
