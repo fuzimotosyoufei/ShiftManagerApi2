@@ -79,7 +79,7 @@ function CreateEvent(Event) {
     Event.forEach(item => {
         const html = `
         <div class="event-list-mein">
-            <h3>${event.name}</h3>
+            <h3>${item.name}</h3>
         </div>
         `;
         eventList.insertAdjacentHTML('beforeend', html);
