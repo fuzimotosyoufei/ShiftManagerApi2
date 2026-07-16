@@ -25,6 +25,5 @@
 }
 
 #event-list-mein {
-    border-radius: blue;
-    margin-bottom: 10px;
+    border: solid 1px #006fe6;
 }

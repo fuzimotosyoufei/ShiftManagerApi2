@@ -8,8 +8,9 @@ const calendarEl = document.getElementById('calendar')
 function StartCalendar() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/calendar', { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
-            if (!response.ok)
-                throw new Error('データの取得に失敗したよ');
+            if (!response.ok){
+                throw new Error('データの取得に失敗したよ');   
+            }
             return response.json();
         })
         .then(data => {
@@ -52,8 +53,9 @@ function InitCalendar(start, end) {
 function GetCalendar(Year, Month) {
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
-            if (!response.ok)
+            if (!response.ok){
                 throw new Error('データの取得に失敗したよ');
+            }
             return response.json();
         })
         .then(data => {
@@ -72,9 +74,11 @@ function GetCalendar(Year, Month) {
 function GetEvent(Id) {//カレンダーのidからイベントを探す
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
-            if (!response.ok)
-                throw new Error(`データの取得に失敗したよイベントの${response.status} エラー:${response.statusText}`);
-            return response.json();
+            if (!response.ok) {
+                // console.log(response);
+                throw new Error(`エラー:${response.status}`);
+            }
+            return response.json(); // 正常なときだけここにたどり着く
         })
         .then(date => {
             CreateEvent(date)
