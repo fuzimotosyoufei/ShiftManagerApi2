@@ -33,10 +33,18 @@ function InitCalendar(start, end) {
         locale: 'ja',//言語
         initialDate: start,
         // カレンダー上部のヘッダー設定
+        customButtons: {
+            myCustomButton: {
+                text: 'カレンダー作成',
+                click: function () {
+                    alert('自作のシフト申請画面を開くなどの処理をここに書きます！');
+                }
+            }
+        },
         headerToolbar: {
             left: 'prev,next today', // 左側に「前月」「翌月」「今日」ボタン
             center: 'title',         // 中央に「2026年7月」などのタイトル
-            right: 'dayGridMonth,timeGridWeek' // 右側に「月」「週」の切り替えボタン
+            right: 'myCustomButton'
         },
         datesSet: function (info) {
             const carendDate = calendar.getDate();
