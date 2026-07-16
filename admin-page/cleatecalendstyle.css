@@ -24,5 +24,6 @@
     flex: 3;
 }
 #event-list-mein{
-    
+    border-radius : blue;
+    margin-bottom : 10px;
 }

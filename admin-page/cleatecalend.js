@@ -74,13 +74,14 @@ function GetEvent(Id) {
 }
 
 function CreateEvent(Event) {
-    const EventList = document.getElementById('event-list')
-    Event.forEach(event => {
+    const eventList = document.getElementById('event-list')
+    eventList.innerHTML = '';//一度中を空にする
+    Event.forEach(item => {
         const html = `
-        <div id="event-list-mein">
+        <div class="event-list-mein">
             <h3>${event.name}</h3>
         </div>
         `;
-        event.insertAdjacentHTML('beforeend', html);
+        eventList.insertAdjacentHTML('beforeend', html);
     });
 }
