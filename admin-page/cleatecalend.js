@@ -40,6 +40,10 @@ function InitCalendar(start, end) {
                     const button = document.querySelector('.fc-myCustomButton-button');//いま画面にあるボタンの要素を取得する
                     if (button) {//そもそもbuttonが画面上にない可能性があるからifをしている
                         if (button.innerText === 'カレンダー作成') {
+                            const carendDate = calendar.getDate();
+                            const carendYear = carendDate.getFullYear();
+                            const carendMonth = carendDate.getMonth() + 1;
+                            CreatePeriods(carendYear, carendMonth)
                             alert('まだ作ってないよ');
                         } else if (button.innerText === 'カレンダー編集') {
                             alert('もう作ってるよ')
@@ -121,4 +125,17 @@ function CreateEvent(Event) {//イベントの枠を作成
         `;
         eventList.insertAdjacentHTML('beforeend', html);
     });
+}
+
+function CreatePeriods(Year, Month) {//カレンダーのidからイベントを探す
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/CreqtePeriods?GetYear=${Year}&GetMonth=${Month}}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`エラー:${response.status}`);
+            }
+            return response.json(); // 正常なときだけここにたどり着く
+        })
+        .then(date => {
+            CreateEvent(date)
+        })
 }
