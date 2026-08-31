@@ -128,7 +128,7 @@ function CreateEvent(Event) {//イベントの枠を作成
 }
 
 function CreatePeriods(Year, Month) {//カレンダーのidからイベントを探す
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/CreqtePeriods?GetYear=${Year}&GetMonth=${Month}}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/CreatePeriods?GetYear=${Year}&GetMonth=${Month}}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`エラー:${response.status}`);
