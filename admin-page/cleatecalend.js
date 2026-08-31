@@ -135,6 +135,17 @@ function CreatePeriods(Year, Month) {//カレンダーのidからイベントを
             }
             return response.json(); // 正常なときだけここにたどり着く
         })
+        .then(data => {
+            alert(data.message); // 「新しいシフト期間が作成されました。」を表示
+
+            // 🎯 作成完了後、最新の状態を取得し直す！
+            // これにより GetCalendar 内で button.innerText が 'カレンダー編集' に変わり、二重作成を防げます！
+            GetCalendar(Year, Month);
+        })
+        .catch(error => {
+            console.error("作成失敗:", error);
+            alert("作成に失敗しました");
+        })
         .then(date => {
             CreateEvent(date)
         })
