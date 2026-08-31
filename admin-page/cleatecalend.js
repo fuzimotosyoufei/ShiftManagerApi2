@@ -1,3 +1,6 @@
+let currentPeriodId = null;
+let calendar = null;
+
 document.addEventListener('DOMContentLoaded', function () {
     StartCalendar();
 
@@ -17,11 +20,11 @@ function StartCalendar() {
             console.log("C#から届いた生データはこれだ！:", data);
             const year = data.year;
             const month = data.month;
-            periods_id = data.id;
+            currentPeriodId = data.id;
             const startMonthStr = String(month).padStart(2, '0');
-            startDateStr = `${year}-${startMonthStr}-01`;
+            const startDateStr = `${year}-${startMonthStr}-01`;
             const lastDay = new Date(year, month + 1, 0).getDate();
-            endDateStr = `${year}-${startMonthStr}-${lastDay}`;
+            const endDateStr = `${year}-${startMonthStr}-${lastDay}`;
             console.log("C#から届いた生データはこれだ！:", startDateStr);
             InitCalendar(startDateStr, endDateStr);
         })
@@ -75,7 +78,7 @@ function InitCalendar(start, end) {
     calendar.render();//これ最後に表示する
 }
 
-function GetCalendar(Year, Month) {
+function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動させたときに画面に表示するやつ
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok) {
@@ -87,6 +90,7 @@ function GetCalendar(Year, Month) {
             const button = document.querySelector('.fc-myCustomButton-button');
             console.log(data);
             if (data.id === null) {
+                currentPeriodId = null; // 🎯 未作成月なのでIDをリセット
                 console.log("カレンダーIDがnull（未作成）なので、イベントの取得はしません！");
                 if (button) {
                     button.innerText = 'カレンダー作成';
@@ -96,13 +100,15 @@ function GetCalendar(Year, Month) {
                 ];
                 CreateEvent(nullevent);
             } else {
-                currentPeriodId = date.id;//どのカレンダーかを区別するための番号
+                currentPeriodId = data.id;//どのカレンダーかを区別するための番号
                 if (button) {
 
                     if (data.start === '配信中') {
-                        button.innerText = '配信中';
+                        button.innerText = 'カレンダー配信中';
+                    } else {
+                        button.innerText = 'カレンダー編集';
                     }
-                    button.innerText = 'カレンダー編集';
+
                 }
                 GetEvent(data.id)
             }
@@ -154,9 +160,9 @@ function CreatePeriods(Year, Month) {//カレンダーのidからイベントを
             console.error("作成失敗:", error);
             alert("作成に失敗しました");
         })
-        .then(date => {
-            CreateEvent(date)
-        })
+    // .then(date => {
+    //     CreateEvent(date)
+    // })
 }
 
 function UpdateStatus(id) {
