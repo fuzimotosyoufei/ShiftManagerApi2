@@ -45,10 +45,13 @@ function InitCalendar(start, end) {
                             const carendMonth = carendDate.getMonth() + 1;
                             CreatePeriods(carendYear, carendMonth)
                             alert('まだ作ってないよ');
-                        } else if (button.innerText === 'カレンダー編集') {
-                            alert('もう作ってるよ')
+                        } else if (button.innerText === 'カレンダー編集') {//今は配信中に変えるだけだけどその他の機能を思いついたらここに追加
+                            if (currentPeriodId) {
+                                UpdateStatus(currentPeriodId);
+                            }
+                        } else if (button.innerText === 'カレンダー配信中') {
+                            alert('今配信中');
                         }
-
                     }
 
                 }
@@ -93,7 +96,12 @@ function GetCalendar(Year, Month) {
                 ];
                 CreateEvent(nullevent);
             } else {
+                currentPeriodId = date.id;//どのカレンダーかを区別するための番号
                 if (button) {
+
+                    if (data.start === '配信中') {
+                        button.innerText = '配信中';
+                    }
                     button.innerText = 'カレンダー編集';
                 }
                 GetEvent(data.id)
@@ -138,7 +146,7 @@ function CreatePeriods(Year, Month) {//カレンダーのidからイベントを
         .then(data => {
             alert(data.message); // 「新しいシフト期間が作成されました。」を表示
 
-            // 🎯 作成完了後、最新の状態を取得し直す！
+
             // これにより GetCalendar 内で button.innerText が 'カレンダー編集' に変わり、二重作成を防げます！
             GetCalendar(Year, Month);
         })
@@ -148,5 +156,20 @@ function CreatePeriods(Year, Month) {//カレンダーのidからイベントを
         })
         .then(date => {
             CreateEvent(date)
+        })
+}
+
+function UpdateStatus(id) {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/UpdateStatus?GetId=${id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`エラー:${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const Year = data.year;
+            const Month = data.month;
+            GetCalendar(Year, Month);
         })
 }
