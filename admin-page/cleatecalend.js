@@ -103,7 +103,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                 currentPeriodId = data.id;//どのカレンダーかを区別するための番号
                 if (button) {
 
-                    if (data.start === '配信中') {
+                    if (data.status === '配信中') {
                         button.innerText = 'カレンダー配信中';
                     } else {
                         button.innerText = 'カレンダー編集';
