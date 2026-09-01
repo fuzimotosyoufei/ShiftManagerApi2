@@ -22,12 +22,22 @@
 
             <div id="page-check" class="content-check">
                 <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')">データを全削除</button>
-                <table id="shift_create" class="design01">
+
+                <!-- <table id="shift_create" class="design01">
                     <tr id="shift_name">
                         <th>名前</th>
 
                     </tr>
+                </table> -->
+
+                <table class="design01">
+                    <!-- 見出し用（日付や「名前」、イベント名が入る場所） -->
+                    <thead id="shift_name"></thead>
+                
+                    <!-- スタッフデータ行が入る場所 -->
+                    <tbody id="shift_create"></tbody>
                 </table>
+                
                 <h1>📥 受信したシフト希望一覧（管理画面）</h1>
                 <div id="admin-history-container"></div>
             </div>
