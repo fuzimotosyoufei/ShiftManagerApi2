@@ -97,6 +97,7 @@ function CreateCalend(date, ymdata) {
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
+    tbody2.innerHTML = '';//スタッフデータもクリア
     console.log("できたよ１1");
     console.log('できたよ２2');
     console.log(ymdata);
