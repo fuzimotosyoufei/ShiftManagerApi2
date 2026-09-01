@@ -180,12 +180,14 @@ function UpdateStatus(id) {
         .then(data => {
             const Year = data.year;
             const Month = data.month;
-            try {
-                refreshCalendar(); //同じ画面だからこのコードにrefresのメゾットがなくても使用はできる中ったら別の方法
-            } catch (e) {
-                alert("作成に失敗しました");
-                console.error("refreshCalendarでエラーが発生しました:", e);
-            }
+            // try {
+            //     refreshCalendar(); //同じ画面だからこのコードにrefresのメゾットがなくても使用はできる中ったら別の方法
+            // } catch (e) {
+            //     alert("作成に失敗しました");
+            //     console.error("refreshCalendarでエラーが発生しました:", e);
+            // }
+            const channel = new broadcastChannel('calendar_channel');
+            channel.postMessage('refresh');//合言葉みたいな感じなんでもいい
             GetCalendar(Year, Month);
         })
 }
