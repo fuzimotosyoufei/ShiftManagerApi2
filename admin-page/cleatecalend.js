@@ -53,6 +53,8 @@ function InitCalendar(start, end) {
                                 UpdateStatus(currentPeriodId);
                             }
                         } else if (button.innerText === 'カレンダー配信中') {
+                            refreshCalendar()//同じ画面だからこのコードにrefresのメゾットがなくても使用はできる中ったら別の方法
+                            // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/AgainCalendar')
                             alert('今配信中');
                         }
                     }
@@ -105,6 +107,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
 
                     if (data.status === '配信中') {
                         button.innerText = 'カレンダー配信中';
+
                     } else {
                         button.innerText = 'カレンダー編集';
                     }
