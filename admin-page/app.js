@@ -2,8 +2,8 @@ const staffShifts = [
     {
         id: 1,
         name: "藤本",
-        isSubmitted: true,  // 💡 YES：シフト提出済み！
-        isApproved: true,   // 💡 YES：管理者も承認・確定済み！
+        isSubmitted: true,
+        isApproved: true,
         currentMonthShifts: [
             { date: "2026-06-01", mode: "日勤" },
             { date: "2026-06-06", mode: "遅番" },
@@ -13,8 +13,8 @@ const staffShifts = [
     {
         id: 2,
         name: "佐藤",
-        isSubmitted: true,  // 💡 YES：シフトは提出してくれた！
-        isApproved: false,  // 💡 NO ：管理者がまだ調整中で未承認。
+        isSubmitted: true,
+        isApproved: false,
         currentMonthShifts: [
             { date: "2026-06-04", mode: "休み" },
             { date: "2026-06-16", mode: "休み" },
@@ -24,21 +24,19 @@ const staffShifts = [
     {
         id: 3,
         name: "田中kkkkkkkkkkkkk",
-        isSubmitted: false, // 💡 NO ：そもそもまだ今月のシフトを出してない！
-        isApproved: false,  // 💡 NO ：出してないので、もちろん未承認。
+        isSubmitted: false,
+        isApproved: false,
         currentMonthShifts: [
             { date: "2026-06-09", mode: "日勤" },
             { date: "2026-06-29", mode: "休み" },
-            { date: "2026-06-30", mode: "遅番" } // ※6月は30日までなので、30日に修正しておきました！
+            { date: "2026-06-30", mode: "遅番" }
         ]
     }
 ];
 
 function CalendarYearAndMonth() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
-        headers: {
-            'ngrok-skip-browser-warning': 'true'
-        }
+        headers: { 'ngrok-skip-browser-warning': 'true' }
     })
         .then(response => {
             if (response.ok) {
@@ -48,165 +46,125 @@ function CalendarYearAndMonth() {
             throw new Error('通信エラー');
         })
         .then(ymdata => {
-            console.log(ymdata.id);
+            console.log("年月データID:", ymdata.id);
             CalendarData(ymdata);
         })
+        .catch(err => console.error(err));
 }
+
 function CalendarData(ymdata) {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
-        headers: {
-            'ngrok-skip-browser-warning': 'true'
-        }
+        headers: { 'ngrok-skip-browser-warning': 'true' }
     })
         .then(response => {
             if (response.ok) {
+                console.log("できたよ3"); // return の前に移動
                 return response.json();
-                console.log("できたよ3");
             }
             throw new Error('通信エラー');
-            console.log("できたよ4");
         })
         .then(date => {
-
             console.log('これデータ', date);
-            CreateCalend(date, ymdata)
+            CreateCalend(date, ymdata);
         })
-
+        .catch(err => console.error(err));
 }
 
-// function CalendarEvetn(){
-//     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/Event',{
-//         headers: {
-//             'ngrok-skip-browser-warning' : 'true'
-//         }
-//     })
-//         .then(response => {
-//             if (response.ok){
-//                 return response.json();
-//             }
-//             throw new Error('通信エラー');
-//         })
-//         .then(event => {
-//             console.log(event);
-
-//         })
-// }
-//月の判定ができてないよ
-
 function CreateCalend(date, ymdata) {
-    const tbody = document.getElementById('shift_name');
-    const tbody2 = document.getElementById('shift_create');
-    tbody.innerHTML = ''; // 一度中身をクリア
-    // tbody2.innerHTML = '';//スタッフデータもクリア
-    console.log("できたよ１1");
-    console.log('できたよ２2');
-    console.log(ymdata);
+    const tbody = document.getElementById('shift_name');   // thead想定
+    const tbody2 = document.getElementById('shift_create'); // tbody想定
 
+    tbody.innerHTML = '';
+    tbody2.innerHTML = '';
 
-    // const eventSetting = [
-    //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
-    //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
-    // ];
+    console.log("カレンダー作成開始");
+
+    // イベントヘッダー設定の構築
     const eventSetting = [];
-    date[0].event.forEach(event => {
-
-        const setting = {
-            key: event.name,
-            TrueText: 'OK',
-            FalseText: 'NO',
-            NullText: '未入力'
-        }
-        eventSetting.push(setting);
-        console.log(setting);
-        console.log(event);
-    })
-
-
-
-    const days = new Date(ymdata.year, ymdata.month, 0).getDate();
-    const thn = document.createElement('th')
-    thn.classList.add('name');
-    thn.textContent = "名前";
-    tbody.appendChild(thn);
-
-    for (let i = 1; i <= days; i++) {//日を入れている
-        const th = document.createElement('th')
-        th.textContent = i;
-        tbody.appendChild(th);
+    if (date.length > 0 && Array.isArray(date[0].event)) {
+        date[0].event.forEach(event => {
+            const setting = {
+                key: event.name,
+                TrueText: 'OK',
+                FalseText: 'NO',
+                NullText: '未入力'
+            };
+            eventSetting.push(setting);
+        });
     }
 
-    eventSetting.forEach(setting => {//イベントの処理
-        const the = document.createElement('th')
+    // ヘッダー行 (tr) の作成
+    const headerTr = document.createElement('tr');
+
+    const days = new Date(ymdata.year, ymdata.month, 0).getDate();
+    const thn = document.createElement('th');
+    thn.classList.add('name');
+    thn.textContent = "名前";
+    headerTr.appendChild(thn);
+
+    // 日付ヘッダーの追加
+    for (let i = 1; i <= days; i++) {
+        const th = document.createElement('th');
+        th.textContent = i;
+        headerTr.appendChild(th);
+    }
+
+    // イベント列ヘッダーの追加
+    eventSetting.forEach(setting => {
+        const the = document.createElement('th');
         the.classList.add('yasumi');
         the.textContent = setting.key;
-        tbody.appendChild(the);
+        headerTr.appendChild(the);
     });
 
+    tbody.appendChild(headerTr);
 
-    date.forEach(staff => {//初期値がいる名前追加
-        console.log(staff);
-        const td = document.createElement('td')
-        const tr = document.createElement('tr')
+    // スタッフごとの行構築
+    date.forEach(staff => {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
         td.textContent = staff.name;
+        tr.appendChild(td);
 
+        // シフトデータのルックアップ辞書作成
         const shiftLookup = {};
         if (staff.day != null) {
-            console.log("辞書処理");
-            staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+            staff.day.forEach(shift => {
                 shiftLookup[shift.date] = shift.mode;
             });
         }
 
-        tbody2.appendChild(tr);
-        tr.appendChild(td);
-
-
-        const count = tbody.childElementCount;
-
-
-
-
-        for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ
-            // const shiftTd = document.createElement('td');
-            // shiftTd.textContent = "希望";
-            // tr.appendChild(shiftTd);
-            // console.log(i);
-            // console.log(i);
+        // 日毎のシフトセル埋め込み
+        for (let i = 1; i <= days; i++) {
             const shiftTd = document.createElement('td');
-            const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-            const yer = shiftLookup[dateStr] || "";
-            shiftTd.textContent = yer;
+            const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const mode = shiftLookup[dateStr] || "";
+            shiftTd.textContent = mode;
             tr.appendChild(shiftTd);
-
         }
 
-        eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+        // イベント状態のセル埋め込み
+        eventSetting.forEach(setting => {
             const eventTd = document.createElement('td');
-            console.log(staff.event[setting.key]);
-            const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
+            const currentEventData = staff.event ? staff.event.find(e => e.name === setting.key) : null;
 
-            console.log(staff.event[name]);
-            if (currentEventData[setting.key] === true) {
+            // APIのレスポンス構造（valueやstatusなどのプロパティ名）に合わせて判定してください
+            const isFlag = currentEventData ? (currentEventData.value ?? currentEventData[setting.key]) : null;
+
+            if (isFlag === true) {
                 eventTd.textContent = setting.TrueText;
-            } else if (currentEventData[setting.key] === false) {
+            } else if (isFlag === false) {
                 eventTd.textContent = setting.FalseText;
             } else {
-                eventTd.textContent = setting.NullText
+                eventTd.textContent = setting.NullText;
             }
             tr.appendChild(eventTd);
-        })
+        });
 
+        tbody2.appendChild(tr);
     });
-
-
-
-    // tbody.appendChild(tr)
 }
 
-
-
-
-// 💡 画面を切り替えるためのJavaScriptスイッチ
 function switchPage(pageName) {
     const checkPage = document.getElementById('page-check');
     const buildPage = document.getElementById('page-build');
@@ -216,7 +174,6 @@ function switchPage(pageName) {
     } else if (pageName == 'build') {
         checkPage.style.display = 'none';
         buildPage.style.display = 'block';
-
     }
 }
 
@@ -225,33 +182,22 @@ function refreshCalendar() {
     CalendarYearAndMonth();
 }
 
-// ② ページ初開時はこの関数を呼ぶ
 document.addEventListener('DOMContentLoaded', function () {
     refreshCalendar();
 });
 
-const channel = new BroadcastChannel('calendar_channel');//別のvsコードから実行するためのコード
+const channel = new BroadcastChannel('calendar_channel');
 channel.onmessage = (calendar) => {
     if (calendar.data === 'refresh') {
         console.log("更新の合図を受け取りました。画面をリフレッシュします。");
-        refreshCalendar(); // ここで関数を実行
+        refreshCalendar();
     }
-}
-
-
-
-
-
-
-
+};
 
 function loadShifts() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
         method: 'GET',
-        headers: {
-
-            'ngrok-skip-browser-warning': 'true'
-        }
+        headers: { 'ngrok-skip-browser-warning': 'true' }
     })
         .then(response => {
             if (response.ok) {
@@ -274,23 +220,21 @@ function loadShifts() {
 
                 const formattedDates = shift.dates.map(item => {
                     if (typeof item === 'object') {
-                        // C#のDateTime型は「2026-06-15T00:00:00」のように時間がくっついてくることがあるので、
-                        // .split('T')[0] を挟んで日付だけに整えてあげるとさらに見やすくなります！
                         const cleanDate = item.date.split('T')[0];
-                        return `${cleanDate} (${item.mode})`; // 例：「2026-06-15 (休み)」
+                        return `${cleanDate} (${item.mode})`;
                     }
                     return item;
                 }).join('<br>');
 
                 card.innerHTML = `
-                            <div class="staff-name">👤 ${shift.name} (${shift.year}年${shift.month}月分)</div>
-                            <div class="date-list">
-                                <strong>希望内容：</strong><br>
-                                ${formattedDates}
-                            </div>
-                            <div class="text-name">📝 備考欄</div>
-                            <div class="text-message">${shift.memo || '（なし）'}</div>
-                        `;
+                    <div class="staff-name">👤 ${shift.name} (${shift.year}年${shift.month}月分)</div>
+                    <div class="date-list">
+                        <strong>希望内容：</strong><br>
+                        ${formattedDates}
+                    </div>
+                    <div class="text-name">📝 備考欄</div>
+                    <div class="text-message">${shift.memo || '（なし）'}</div>
+                `;
                 container.appendChild(card);
             });
         })
@@ -299,164 +243,3 @@ function loadShifts() {
             alert('シフトデータの読み込みに失敗しました。');
         });
 }
-
-//開始日と終了日をshift_periodsからとってくる処理
-// const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-// const days = new Date(2026, 7, 0).getDate();
-// const thn = document.createElement('th')
-// thn.classList.add('name');
-// thn.textContent = "名前";
-// tbody.appendChild(thn);
-
-// for (let i = 1; i <= days; i++) {//日を入れている
-//     const th = document.createElement('th')
-//     th.textContent = i;
-//     tbody.appendChild(th);
-// }ここら辺
-//イベント追加処理
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function CalendarData() {
-//     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
-//         headers: {
-//             'ngrok-skip-browser-warning': 'true'
-//         }
-//     })
-//         .then(response => {
-//             if (response.ok) {
-//                 return response.json();
-//                 console.log("できたよ3");
-//             }
-//             throw new Error('通信エラー');
-//             console.log("できたよ4");
-//         })
-//         .then(date => {
-//             console.log('これデータ', date);
-//             // InCalendarNauList = [];
-//             date.forEach(datename => {
-//                 // SingreDate =[];
-
-//                 datename.day.forEach(dates => {
-//                     console.log('日付', dates.date),
-//                         console.log('種類', dates.mode)
-//                     //     var InSingreDate = new
-//                     //     {
-//                     //         date = dates.date,
-//                     //         mode = dates.mode
-//                     //     }
-//                     // SingreDate.Add(InSingreDate) ;
-//                 });
-//                 // var SingreData = new{
-//                 //     name = datename.name,
-//                 //     date = InSingreDate
-//                 // }
-//                 // InCalendarNauList.Add(SingreData)
-
-//             });
-
-//         })
-
-// }
-
-// //月の判定ができてないよ
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     // CalendarNauList = [];
-//     //CalendarNaulist = CalendarData();
-//     CalendarData();
-//     const tbody = document.getElementById('shift_name');
-//     const tbody2 = document.getElementById('shift_create');
-//     tbody.innerHTML = ''; // 一度中身をクリア
-//     console.log("できたよ１1");
-//     console.log('できたよ２2');
-
-//     // const eventSetting = [
-//     //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
-//     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
-//     // ];
-
-
-//     const days = new Date(2026, 6, 0).getDate();
-//     const thn = document.createElement('th')
-//     thn.classList.add('name');
-//     thn.textContent = "名前";
-//     tbody.appendChild(thn);
-
-//     for (let i = 1; i <= days; i++) {//日を入れている
-//         const th = document.createElement('th')
-//         th.textContent = i;
-//         tbody.appendChild(th);
-//     }
-
-//     // eventSetting.forEach(setting => {//イベントの処理
-//     //     const the = document.createElement('th')
-//     //     the.classList.add('yasumi');
-//     //     the.textContent = "sssssss";
-//     //     tbody.appendChild(the);
-//     // });
-
-
-//     staffShifts.forEach(staff => {//初期値がいる名前追加
-
-//         const td = document.createElement('td')
-//         const tr = document.createElement('tr')
-//         td.textContent = staff.name;
-
-//         const shiftLookup = {};
-//         staff.currentMonthShifts.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
-//             shiftLookup[shift.date] = shift.mode;
-//         });
-
-//         tbody2.appendChild(tr);
-//         tr.appendChild(td);
-
-
-//         const count = tbody.childElementCount;
-
-
-
-
-//         for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ
-//             // const shiftTd = document.createElement('td');
-//             // shiftTd.textContent = "希望";
-//             // tr.appendChild(shiftTd);
-
-//             const shiftTd = document.createElement('td');
-//             const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-//             const yer = shiftLookup[dateStr] || "";
-//             shiftTd.textContent = yer;
-//             tr.appendChild(shiftTd);
-
-//         }
-
-//         // eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
-//         //     const eventTd = document.createElement('td');
-
-//         //     if (staff[setting.key] === true) {
-//         //         eventTd.textContent = setting.TrueText;
-//         //     } else {
-//         //         eventTd.textContent = setting.FalseText;
-//         //     }
-//         //     tr.appendChild(eventTd);
-//         // })
-
-//     });
-
-
-
-//     // tbody.appendChild(tr)
-// });
