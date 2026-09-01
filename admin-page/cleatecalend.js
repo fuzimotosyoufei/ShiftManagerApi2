@@ -186,7 +186,7 @@ function UpdateStatus(id) {
             //     alert("作成に失敗しました");
             //     console.error("refreshCalendarでエラーが発生しました:", e);
             // }
-            const channel = new broadcastChannel('calendar_channel');
+            const channel = new BroadcastChannel('calendar_channel');
             channel.postMessage('refresh');//合言葉みたいな感じなんでもいい
             GetCalendar(Year, Month);
         })
