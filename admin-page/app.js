@@ -219,14 +219,23 @@ function switchPage(pageName) {
     }
 }
 
-// 画面が開いたら自動でデータを読み込む（元のロジックそのまま）
-document.addEventListener('DOMContentLoaded', function () {
+function refreshCalendar() {
     loadShifts();
     CalendarYearAndMonth();
+}
+
+// ② ページ初開時はこの関数を呼ぶ
+document.addEventListener('DOMContentLoaded', function () {
+    refreshCalendar();
 });
 
-
-
+const channel = new BroadcastChannel('calendar_channel');//別のvsコードから実行するためのコード
+channel.onmessage = (calendar) => {
+    if (calendar.data === 'refresh') {
+        console.log("更新の合図を受け取りました。画面をリフレッシュします。");
+        refreshCalendar(); // ここで関数を実行
+    }
+}
 
 
 
