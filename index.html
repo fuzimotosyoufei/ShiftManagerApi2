@@ -334,10 +334,10 @@
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
-                validRange: {
-                    start: start,
-                    end: end
-                },
+                // validRange: {
+                //     start: start,
+                //     end: end
+                // },実験
                 contentHeight: 'auto',
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
@@ -412,7 +412,7 @@
                 }
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
-                        <div class="palette-container">
+                        <div class=">
                             <event-name>${eventl.eventName}</event-name>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
