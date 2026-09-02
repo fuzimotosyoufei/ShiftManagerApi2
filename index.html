@@ -257,7 +257,8 @@
                     startDateStr = `${year}-${startMonthStr}-01`;
 
 
-                    const lastDay = new Date(year, month, 1).getDate();
+                    const lastDay = new Date(year, month, 1).getDate();//多分5月のはじめを計算している
+                    alert(lastDay);
                     //const lastDay = new Date(year, month+1, 0).getDate();
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
