@@ -21,7 +21,12 @@
     margin-bottom: 20px;
 }
 
-#event-settings {}
+.event-settings {
+
+}
+.event-settings-button{
+    
+}
 
 #event-list {
     flex: 3;
