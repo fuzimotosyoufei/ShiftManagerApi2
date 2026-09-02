@@ -98,6 +98,7 @@ function CreateCalend(date, ymdata) {
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
     tbody2.innerHTML = '';//スタッフデータもクリア
+
     console.log("できたよ１1");
     console.log('できたよ２2');
     console.log(ymdata);
@@ -108,52 +109,53 @@ function CreateCalend(date, ymdata) {
     //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
     // ];
     const eventSetting = [];
-    date[0].event.forEach(event => {
+    if (date.length > 0 && Array.isArray(date[0].event)) {
+        date[0].event.forEach(event => {
+            const setting = {
+                key: event.name,
+                TrueText: 'OK',
+                FalseText: 'NO',
+                NullText: '未入力'
+            };
+            eventSetting.push(setting);
+        });
+    }
 
-        const setting = {
-            key: event.name,
-            TrueText: 'OK',
-            FalseText: 'NO',
-            NullText: '未入力'
-        }
-        eventSetting.push(setting);
-        console.log(setting);
-        console.log(event);
-    })
+    // // ヘッダー行 (tr) の作成
+    const headerTr = document.createElement('tr');//要注意
 
 
 
 
-
-    
-    const days = new Date(ymdata.year, ymdata.month, 0).getDate();
     const thn = document.createElement('th')
     thn.classList.add('name');
     thn.textContent = "名前";
-    tbody.appendChild(thn);
+    headerTr.appendChild(thn);
 
 
-
+    const days = new Date(ymdata.year, ymdata.month, 0).getDate();
     for (let i = 1; i <= days; i++) {//日を入れている
         const th = document.createElement('th')
         th.textContent = i;
-        tbody.appendChild(th);
+        headerTr.appendChild(th);
     }
 
     eventSetting.forEach(setting => {//イベントの処理
         const the = document.createElement('th')
         the.classList.add('yasumi');
         the.textContent = setting.key;
-        tbody.appendChild(the);
+        headerTr.appendChild(the);
     });
+
+    tbody.appendChild(headerTr);//要注意
 
 
     date.forEach(staff => {//初期値がいる名前追加
-        console.log(staff);
+        // console.log(staff);
         const td = document.createElement('td')
         const tr = document.createElement('tr')
         td.textContent = staff.name;
-
+        tr.appendChild(td);
         const shiftLookup = {};
         if (staff.day != null) {
             console.log("辞書処理");
@@ -162,11 +164,9 @@ function CreateCalend(date, ymdata) {
             });
         }
 
-        tbody2.appendChild(tr);
-        tr.appendChild(td);
-
-
-        const count = tbody.childElementCount;
+        // tbody2.appendChild(tr);
+        // tr.appendChild(td);
+        // const count = tbody.childElementCount;
 
 
 
@@ -180,28 +180,46 @@ function CreateCalend(date, ymdata) {
             const shiftTd = document.createElement('td');
             const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
-            shiftTd.textContent = yer;
+            // shiftTd.textContent = yer;
+            shiftTd.textContent = yer;//要注意
             tr.appendChild(shiftTd);
 
         }
-
+        ///////////////////ここまで
         eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
             const eventTd = document.createElement('td');
-            console.log(staff.event[setting.key]);
-            const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
+            // console.log(staff.event[setting.key]);
+            // const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
 
-            console.log(staff.event[name]);
-            if (currentEventData[setting.key] === true) {
+            const currentEventData = staff.event ? staff.event.find(e => e.name === setting.key) : null;//要注意
+            const isFlag = currentEventData ? (currentEventData.value ?? currentEventData[setting.key]) : null;//要注意
+            // console.log(staff.event[name]);
+
+
+            if (isFlag === true) {
                 eventTd.textContent = setting.TrueText;
-            } else if (currentEventData[setting.key] === false) {
+            } else if (isFlag === false) {
                 eventTd.textContent = setting.FalseText;
             } else {
-                eventTd.textContent = setting.NullText
+                eventTd.textContent = setting.NullText;
             }
             tr.appendChild(eventTd);
-        })
+        });
 
+        tbody2.appendChild(tr);
     });
+    //         if (currentEventData[setting.key] === true) {
+    //             eventTd.textContent = setting.TrueText;
+    //         } else if (currentEventData[setting.key] === false) {
+    //             eventTd.textContent = setting.FalseText;
+    //         } else {
+    //             eventTd.textContent = setting.NullText
+    //         }
+    //         tr.appendChild(eventTd);
+    //     })
+    //     tbody2.appendChild(tr);//要注意
+
+    // });
 
 
 
