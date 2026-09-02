@@ -22,11 +22,12 @@
 }
 
 .event-settings {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-}
-.event-settings-button{
-    
-}
+.event-settings-button {}
 
 #event-list {
     flex: 3;
