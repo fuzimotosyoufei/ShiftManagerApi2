@@ -256,8 +256,9 @@
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
 
-                    
-                    const lastDay = new Date(year, month + 1, 0).getDate();
+
+                    const lastDay = new Date(year, month, 0).getDate();
+                    //const lastDay = new Date(year, month+1, 0).getDate();
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
