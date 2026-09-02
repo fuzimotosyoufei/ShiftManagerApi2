@@ -21,6 +21,8 @@
     margin-bottom: 20px;
 }
 
+#event-settings {}
+
 #event-list {
     flex: 3;
 }
