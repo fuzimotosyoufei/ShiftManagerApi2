@@ -2,6 +2,7 @@
 .content-build h2 {
     color: blue;
     border-bottom: 2px solid blue;
+    text-align: center;
     /* 下線もつけて分かりやすく */
 }
 
@@ -27,5 +28,5 @@
 #event-list-mein {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
-    gap :  20px;
+    gap: 20px;
 }
