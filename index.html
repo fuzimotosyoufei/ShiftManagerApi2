@@ -255,6 +255,8 @@
                     periods_id = data.id;
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
+
+                    
                     const lastDay = new Date(year, month + 1, 0).getDate();
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
@@ -334,10 +336,10 @@
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
-                // validRange: {
-                //     start: start,
-                //     end: end
-                // },実験
+                validRange: {
+                    start: start,
+                    end: end
+                },
                 contentHeight: 'auto',
                 selectable: true,//カレンダーのマス目をたプできるようにする
 
