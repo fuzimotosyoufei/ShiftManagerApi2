@@ -38,7 +38,8 @@
     /* 💡 右側のボタンの横幅と同じ数値に合わせる */
 }
 
-.event-settings h2 {
+.event-settings h4{
+    color: rgb(32, 164, 205);
     flex: 1;
     /* 余った中央エリアをめいっぱい広げる */
     text-align: center;
