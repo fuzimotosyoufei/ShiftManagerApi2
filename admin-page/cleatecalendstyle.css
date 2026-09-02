@@ -24,10 +24,31 @@
 .event-settings {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* 高さ同じ */
+
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+
 }
 
-.event-settings-button {}
+.event-settings::before {
+    content: '';
+    width: 120px;
+    /* 💡 右側のボタンの横幅と同じ数値に合わせる */
+}
+
+.event-settings h2 {
+    flex: 1;
+    /* 余った中央エリアをめいっぱい広げる */
+    text-align: center;
+    /* 文字を中央揃えにする */
+    margin: 0;
+}
+
+.event-settings-button {
+    width: 120px;
+}
 
 #event-list {
     flex: 3;
