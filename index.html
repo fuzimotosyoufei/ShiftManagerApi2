@@ -423,7 +423,7 @@
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class=">
-                            <event-name>${eventl.eventName}</event-name>
+                            <div class="event-name">${eventl.eventName}</div>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
                                     <input type="radio" name= ${eventl.eventId} onchange="CheckEvent(${eventl.eventId}, true)"  ${OKchecked}> OK
