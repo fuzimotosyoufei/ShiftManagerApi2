@@ -80,11 +80,17 @@ function InitCalendar(start, end) {
         contentHeight: 'auto',
         selectable: true,//カレンダーのマス目をたプできるようにする
     });
-    const settingsBtn = document.querySelector('#event-settings-button')
-
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', function () {
-            console.log("押せたよ");
+    const Btn = document.querySelector('#event-settings-button')
+    const modal = document.querySelector('#my-modal')
+    if (Btn) {
+        Btn.addEventListener('click', function () {
+            if (modal.open) {
+                modal.close();
+                Btn.innerText = 'イベント追加を閉じる';
+            } else {
+                modal.showModal();
+                Btn.innerText = 'イベント追加を開く'
+            }
         })
     }
     calendar.render();//これ最後に表示する
