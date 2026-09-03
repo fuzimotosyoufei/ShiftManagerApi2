@@ -413,13 +413,13 @@
                 });
                 var OKchecked = "";
                 var NOchecked = "";
-                console.log(できた１)
+                console.log("できた１")
                 if (eventl.answer == true) {
                     OKchecked = 'checked';
                 } else if (eventl.answer == false) {
                     NOchecked = 'checked';
                 }
-                console.log(できた２)
+                console.log("できた２")
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
                         <div class=">
@@ -434,7 +434,7 @@
                             </div>
                         </div>
                     `;//HTMLのように各
-                console.log(できた３)
+                console.log("できた３")
                 event.insertAdjacentHTML('beforeend', html);//おおもとに追加beforeendで後ろから順に追加htmlでその中を
             });
         }
