@@ -81,15 +81,16 @@ function InitCalendar(start, end) {
         selectable: true,//カレンダーのマス目をたプできるようにする
     });
     const Btn = document.querySelector('#event-settings-button')
-    const modal = document.querySelector('#my-modal')
+
     if (Btn) {
         Btn.addEventListener('click', function () {
+            const modal = document.querySelector('#my-modal')
             if (modal.open) {
                 modal.close();
-                Btn.innerText = 'イベント追加を閉じる';
+                Btn.innerText = 'イベント追加を開く'
             } else {
                 modal.showModal();
-                Btn.innerText = 'イベント追加を開く'
+                Btn.innerText = 'イベント追加を閉じる';
             }
         })
     }
