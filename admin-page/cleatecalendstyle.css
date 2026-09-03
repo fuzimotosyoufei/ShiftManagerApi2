@@ -34,12 +34,12 @@
 
 .event-settings::before {
     content: '';
-    width: 30px;
+    width: 120px;
     /* 💡 右側のボタンの横幅と同じ数値に合わせる */
 }
 
 .event-settings h4 {
-    font-size: 100px;
+    font-size: 30px;
     color: rgb(32, 164, 205);
     flex: 1;
     /* 余った中央エリアをめいっぱい広げる */
@@ -49,8 +49,10 @@
 }
 
 .event-settings-button {
-    width: 50em;
-    height: 30em;
+    width: 100em;
+
+    height: 300em;
+
 }
 
 #event-list {
