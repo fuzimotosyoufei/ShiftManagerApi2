@@ -38,7 +38,8 @@
     /* 💡 右側のボタンの横幅と同じ数値に合わせる */
 }
 
-.event-settings h4{
+.event-settings h4 {
+    font-size: 100px;
     color: rgb(32, 164, 205);
     flex: 1;
     /* 余った中央エリアをめいっぱい広げる */
@@ -48,7 +49,8 @@
 }
 
 .event-settings-button {
-    width: 120px;
+    width: 5em;
+    height: 3em;
 }
 
 #event-list {
