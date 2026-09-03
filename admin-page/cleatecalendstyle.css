@@ -60,7 +60,10 @@ dialog {
     padding:10px;
     width:50%;
 }
-
+#modal-button {
+    width: 100px;
+    height: 20px;
+}
 #event-list {
     flex: 3;
 }
