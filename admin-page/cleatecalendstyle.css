@@ -34,7 +34,7 @@
 
 .event-settings::before {
     content: '';
-    width: 120px;
+    width: 30px;
     /* 💡 右側のボタンの横幅と同じ数値に合わせる */
 }
 
@@ -49,8 +49,8 @@
 }
 
 .event-settings-button {
-    width: 5em;
-    height: 3em;
+    width: 50em;
+    height: 30em;
 }
 
 #event-list {
