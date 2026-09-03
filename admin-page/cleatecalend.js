@@ -63,6 +63,8 @@ function InitCalendar(start, end) {
                 }
             }
         },
+
+
         headerToolbar: {
             left: 'prev,next today', // 左側に「前月」「翌月」「今日」ボタン
             center: 'title',         // 中央に「2026年7月」などのタイトル
@@ -78,6 +80,13 @@ function InitCalendar(start, end) {
         contentHeight: 'auto',
         selectable: true,//カレンダーのマス目をたプできるようにする
     });
+    const settingsBtn = document.querySelector('#event-settings-button')
+
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', function () {
+            console.log("押せたよ");
+        })
+    }
     calendar.render();//これ最後に表示する
 }
 
