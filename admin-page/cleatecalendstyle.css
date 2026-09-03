@@ -48,10 +48,11 @@
     margin: 0;
 }
 
-.event-settings-button {
-    width: 100em;
-
-    height: 300em;
+#event-settings-button {
+    width: 140px;
+    /* 横幅（120px〜160pxくらいが標準的） */
+    height: 40px;
+    /* 高さ（36px〜44pxくらいが押しやすい） */
 
 }
 
