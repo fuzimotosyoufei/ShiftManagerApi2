@@ -92,7 +92,7 @@ function InitCalendar(start, end) {
     }
     if (modalBtn) {
         modalBtn.addEventListener('click', function () {
-            modal.closest();
+            modal.close();
         })
     }
     calendar.render();//これ最後に表示する
