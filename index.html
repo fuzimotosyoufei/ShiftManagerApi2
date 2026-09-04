@@ -279,13 +279,17 @@
                                 console.log("スタッフがすでにあるかのデータだよ", staff_id);
                                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
-                                    .then(shift_reqs_id => {
-                                        if (shift_reqs_id === null) {
+                                    .then(data => {
+                                        if (data === null) {
                                             console.log("まだ作ってないよ")
                                             Event(null);
-                                        } else {
+                                            return;
+                                        } 
+                                             shift_reqs_id = data.id;
                                             console.log("もうその月に作ってあるよ", shift_reqs_id);
+                                            document.getElementById("Text-message").value = data.memo || "";     
                                             Event(shift_reqs_id);
+                                               
                                             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                                 .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                                 .then(dates => {
@@ -301,7 +305,7 @@
 
 
                                                 })
-                                        }
+                                        
                                     })
                             }
 
