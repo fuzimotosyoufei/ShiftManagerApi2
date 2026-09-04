@@ -104,7 +104,7 @@
         .event-name {
             width: 60%;
             font-size: 18px;
-            color: #333;
+            color: #ca0202;
         }
 
         .radio-sample-container {
@@ -343,6 +343,13 @@
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
                 locale: 'ja',//言語
+
+                headerToolbar: {
+                    left: '',
+                    center: 'title',
+                    right: ''
+                },
+
                 validRange: {
                     start: start,
                     end: end
@@ -422,7 +429,7 @@
                 console.log("できた２")
                 //名前が同じradioがあることでそれしか選べないみたいになる
                 const html = `
-                        <div class=">
+                        <div class="pelette-container>
                             <div class="event-name">${eventl.eventName}</div>
                             <div class ="radio-sample-container">
                                 <label class="radio-label"> 
