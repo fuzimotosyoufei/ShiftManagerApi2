@@ -56,11 +56,23 @@
 
 }
 
-
 .modal-content {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+}
 
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.modeal-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .modal-content h5 {
