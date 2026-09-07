@@ -96,7 +96,7 @@ function InitCalendar(start, end) {
             modal.close();
         })
     }
-    if (event) {
+    if (modalcalend) {
         const carendDate = calendar.getDate();
         const Year = carendDate.getFullYear();
         const Month = carendDate.getMonth() + 1;
