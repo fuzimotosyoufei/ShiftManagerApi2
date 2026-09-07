@@ -97,21 +97,23 @@ function InitCalendar(start, end) {
         })
     }
     if (modalcalend) {//イベントの追加の時今表示しているカレンダーの日付を取るための処理
-        const carendDate = calendar.getDate();
-        const Year = carendDate.getFullYear();
-        const Month = carendDate.getMonth() + 1;
 
-        const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
-        const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
-        const lastDay = new Date(Year, Month, 0).getDate();
-        const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
+        InputEventCalend()
+        // const carendDate = calendar.getDate();
+        // const Year = carendDate.getFullYear();
+        // const Month = carendDate.getMonth() + 1;
 
-        const dateInput = document.getElementById('event-calend');
-        if (dateInput) {
-            dateInput.min = minDate;//最小値
-            dateInput.max = maxDate;//最大で選べる日付
-            dateInput.value = minDate;//初期値
-        }
+        // const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
+        // const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
+        // const lastDay = new Date(Year, Month, 0).getDate();
+        // const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
+
+        // const dateInput = document.getElementById('event-calend');
+        // if (dateInput) {
+        //     dateInput.min = minDate;//最小値
+        //     dateInput.max = maxDate;//最大で選べる日付
+        //     dateInput.value = minDate;//初期値
+
     }
 
 
@@ -146,6 +148,28 @@ function InitCalendar(start, end) {
 
 }
 
+function InputEventCalend() {
+    const modalcalend = document.querySelector('#event-calend')
+    if (modalcalend) {//イベントの追加の時今表示しているカレンダーの日付を取るための処理
+        const carendDate = calendar.getDate();
+        const Year = carendDate.getFullYear();
+        const Month = carendDate.getMonth() + 1;
+
+        const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
+        const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
+        const lastDay = new Date(Year, Month, 0).getDate();
+        const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
+
+        const dateInput = document.getElementById('event-calend');
+        if (dateInput) {
+            dateInput.min = minDate;//最小値
+            dateInput.max = maxDate;//最大で選べる日付
+            dateInput.value = minDate;//初期値
+        }
+    }
+}
+
+
 function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動させたときに画面に表示するやつ
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
@@ -155,6 +179,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
             return response.json();
         })
         .then(data => {
+            InputEventCalend()
             const button = document.querySelector('.fc-myCustomButton-button');
             console.log(data);
             if (data.id === null) {
@@ -191,6 +216,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
             }
         })
 }
+
 function GetEvent(Id) {//カレンダーのidからイベントを探す
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
