@@ -148,6 +148,12 @@ function InitCalendar(start, end) {
                     alert(inputText);
                     alert(inputContent);
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}&GetDay=${Day}&GetText=${inputText}&GetContent=${inputContent}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('データの取得に失敗したよ');
+                            }
+                            return response.json();
+                        })
                 })
         }
 
