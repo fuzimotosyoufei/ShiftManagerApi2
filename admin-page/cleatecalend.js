@@ -84,7 +84,8 @@ function InitCalendar(start, end) {
     const Btn = document.querySelector('#event-settings-button')//イベント追加ボタンの処理
     const modal = document.querySelector('#my-modal')
     const modalBtn = document.querySelector('#modal-button')
-
+    const modalbodyBtn = document.querySelector('#modal-body-button')
+    const modalcalend = document.querySelector('#event-calend')
     if (Btn) {
         Btn.addEventListener('click', function () {
             modal.showModal();
@@ -95,7 +96,36 @@ function InitCalendar(start, end) {
             modal.close();
         })
     }
+
+    // if(modalbodyBtn) {
+    //     modalbodyBtn.addEventListener('click',function(){
+    //         const inputText = document.getElementById('modal-body-text').value;
+    //         if (inputText.trim() === "") {
+    //             alert("テキストを入力してください");
+    //             return;
+    //         }else {
+
+    //                 const carendDate = calendar.getDate();
+    //                 const carendYear = carendDate.getFullYear();
+    //                 const carendMonth = carendDate.getMonth() + 1;
+    //                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${carendYear}&Getmonth=${carendMonth}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+    //                 .then(response => {
+    //                     if (!response.ok) {
+    //                         throw new Error('データの取得に失敗したよ');
+    //                     }
+    //                     return response.json();
+    //                 })
+    //                 .then(data => {
+    //                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}GeText=${inputText}&`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+    //                 })
+
+
+    //         }
+
+    //     })
+    // }
     calendar.render();//これ最後に表示する
+
 }
 
 function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動させたときに画面に表示するやつ
@@ -115,6 +145,10 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                 if (button) {
                     button.innerText = 'カレンダー作成';
                 }
+
+                if (eventAddBtn) {
+                    eventAddBtn.disabled = true;
+                }
                 const nullevent = [
                     { name: '未作成' }
                 ];
@@ -130,6 +164,9 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                         button.innerText = 'カレンダー編集';
                     }
 
+                }
+                if (eventAddBtn) {
+                    eventAddBtn.disabled = false;
                 }
                 GetEvent(data.id)
             }
