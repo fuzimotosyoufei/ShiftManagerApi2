@@ -116,34 +116,39 @@ function InitCalendar(start, end) {
 
     }
 
+    if(modalbodyBtn) {
+        modalbodyBtn.addEventListener('click',function(){
+            const inputText = document.getElementById('modal-body-text').value;
+            const selectedDate = document.getElementById('event-calend').value;
 
-    // if(modalbodyBtn) {
-    //     modalbodyBtn.addEventListener('click',function(){
-    //         const inputText = document.getElementById('modal-body-text').value;
-    //         if (inputText.trim() === "") {
-    //             alert("テキストを入力してください");
-    //             return;
-    //         }else {
+            if (inputText.trim() === "") {
+                alert("テキストを入力してください");
+                return;
+            } 
+            if(!selectedDate){
+                return;
+            }
+          
+            const dateObj = new Date(selectedDate);//ばらすためにオブジェクト化する
+            const Day = dateObj.getDate();
+            const carendDate = calendar.getDate();
+            const carendYear = carendDate.getFullYear();
+            const carendMonth = carendDate.getMonth() + 1;
+            const inputContent = "実験";
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${carendYear}&Getmonth=${carendMonth}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('データの取得に失敗したよ');
+                    }
+                        return response.json();
+                    })
+                    .then(data => {
+                        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}&GetYear=${Day}&GeText=${inputText}&GetContent=${inputContent}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                    })
+            }
 
-    //                 const carendDate = calendar.getDate();
-    //                 const carendYear = carendDate.getFullYear();
-    //                 const carendMonth = carendDate.getMonth() + 1;
-    //                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${carendYear}&Getmonth=${carendMonth}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
-    //                 .then(response => {
-    //                     if (!response.ok) {
-    //                         throw new Error('データの取得に失敗したよ');
-    //                     }
-    //                     return response.json();
-    //                 })
-    //                 .then(data => {
-    //                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}GeText=${inputText}&`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
-    //                 })
-
-
-    //         }
-
-    //     })
-    // }
+        )
+    }
     calendar.render();//これ最後に表示する
 
 }
