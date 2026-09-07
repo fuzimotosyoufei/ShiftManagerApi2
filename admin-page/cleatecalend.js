@@ -96,18 +96,18 @@ function InitCalendar(start, end) {
             modal.close();
         })
     }
-    if(event){
+    if (event) {
         const carendDate = calendar.getDate();
         const Year = carendDate.getFullYear();
         const Month = carendDate.getMonth() + 1;
 
-        const monthStr = String(Month).padStart(2,'0');//カレンダーの形式の変更
-        const minDate =`${Year}-${monthStr}-01`//月の開始日のやつを作っている
-        const lastDay = new Date(year,month,0).getDate();
+        const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
+        const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
+        const lastDay = new Date(year, month, 0).getDate();
         const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
 
         const dateInput = document.getElementById('event-calend');
-        if(dateInput){
+        if (dateInput) {
             dateInput.min = minDate;//最小値
             dateInput.max = maxDate;//最大で選べる日付
             dateInput.value = minDate;//初期値
@@ -122,7 +122,7 @@ function InitCalendar(start, end) {
     //             alert("テキストを入力してください");
     //             return;
     //         }else {
-              
+
     //                 const carendDate = calendar.getDate();
     //                 const carendYear = carendDate.getFullYear();
     //                 const carendMonth = carendDate.getMonth() + 1;
@@ -136,10 +136,10 @@ function InitCalendar(start, end) {
     //                 .then(data => {
     //                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}GeText=${inputText}&`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
     //                 })
-                
-               
+
+
     //         }
-           
+
     //     })
     // }
     calendar.render();//これ最後に表示する
@@ -163,7 +163,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                 if (button) {
                     button.innerText = 'カレンダー作成';
                 }
-
+                const eventAddBtn = document.querySelector('#event-settings-button');
                 if (eventAddBtn) {
                     eventAddBtn.disabled = true;
                 }
@@ -183,6 +183,7 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                     }
 
                 }
+                const eventAddBtn = document.querySelector('#event-settings-button');
                 if (eventAddBtn) {
                     eventAddBtn.disabled = false;
                 }
