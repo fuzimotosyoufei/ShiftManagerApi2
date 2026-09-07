@@ -143,7 +143,11 @@ function InitCalendar(start, end) {
                     return response.json();
                 })
                 .then(data => {
-                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}&GetYear=${Day}&GetText=${inputText}&GetContent=${inputContent}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                    alert(data.id);
+                    alert(Day);
+                    alert(inputText);
+                    alert(inputContent);
+                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}&GetDay=${Day}&GetText=${inputText}&GetContent=${inputContent}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                 })
         }
 
