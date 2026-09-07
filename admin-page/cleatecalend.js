@@ -96,14 +96,14 @@ function InitCalendar(start, end) {
             modal.close();
         })
     }
-    if (modalcalend) {
+    if (modalcalend) {//イベントの追加の時今表示しているカレンダーの日付を取るための処理
         const carendDate = calendar.getDate();
         const Year = carendDate.getFullYear();
         const Month = carendDate.getMonth() + 1;
 
         const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
         const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
-        const lastDay = new Date(year, month, 0).getDate();
+        const lastDay = new Date(Year, Month, 0).getDate();
         const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
 
         const dateInput = document.getElementById('event-calend');
