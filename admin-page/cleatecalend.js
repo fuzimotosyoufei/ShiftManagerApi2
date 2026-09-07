@@ -99,20 +99,6 @@ function InitCalendar(start, end) {
     if (modalcalend) {//イベントの追加の時今表示しているカレンダーの日付を取るための処理
 
         InputEventCalend()
-        // const carendDate = calendar.getDate();
-        // const Year = carendDate.getFullYear();
-        // const Month = carendDate.getMonth() + 1;
-
-        // const monthStr = String(Month).padStart(2, '0');//カレンダーの形式の変更
-        // const minDate = `${Year}-${monthStr}-01`//月の開始日のやつを作っている
-        // const lastDay = new Date(Year, Month, 0).getDate();
-        // const maxDate = `${Year}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
-
-        // const dateInput = document.getElementById('event-calend');
-        // if (dateInput) {
-        //     dateInput.min = minDate;//最小値
-        //     dateInput.max = maxDate;//最大で選べる日付
-        //     dateInput.value = minDate;//初期値
 
     }
 
@@ -143,16 +129,16 @@ function InitCalendar(start, end) {
                     return response.json();
                 })
                 .then(data => {
-                    alert(data.id);
-                    alert(Day);
-                    alert(inputText);
-                    alert(inputContent);
+
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/modalbodyBtn?GetId=${data.id}&GetDay=${Day}&GetText=${inputText}&GetContent=${inputContent}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('データの取得に失敗したよ');
+                            } else {
+                                GetEvent(data.id);
+                                return response.json();
                             }
-                            return response.json();
+
                         })
                 })
         }
