@@ -1,4 +1,4 @@
-blet currentPeriodId = null;
+let currentPeriodId = null;
 let calendar = null;
 
 document.addEventListener('DOMContentLoaded', function () {
