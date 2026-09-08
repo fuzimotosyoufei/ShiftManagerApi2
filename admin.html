@@ -177,6 +177,23 @@
             padding: 10px;
             border: solid 1px #006fe6;
         }
+
+        /* 名前のセルの基本スタイル（枠線がズレないように元から透明な枠を持たせるか、box-sizingを指定） */
+        .staff-name {
+            cursor: pointer;
+            /* マウスカーソルをポインターにする場合 */
+            box-sizing: border-box;
+            transition: outline 0.1s ease;
+            /* アニメーションを滑らかにする場合 */
+        }
+
+        /* ホバー時に枠線を表示する */
+        .staff-name:hover {
+            outline: 2px solid #007bff;
+            /* 青色の枠線 */
+            /* または内部に枠線を出したい場合: */
+            /* box-shadow: inset 0 0 0 2px #007bff; */
+        }
     </style>
 </head>
 
@@ -275,7 +292,7 @@
             ];
 
 
-            const days = new Date(2026, 6, 0).getDate();
+            const days = new Date(2026, 6, 0).getDate();////////////////////////////
             const thn = document.createElement('th')
             thn.classList.add('name');
             thn.textContent = "名前";
@@ -290,7 +307,7 @@
             eventSetting.forEach(setting => {//イベントの処理
                 const the = document.createElement('th')
                 the.classList.add('yasumi');
-                the.textContent = "sssssss";
+                the.textContent = "sssssss";/////////////
                 tbody.appendChild(the);
             });
 
@@ -298,6 +315,7 @@
             staffShifts.forEach(staff => {//初期値がいる名前追加
 
                 const td = document.createElement('td')
+                td.classList.add('staff-name');
                 const tr = document.createElement('tr')
                 td.textContent = staff.name;
 
@@ -321,7 +339,7 @@
                     // tr.appendChild(shiftTd);
 
                     const shiftTd = document.createElement('td');
-                    const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+                    const dateStr = `${2026}-${String(6).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない///////////////////////////
                     const yer = shiftLookup[dateStr] || "";
                     shiftTd.textContent = yer;
                     tr.appendChild(shiftTd);
