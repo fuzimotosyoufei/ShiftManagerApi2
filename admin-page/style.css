@@ -171,8 +171,11 @@
  }
 
  .staff-name {
-     content: attr(data-memo);
-     display: none;
+     cursor: pointer;
+     /* マウスカーソルをポインターにする場合 */
+     box-sizing: border-box;
+     transition: outline 0.1s ease;
+     /* アニメーションを滑らかにする場合 */
  }
 
  /* ホバー時に枠線を表示する */
