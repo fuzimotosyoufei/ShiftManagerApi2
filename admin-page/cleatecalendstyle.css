@@ -100,12 +100,13 @@ dialog {
 #event-list-mein {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
-    gap: 200px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 10px 15px;
 }
-#event-list-mein
+
 .event-ded-button {
     width: 140px;
     height: 40px;

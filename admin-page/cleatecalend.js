@@ -86,6 +86,7 @@ function InitCalendar(start, end) {
     const modalBtn = document.querySelector('#modal-button')
     const modalbodyBtn = document.querySelector('#modal-body-button')
     const modalcalend = document.querySelector('#event-calend')
+
     if (Btn) {
         Btn.addEventListener('click', function () {
             modal.showModal();
@@ -99,7 +100,6 @@ function InitCalendar(start, end) {
     if (modalcalend) {//イベントの追加の時今表示しているカレンダーの日付を取るための処理
 
         InputEventCalend()
-
     }
 
     if (modalbodyBtn) {
@@ -144,6 +144,13 @@ function InitCalendar(start, end) {
         }
 
         )
+    }
+    const eventList = document.getElementById('event-list')
+    if (eventList) {
+        eventList.addEventListener('click', function (e) {
+            const eventId = e.target.getAttribute('data-id');
+            console.log("削除対象のID:", eventId);
+        })
     }
     calendar.render();//これ最後に表示する
 
