@@ -239,7 +239,7 @@ function CreateEvent(Event) {//イベントの枠を作成
     Event.forEach(item => {
         const html = `
         <div class="event-list-mein">
-            <div> class="event-info">
+            <div class="event-info">
                 <h3>${item.name}</h3>
                 <p class="event-day">${item.day}</p>
             </div>
@@ -262,7 +262,10 @@ if (eventList) {
                     if (!response.ok) {
                         throw new Error(`エラー:${response.status}`);
                     }
-                    return response.json(); // 正常なときだけここにたどり着く
+                    const carendDate = calendar.getDate();
+                    const Year = carendDate.getFullYear();
+                    const Month = carendDate.getMonth() + 1;
+                    GetCalendar(Year, Month)
                 })
 
         }
