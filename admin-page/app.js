@@ -153,6 +153,7 @@ function CreateCalend(date, ymdata) {
     date.forEach(staff => {//初期値がいる名前追加
         // console.log(staff);
         const td = document.createElement('td')
+        td.classList.add('staff-name');
         const tr = document.createElement('tr')
         td.textContent = staff.name;
         tr.appendChild(td);
