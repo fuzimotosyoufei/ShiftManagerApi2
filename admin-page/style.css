@@ -171,22 +171,29 @@
  }
 
  .staff-name {
+     position: relative;
+     /* 吹き出しを浮かす基準 */
      cursor: pointer;
-     /* マウスカーソルをポインターにする場合 */
-     box-sizing: border-box;
-     transition: outline 0.1s ease;
-     /* アニメーションを滑らかにする場合 */
  }
 
- /* ホバー時に枠線を表示する */
- .staff-name::after {
-     background-color: #ffffff;
-     color: #333333;
-     border: 1px solid #cccccc;
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-     padding: 6px 12px;
-     border-radius: 6px;
-     font-size: 12px;
+ /* 2. マウスを乗せたときだけ出る白枠（中身は空） */
+ .staff-name:hover::after {
+     content: "テスト表示OK！";
+     /* ★文字がなくても枠線を見るなら content: ""; でOK */
+     position: absolute;
+     bottom: 100%;
+     /* セルの真上 */
+     left: 50%;
+     transform: translateX(-50%);
+     margin-bottom: 5px;
+
+     /* シンプルな白枠デザイン */
+     background: white;
+     border: 2px solid #007bff;
+     /* 分かりやすい青枠 */
+     padding: 5px 10px;
+     border-radius: 4px;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
      white-space: nowrap;
-     z-index: 100;
+     z-index: 10;
  }
