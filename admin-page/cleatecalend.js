@@ -145,13 +145,7 @@ function InitCalendar(start, end) {
 
         )
     }
-    const eventList = document.getElementById('event-list')
-    if (eventList) {
-        eventList.addEventListener('click', function (e) {
-            const eventId = e.target.getAttribute('data-id');
-            console.log("削除対象のID:", eventId);
-        })
-    }
+
     calendar.render();//これ最後に表示する
 
 }
@@ -251,6 +245,14 @@ function CreateEvent(Event) {//イベントの枠を作成
         `;//複製しても分かるようにitem.idを付けるidはかぶったらいけないため複製する場合はclassを付ける
         eventList.insertAdjacentHTML('beforeend', html);
     });
+}
+
+const eventList = document.getElementById('event-list')
+if (eventList) {
+    eventList.addEventListener('click', function (e) {
+        const eventId = e.target.getAttribute('data-id');
+        console.log("削除対象のID:", eventId);
+    })
 }
 
 function CreatePeriods(Year, Month) {//カレンダーのidからイベントを探す
