@@ -238,9 +238,9 @@ function CreateEvent(Event) {//イベントの枠を作成
     eventList.innerHTML = '';//一度中を空にする
     Event.forEach(item => {
         const html = `
-        <div id="event-list-mein">
+        <div class="event-list-mein">
             <h3>${item.name}</h3>
-            <button type="button" class="event-ded-button" data-id="${item.id}"削除ボタン</button>
+            <button type="button" class="event-ded-button" data-id="${item.id}">削除ボタン</button>
         </div>
         `;//複製しても分かるようにitem.idを付けるidはかぶったらいけないため複製する場合はclassを付ける
         eventList.insertAdjacentHTML('beforeend', html);
@@ -250,8 +250,10 @@ function CreateEvent(Event) {//イベントの枠を作成
 const eventList = document.getElementById('event-list')
 if (eventList) {
     eventList.addEventListener('click', function (e) {
-        const eventId = e.target.getAttribute('data-id');
-        console.log("削除対象のID:", eventId);
+        if (e.target.classList.contains('event-ded-button')) {
+            const eventId = e.target.getAttribute('data-id');
+            console.log("削除対象のID:", eventId);
+        }
     })
 }
 

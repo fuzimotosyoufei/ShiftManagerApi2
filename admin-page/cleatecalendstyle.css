@@ -97,7 +97,7 @@ dialog {
     flex: 3;
 }
 
-#event-list-mein {
+.event-list-mein {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
 
