@@ -1,4 +1,4 @@
-let currentPeriodId = null;
+blet currentPeriodId = null;
 let calendar = null;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -239,6 +239,7 @@ function CreateEvent(Event) {//イベントの枠を作成
         const html = `
         <div id="event-list-mein">
             <h3>${item.name}</h3>
+            <button type="button" id="event-Ded-button>削除ボタン</button>
         </div>
         `;
         eventList.insertAdjacentHTML('beforeend', html);

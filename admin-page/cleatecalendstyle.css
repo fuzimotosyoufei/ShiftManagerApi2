@@ -101,4 +101,5 @@ dialog {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
     gap: 20px;
+    display: flex;
 }
