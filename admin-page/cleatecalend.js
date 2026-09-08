@@ -253,6 +253,14 @@ if (eventList) {
         if (e.target.classList.contains('event-ded-button')) {
             const eventId = e.target.getAttribute('data-id');
             console.log("削除対象のID:", eventId);
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/Deleteevent?GetId=${eventId}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`エラー:${response.status}`);
+                    }
+                    return response.json(); // 正常なときだけここにたどり着く
+                })
+
         }
     })
 }
