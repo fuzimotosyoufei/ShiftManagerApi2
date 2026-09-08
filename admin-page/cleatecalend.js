@@ -239,9 +239,9 @@ function CreateEvent(Event) {//イベントの枠を作成
         const html = `
         <div id="event-list-mein">
             <h3>${item.name}</h3>
-            <button type="button" id="event-Ded-button>削除ボタン</button>
+            <button type="button" class="event-ded-button" data-id="${item.id}"削除ボタン</button>
         </div>
-        `;
+        `;//複製しても分かるようにitem.idを付けるidはかぶったらいけないため複製する場合はclassを付ける
         eventList.insertAdjacentHTML('beforeend', html);
     });
 }
