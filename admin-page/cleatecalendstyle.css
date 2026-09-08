@@ -107,6 +107,19 @@ dialog {
     padding: 10px 15px;
 }
 
+.event-info h3 {
+    margin: 0 0 5px 0;
+    /* 下（日付との間）に少し余白をつける */
+    font-size: 18px;
+}
+
+.event-info .event-day {
+    margin: 0;
+    font-size: 14px;
+    color: #666666;
+    /* 日付の文字色を少し落ち着かせる */
+}
+
 .event-ded-button {
     width: 140px;
     height: 40px;

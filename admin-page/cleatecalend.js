@@ -239,8 +239,12 @@ function CreateEvent(Event) {//イベントの枠を作成
     Event.forEach(item => {
         const html = `
         <div class="event-list-mein">
-            <h3>${item.name}</h3>
+            <div> class="event-info">
+                <h3>${item.name}</h3>
+                <p class="event-day">${item.day}</p>
+            </div>
             <button type="button" class="event-ded-button" data-id="${item.id}">削除ボタン</button>
+
         </div>
         `;//複製しても分かるようにitem.idを付けるidはかぶったらいけないため複製する場合はclassを付ける
         eventList.insertAdjacentHTML('beforeend', html);
