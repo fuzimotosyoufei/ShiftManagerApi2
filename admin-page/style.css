@@ -182,8 +182,8 @@
 
  /* ホバー時に枠線を表示する */
  .staff-name:hover::after {
-     /* content: attr(data-memo); */
-    content: "テスト表示OK！";
+     content: attr(data-memo);
+  
      background-color: #ffffff;
      color: #333333;
      border: 1px solid #cccccc;

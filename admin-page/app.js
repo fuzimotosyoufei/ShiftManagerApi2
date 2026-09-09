@@ -158,8 +158,8 @@ function CreateCalend(date, ymdata) {
         td.textContent = staff.name;
 
         const memoText = staff.memo || "メモはありません"
-        alert(memoText);
-        td.setAttribute('data-name', memoText)
+        
+        td.setAttribute('data-memo', memoText)
         tr.appendChild(td);
         const shiftLookup = {};
         if (staff.day != null) {
