@@ -157,9 +157,13 @@ function CreateCalend(date, ymdata) {
         const tr = document.createElement('tr')
         td.textContent = staff.name;
 
-        const memoText = staff.memo || "メモはありません"
-        
-        td.setAttribute('data-memo', memoText)
+      
+        id(staff.memo && staff.memo.trim() !== "")//メモがあるかとメモが空白だけではないかを確かめている
+        {
+            const memoText = staff.memo || "メモはありません"
+            td.setAttribute('data-memo', memoText)
+        };
+     
         tr.appendChild(td);
         const shiftLookup = {};
         if (staff.day != null) {
@@ -172,7 +176,6 @@ function CreateCalend(date, ymdata) {
         // tbody2.appendChild(tr);
         // tr.appendChild(td);
         // const count = tbody.childElementCount;
-
 
 
 
