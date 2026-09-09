@@ -183,12 +183,15 @@
             cursor: pointer;
             /* マウスカーソルをポインターにする場合 */
             box-sizing: border-box;
+            position: relative;
             transition: outline 0.1s ease;
             /* アニメーションを滑らかにする場合 */
         }
 
         /* ホバー時に枠線を表示する */
         .staff-name:hover {
+            content: "テスト表示OK！";
+            position: absolute;
             outline: 2px solid #007bff;
             /* 青色の枠線 */
             /* または内部に枠線を出したい場合: */
