@@ -184,7 +184,9 @@
  /* ホバー時に枠線を表示する */
  .staff-name.has-memo:hover::after {
      content: attr(data-memo);
-
+     position: absolute;
+     bottom:200%;
+     left:50%;
      background-color: #ffffff;
      color: #333333;
      border: 1px solid #cccccc;
