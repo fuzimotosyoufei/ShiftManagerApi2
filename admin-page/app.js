@@ -155,11 +155,11 @@ function CreateCalend(date, ymdata) {
         const td = document.createElement('td')
         td.classList.add('staff-name');
         const tr = document.createElement('tr')
-
+        td.textContent = staff.name;
 
         if (staff.memo && staff.memo.trim() !== "")//メモがあるかとメモが空白だけではないかを確かめている
         {
-            td.textContent = staff.name;
+
             const memoText = staff.memo || "メモはありません"
             td.setAttribute('data-memo', memoText)
         };
