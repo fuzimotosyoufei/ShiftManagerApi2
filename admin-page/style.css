@@ -211,20 +211,24 @@
      /* display: inline-flex;
         align-items: center;
         justify-content: center; */
-        margin-right: 6px;
+     margin-right: 6px;
      font-weight: 900;
      /* 極太にすると色の変化がハッキリ見えます */
 
      /* ▼ 背景に色やグラデーションを設定 ▼ */
      background: linear-gradient(135deg, #ff4d4f, #ff7a45);
 
-    
-     /* -webkit-background-clip: text;
-     background-clip: text; */
 
-     
-     /* -webkit-text-fill-color: transparent;
-     color: transparent; */
+     -webkit-background-clip: text;
+     /* 背景を文字の形にくりぬく */
+     background-clip: text;
+     /* 標準仕様で互換性を保つための処理 */
+
+
+     -webkit-text-fill-color: transparent;
+     /*文字の色を消して新しい色がかかるようにする */
+     color: transparent;
+     /* ここで透明にしている予備ブラウザでは消えない可能性があるか */
 
  }
 
