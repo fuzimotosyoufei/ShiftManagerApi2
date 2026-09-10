@@ -185,10 +185,10 @@
  .staff-name.has-memo:hover::after {
      content: attr(data-memo);
      position: absolute;
-     bottom: 200%;
+     bottom: 100%;
      left: 100%;
-     width: 100px;
-     height: 100px;
+     width: auto;
+     height: auto;
      background-color: #ffffff;
      color: #333333;
      border: 1px solid #cccccc;
@@ -198,6 +198,7 @@
      font-size: 12px;
      white-space: nowrap;
      z-index: 100;
+     text-align: center;
  }
 
  .staff-name.has-memo {
