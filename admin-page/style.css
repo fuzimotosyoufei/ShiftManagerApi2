@@ -182,7 +182,7 @@
 
 
  /* ホバー時に枠線を表示する */
- .staff-name:hover::after {
+ .staff-name.has-memo:hover::after {
      content: attr(data-memo);
 
      background-color: #ffffff;
