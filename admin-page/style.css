@@ -218,13 +218,13 @@
      /* ▼ 背景に色やグラデーションを設定 ▼ */
      background: linear-gradient(135deg, #ff4d4f, #ff7a45);
 
-     /* ▼ 背景を文字の形「！」だけにくり抜く設定 ▼ */
-     -webkit-background-clip: text;
-     background-clip: text;
+    
+     /* -webkit-background-clip: text;
+     background-clip: text; */
 
-     /* ▼ 文字自体の色を透明にして、背景色を透けさせる ▼ */
-     -webkit-text-fill-color: transparent;
-     color: transparent;
+     
+     /* -webkit-text-fill-color: transparent;
+     color: transparent; */
 
  }
 
