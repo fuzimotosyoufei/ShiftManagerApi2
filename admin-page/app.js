@@ -156,6 +156,7 @@ function CreateCalend(date, ymdata) {
     weekth.classList.add('inweek');
     weekth.textContent = "曜日";
     weektr.appendChild(weekth);//
+    tbody.appendChild(weektr);
 
     date.forEach(staff => {//初期値がいる名前追加
         // console.log(staff);
