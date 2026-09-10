@@ -132,11 +132,18 @@ function CreateCalend(date, ymdata) {
     thn.textContent = "名前";
     headerTr.appendChild(thn);
 
-
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
     const days = new Date(ymdata.year, ymdata.month, 0).getDate();
     for (let i = 1; i <= days; i++) {//日を入れている
         const th = document.createElement('th')
-        th.textContent = i;
+        const dateObj = new Date(ymdata.year, ymdata.month - 1, i);//曜日の計算
+        const dayOfWeek = dateObj.getDay();//曜日が数字として帰ってきて日なら0月なら1みたいにこれに配列を当てはめて曜日を出している
+        const dayStr = dayNames[dayOfWeek];
+
+        // ★ 2. 1つのセル（th）の中に日付と曜日を改行を入れてセット
+        th.innerHTML = `${i}<br><span class="day-label">${dayStr}</span>`;
+        if (dayOfWeek === 0) th.classList.add('sunday');
+        if (dayOfWeek === 6) th.classList.add('saturday');
         headerTr.appendChild(th);
     }
 
@@ -151,12 +158,12 @@ function CreateCalend(date, ymdata) {
 
 
 
-    const weektr = document.createElement('tr')//行を作るならtr
-    const weekth = document.createElement('th')//中身を作るならthと決まっている
-    weekth.classList.add('inweek');
-    weekth.textContent = "曜日";
-    weektr.appendChild(weekth);//
-    tbody.appendChild(weektr);
+    // const weektr = document.createElement('tr')//行を作るならtr
+    // const weekth = document.createElement('th')//中身を作るならthと決まっている
+    // weekth.classList.add('inweek');
+    // weekth.textContent = "曜日";
+    // weektr.appendChild(weekth);//
+    // tbody.appendChild(weektr);
 
     date.forEach(staff => {//初期値がいる名前追加
         // console.log(staff);

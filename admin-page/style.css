@@ -232,6 +232,17 @@
 
  }
 
+ th.sunday {
+     color: #ff4d4f;
+ }
+
+ /* 赤 */
+ th.saturday {
+     color: #1890ff;
+ }
+
+ /* 青 */
+
  /* .staff-name {
      position: relative;
       吹き出しを浮かす基準 
