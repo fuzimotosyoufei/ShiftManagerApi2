@@ -205,6 +205,13 @@
      cursor: pointer;
  }
 
+ 
+.staff-name.memo-name::before{
+    content:"!";
+    /* display: inline-flex;
+        align-items: center;
+        justify-content: center; */
+}
  /* .staff-name {
      position: relative;
       吹き出しを浮かす基準 
