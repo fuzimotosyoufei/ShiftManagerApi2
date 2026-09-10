@@ -171,20 +171,20 @@
  }
 
  .staff-name {
-     cursor: pointer;
+
      /* マウスカーソルをポインターにする場合 */
-   
+     position: relative;
      /* 画面全体ではなくstaff-nameを基準に枠を表示させる命令 */
      box-sizing: border-box;
      transition: outline 0.1s ease;
      /* アニメーションを滑らかにする場合 */
  }
- 
+
 
  /* ホバー時に枠線を表示する */
  .staff-name:hover::after {
      content: attr(data-memo);
-  
+
      background-color: #ffffff;
      color: #333333;
      border: 1px solid #cccccc;
@@ -195,8 +195,9 @@
      white-space: nowrap;
      z-index: 100;
  }
- .staff-name.has-memo{
-    position: relative;
+
+ .staff-name.has-memo {
+     cursor: pointer;
  }
 
  /* .staff-name {
