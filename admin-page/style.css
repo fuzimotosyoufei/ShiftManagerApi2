@@ -173,12 +173,13 @@
  .staff-name {
      cursor: pointer;
      /* マウスカーソルをポインターにする場合 */
-     position: relative;
+   
      /* 画面全体ではなくstaff-nameを基準に枠を表示させる命令 */
      box-sizing: border-box;
      transition: outline 0.1s ease;
      /* アニメーションを滑らかにする場合 */
  }
+ 
 
  /* ホバー時に枠線を表示する */
  .staff-name:hover::after {
@@ -193,6 +194,9 @@
      font-size: 12px;
      white-space: nowrap;
      z-index: 100;
+ }
+ .staff-name.has-memo{
+    position: relative;
  }
 
  /* .staff-name {

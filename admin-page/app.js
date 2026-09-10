@@ -161,6 +161,7 @@ function CreateCalend(date, ymdata) {
         {
 
             const memoText = staff.memo || "メモはありません"
+            td.classList.add('has-memo');
             td.setAttribute('data-memo', memoText)
         };
 
