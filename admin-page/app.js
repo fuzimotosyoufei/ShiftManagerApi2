@@ -148,10 +148,14 @@ function CreateCalend(date, ymdata) {
     });
 
     tbody.appendChild(headerTr);//要注意
-    const week = document.createElement('week')
-    week.classList.add('week');
-    week.textContent = "曜日";
-    week.appendChild(week);//appendChildはからの行を作っているだけ
+
+
+
+    const weektr = document.createElement('tr')//行を作るならtr
+    const weekth = document.createElement('th')//中身を作るならthと決まっている
+    weekth.classList.add('inweek');
+    weekth.textContent = "曜日";
+    weektr.appendChild(weekth);//
 
     date.forEach(staff => {//初期値がいる名前追加
         // console.log(staff);
