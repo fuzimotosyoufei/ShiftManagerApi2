@@ -205,12 +205,12 @@
      cursor: pointer;
  }
 
- 
+
 .staff-name.memo-name::before{
     content:"!";
-    /* display: inline-flex;
+    display: inline-flex;
         align-items: center;
-        justify-content: center; */
+        justify-content: center;
 }
  /* .staff-name {
      position: relative;
