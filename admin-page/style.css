@@ -211,9 +211,20 @@
      /* display: inline-flex;
         align-items: center;
         justify-content: center; */
-     background-color: #ef5006;
-     color: #ffffff;
-     margin-right: 6px;
+        margin-right: 6px;
+     font-weight: 900;
+     /* 極太にすると色の変化がハッキリ見えます */
+
+     /* ▼ 背景に色やグラデーションを設定 ▼ */
+     background: linear-gradient(135deg, #ff4d4f, #ff7a45);
+
+     /* ▼ 背景を文字の形「！」だけにくり抜く設定 ▼ */
+     -webkit-background-clip: text;
+     background-clip: text;
+
+     /* ▼ 文字自体の色を透明にして、背景色を透けさせる ▼ */
+     -webkit-text-fill-color: transparent;
+     color: transparent;
 
  }
 
