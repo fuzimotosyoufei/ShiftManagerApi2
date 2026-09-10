@@ -487,82 +487,155 @@
 
 
 
+    async function submitData() {
+        // 1. C# (ShiftSubmission) に完全に合わせた送信用オブジェクトを作成
+        const sendData = {
+            Name: userName,
+            Memo: bikouText,
+            id: lineid,
+            Year: parseInt(calYear, 10),
+            Month: parseInt(calMonth, 10),
+            Dates: sortedDates,  // [{ Date: "...", Mode: "..." }]
+            Answer: event_ans    // [{ Id: 1, Answer: true }]
+        };
 
+        console.log("=== 送信データ (JSON Payload) ===");
+        console.log(JSON.stringify(sendData, null, 2));
 
-
-        //データをC#に渡しデータベースの処理を行う---------------------------------------------------------------------------------------------------------------------------------------
-        function submitData() {
-            if (selectedDates.length === 0) {
-                alert("日付が選択されていません！");
-                return;
-            }
-            const isAllAnswer = event_ans.some(item => item.answer === null);//some一つでも条件に当てはまるやつがあるなら
-            if (isAllAnswer) {
-                alert("イベントに未回答があります");
-                return;
-            }
-
-
-
-
-            const bikouText = document.getElementById("Text-message").value;
-            const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
-            const calendData = calendar.getDate();
-            const calYear = calendData.getFullYear();
-            const calMonth = calendData.getMonth() + 1;
-
-            sortedDates.forEach(element => {
-                console.log(element.date),
-                    console.log(element.mode)
-            });//実験用
-
-            // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
-            const sendData = {
-                name: userName,    // C#の Name にマッピングされます
-                dates: sortedDates, // C#の Dates にマッピングされます
-                memo: bikouText,
-                year: calYear,
-                month: calMonth,
-                id: lineid,
-                answer: event_ans
-            };
-
-
-            // ⭕ C#のAPIへ送信
-            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
-                method: 'POST',
+        try {
+            // 2. APIへの送信
+            const response = await fetch("https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',//送る先にJSON形式だと教えるため
-                    'ngrok-skip-browser-warning': 'true'
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "ngrok-skip-browser-warning": "true" // ngrokの警告画面回避
                 },
-                body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('通信エラーが発生しました。');
-                })
-                .then(data => {
-                    // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
-                    alert(data.message);
+                body: JSON.stringify(sendData)
+            });
 
-                    // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
-                    if (liff.isInClient()) {
-                        // ❹ 【修正】LINEに送る文字を「日付(スタンプ)」の形に変換する
-                        const formattedDatesForLine = sortedDates.map(item => `${item.date} (${item.mode})`).join("\n");
+            console.log(`ステータスコード: ${response.status} ${response.statusText}`);
 
-                        liff.sendMessages([{
-                            type: 'text',
-                            text: `【シフト希望】\n氏名: ${userName}\n${formattedDatesForLine}\n上記で申請します。`
-                        }]).then(() => { liff.closeWindow(); });
-                    }
-                })
-                .catch(error => {
-                    console.error('エラー:', error);
-                    alert('送信に失敗しました。');
-                });
+            // レスポンスのテキストを取得
+            const responseText = await response.text();
+            console.log("=== サーバーからの生の返答 ===");
+            console.log(responseText);
+
+            // 3. エラー時の処理 (400 Bad Request 等)
+            if (!response.ok) {
+                try {
+                    const errorJson = JSON.parse(responseText);
+                    console.error("=== バリデーションエラー詳細 ===", errorJson.errors || errorJson);
+                    alert(`送信エラー (${response.status}):\n` + JSON.stringify(errorJson.errors || errorJson, null, 2));
+                } catch (e) {
+                    alert(`エラーが発生しました (ステータス: ${response.status}):\n${responseText}`);
+                }
+                return;
+            }
+
+            // 4. 成功時の処理
+            let resultData = {};
+            if (responseText) {
+                resultData = JSON.parse(responseText);
+            }
+
+            alert(resultData.message || "提出が完了しました。");
+
+            // 5. LINEトーク画面へのメッセージ送信＆画面閉じ処理
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+                const formattedDatesForLine = sortedDates
+                    .map(item => `${item.date || item.Date} (${item.mode || item.Mode})`)
+                    .join("\n");
+
+                await liff.sendMessages([{
+                    type: 'text',
+                    text: `【シフト希望】\n氏名: ${userName}\n${formattedDatesForLine}\n上記で申請します。`
+                }]);
+
+                liff.closeWindow();
+            }
+
+        } catch (error) {
+            console.error("=== 通信・処理エラー ===", error);
+            alert(`例外エラーが発生しました: ${error.message}`);
         }
+    }
+
+
+        // //データをC#に渡しデータベースの処理を行う---------------------------------------------------------------------------------------------------------------------------------------
+        // function submitData() {
+        //     if (selectedDates.length === 0) {
+        //         alert("日付が選択されていません！");
+        //         return;
+        //     }
+        //     const isAllAnswer = event_ans.some(item => item.answer === null);//some一つでも条件に当てはまるやつがあるなら
+        //     if (isAllAnswer) {
+        //         alert("イベントに未回答があります");
+        //         return;
+        //     }
+
+
+
+
+        //     const bikouText = document.getElementById("Text-message").value;
+        //     const sortedDates = [...selectedDates].sort((a, b) => a.date.localeCompare(b.date));
+        //     const calendData = calendar.getDate();
+        //     const calYear = calendData.getFullYear();
+        //     const calMonth = calendData.getMonth() + 1;
+
+        //     sortedDates.forEach(element => {
+        //         console.log(element.date),
+        //             console.log(element.mode)
+        //     });//実験用
+
+        //     // 💡 C#のModel（ShiftSubmission）の形に合わせたデータ（オブジェクト）を作成します
+        //     const sendData = {
+        //         name: userName,    // C#の Name にマッピングされます
+        //         dates: sortedDates, // C#の Dates にマッピングされます
+        //         memo: bikouText,
+        //         year: calYear,
+        //         month: calMonth,
+        //         id: lineid,
+        //         answer: event_ans
+        //     };
+
+
+        //     // ⭕ C#のAPIへ送信
+        //     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',//送る先にJSON形式だと教えるため
+        //             'ngrok-skip-browser-warning': 'true'
+        //         },
+                
+        //         body: JSON.stringify(sendData) // 💡 さっき作った sendData をJSON文字列にして送る！
+        //     })
+        //         .then(response => {
+        //             if (response.ok) {
+        //                 return response.json();
+        //             }
+        //             throw new Error('通信エラーが発生しました。');
+        //         })
+        //         .then(data => {
+        //             // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
+        //             alert(data.message);
+
+        //             // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
+        //             if (liff.isInClient()) {
+        //                 // ❹ 【修正】LINEに送る文字を「日付(スタンプ)」の形に変換する
+        //                 const formattedDatesForLine = sortedDates.map(item => `${item.date} (${item.mode})`).join("\n");
+
+        //                 liff.sendMessages([{
+        //                     type: 'text',
+        //                     text: `【シフト希望】\n氏名: ${userName}\n${formattedDatesForLine}\n上記で申請します。`
+        //                 }]).then(() => { liff.closeWindow(); });
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('エラー:', error);
+        //             alert('送信に失敗しました。');
+        //         });
+        // }
     </script>
 </body>
 
