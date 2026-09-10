@@ -206,12 +206,17 @@
  }
 
 
-.staff-name.memo-name::before{
-    content:"!";
-    display: inline-flex;
+ .staff-name.memo-name::before {
+     content: "!";
+     /* display: inline-flex;
         align-items: center;
-        justify-content: center;
-}
+        justify-content: center; */
+     background-color: #ef5006;
+     color: #ffffff;
+     margin-right: 6px;
+
+ }
+
  /* .staff-name {
      position: relative;
       吹き出しを浮かす基準 
