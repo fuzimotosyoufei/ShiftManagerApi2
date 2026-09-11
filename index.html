@@ -226,7 +226,7 @@
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
 
-                            CalendarData(lineid);
+                            checkUserid(lineid, userName);
                         });
                     }
                     //ここらへんで多分入れるらいんのID
@@ -237,6 +237,24 @@
         });
         //今配信しているカレンダーを選別し表示する処理-----------------------------------------------------------------------------------------------------------------------------------------      
 
+        function checkUserid(lineid, name) {
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/CheckUsertid?GetId=${lineid}&GetName=${name}`, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('データの取得に失敗しました');
+                    return response.json(); // 💡 C#から届いたJSONをJavaScriptで使えるように変換少し勉強がいる
+                })
+                .then(data => {
+                    if (data.message) {
+                        alert("ダメ重だ・・・よ");
+                    } else {
+                        CalendarData(lineid);
+                    }
+                })
+        }
         function CalendarData(lineid) {
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
@@ -270,12 +288,7 @@
                     initCalendar(startDateStr, endDateStr);
                     //すでにその月のカレンダーに入力していてそれを表示する処理-----------------------------------------------------------------------------------------------------------------------------------------    
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
-                        .then(response => {
-                            if (response.status === 404) {
-                                return null;
-                            }
-                            if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json();
-                        })
+                        .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         .then(staff_id => {
                             if (staff_id === null) {
                                 console.log("スタッフがまだ登録されてないよ")
