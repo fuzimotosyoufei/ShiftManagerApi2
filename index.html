@@ -310,14 +310,29 @@
                 })
                 .then(data => {
                     if (!data.message) {
-                        alert("ダメ重だ・・よ");
-                        document.getElementById('modal-line-name').value = name;
+                        alert("ダメ重だよ");
+                        document.getElementById('modal-line-name').value = lineid;
+                        const staff = document.getElementById('modal-staff-name');
+
                         // display を 'flex' に変更して表示
                         document.getElementById('register-modal').style.display = 'flex';
                     } else {
                         CalendarData(lineid);
                     }
                 })
+        }
+        function submitRegister() {
+            const staffInput = document.getElementById('modal-staff-name');
+            const lineIdInput = document.getElementById('modal-line-name');
+            const staffName = staffInput.value.trime();
+            const lineId = lineIdInput.value;
+
+            if (staffName == "") {
+                alert("名前が入力されてないよ");
+                return
+            } else {
+                alert(OK)
+            }
         }
         function CalendarData(lineid) {
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
