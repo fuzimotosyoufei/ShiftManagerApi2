@@ -248,7 +248,7 @@
                     return response.json(); // 💡 C#から届いたJSONをJavaScriptで使えるように変換少し勉強がいる
                 })
                 .then(data => {
-                    if (data.message) {
+                    if (!data.message) {
                         alert("ダメ重だ・・・よ");
                     } else {
                         CalendarData(lineid);
