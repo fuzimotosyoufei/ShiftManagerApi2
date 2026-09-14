@@ -332,16 +332,16 @@
                 return
 
             } else {
-                alert("OK許可が出るまで待ってね");   
-                   fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staff_apply?line_id=${lineId}&staff_name=${staffName}`, {
-                headers: {
-                    'ngrok-skip-browser-warning': 'true'
-                }
-            })
+                alert("OK許可が出るまで待ってね");
+                fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staff_apply?line_id=${lineId}&staffName=${staffName}`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                })
                 return
             }
         }
-        
+
         function CalendarData(lineid) {
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
@@ -516,7 +516,7 @@
         }
 
         // イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
-                          
+
 
 
         function initEvent(eventList) {//イベント欄の作成
