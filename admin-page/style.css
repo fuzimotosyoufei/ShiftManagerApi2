@@ -82,6 +82,9 @@
      display: none;
      /* 最初は隠しておく */
  }
+ .content-staff{
+    display: none;
+ }
 
  /* シフトカードたちのデザイン（元のやつをそのままキープ） */
  .shift-card {
