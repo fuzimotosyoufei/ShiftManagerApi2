@@ -228,6 +228,15 @@
                     <label>氏名</label>
                     <input type="text" id="modal-staff-name">
                 </div>
+                <div class="form-grop">
+                    <label>区分</label>
+                    <select name="employmentType" id="modal-employment-type">
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="apple">正社員</option>
+                        <option value="banana">準社員</option>
+                        <option value="orange">パート</option>
+                    </select>
+                </div>
                 <div class="modal-buttons">
                     <button type="button" onclick="submitRegistration()">登録する</button>
                 </div>
@@ -324,21 +333,31 @@
         function submitRegistration() {
             const staffInput = document.getElementById('modal-staff-name');
             const lineIdInput = document.getElementById('modal-line-name');
+            const employmentType = document.querySelector('#modal-employment-type').value;
             const staffName = staffInput.value.trim();
             const lineId = lineIdInput.value;
 
-            if (staffName == "") {
-                alert("名前が入力されてないよ");
-                return
-
-            } else {
+        //   / 選択されていない項目がないかチェック
+            if (!lineName || !staffName || !employmentType) {
+                alert('すべての項目を入力・選択してください。');
+                return;
+            }else {
                 alert("OK許可が出るまで待ってね");
                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staff_apply?line_id=${lineId}&staffName=${staffName}`, {
                     headers: {
                         'ngrok-skip-browser-warning': 'true'
                     }
+
                 })
-                return
+                    .then(response => {
+                        if (!response.ok) throw new Error('データの取得に失敗しました');
+                        return response.json(); // 💡 C#から届いたJSONをJavaScriptで使えるように変換少し勉強がいる
+
+                    })
+                    .then(data => {
+                        alert(data.message);
+                    })
+
             }
         }
 
