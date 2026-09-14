@@ -237,6 +237,12 @@
                         <option value="orange">パート</option>
                     </select>
                 </div>
+                <div class="form-grop">
+                    <label>じょぶ</label>
+                    <select name="employmentJobType" id="modal-employment-Jobtype">
+
+                    </select>
+                </div>
                 <div class="modal-buttons">
                     <button type="button" onclick="submitRegistration()">登録する</button>
                 </div>
@@ -321,6 +327,7 @@
                     if (!data.message) {
                         alert("ダメ重だよ");
                         document.getElementById('modal-line-name').value = lineid;
+                        loadJobOptions();
                         const staff = document.getElementById('modal-staff-name');
 
                         // display を 'flex' に変更して表示
@@ -330,18 +337,38 @@
                     }
                 })
         }
+        function loadJobOptions() {
+            const selectEl = document.querySelector('#modal-employment-Jobtype');
+
+            // 職種マスターを取得するAPI（※API名はご自身の環境に合わせてください）
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/GetJobList`, {
+                headers: { 'ngrok-skip-browser-warning': 'true' }
+            })
+                .then(response => response.json())
+                .then(jobs => {
+                    selectEl.innerHTML = '<option value="" disabled selected>選択してください</option>';
+                    jobs.forEach(job => {
+                        const option = document.createElement('option');
+                        option.value = job.id;
+                        option.textContent = job.name;
+                        selectEl.appendChild(option);
+                    });
+                })
+                .catch(err => console.error("職種データの取得エラー:", err));
+        }
+
         function submitRegistration() {
             const staffInput = document.getElementById('modal-staff-name');
             const lineIdInput = document.getElementById('modal-line-name');
             const employmentType = document.querySelector('#modal-employment-type').value;
+            const selectEl = document.querySelector('#modal-employment-Jobtype');
             const staffName = staffInput.value.trim();
             const lineId = lineIdInput.value;
-
-        //   / 選択されていない項目がないかチェック
-            if (!lineName || !staffName || !employmentType) {
+            //   / 選択されていない項目がないかチェック
+            if (!lineId || !staffName || !employmentType || !selectEl) {
                 alert('すべての項目を入力・選択してください。');
                 return;
-            }else {
+            } else {
                 alert("OK許可が出るまで待ってね");
                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staff_apply?line_id=${lineId}&staffName=${staffName}`, {
                     headers: {
