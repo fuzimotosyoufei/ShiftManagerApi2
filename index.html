@@ -332,7 +332,12 @@
                 return
 
             } else {
-                alert("OK");   
+                alert("OK許可が出るまで待ってね");   
+                   fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staff_apply?line_id=${lineId}&staff_name=${staffName}`, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            })
                 return
             }
         }
