@@ -11,42 +11,55 @@ const ROLE_MASTER = ['正社員', 'パート', 'アルバイト'];
 let isEditMode = false;
 
 // 画面表示関数（引数でモードを判定）
-function showStaffList(data) {
+function showStaffList() {
     const listEl = document.getElementById('staff-list');
     listEl.innerHTML = '';
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/stafflist', {
+        method: 'GET',
+        headers: {
 
-    // ① IDごとにグループ化
-    const groupedStaffs = data.reduce((acc, current) => {
-        const existingStaff = acc.find(item => item.id === current.id);
-        if (existingStaff) {
-            if (!existingStaff.jobs.includes(current.job_name)) {
-                existingStaff.jobs.push(current.job_name);
-            }
-        } else {
-            acc.push({
-                id: current.id,
-                name: current.staff_name,
-                role: current.role,
-                jobs: [current.job_name]
-            });
+            'ngrok-skip-browser-warning': 'true'
         }
-        return acc;
-    }, []);
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // 💡 レスポンス本文をJSONオブジェクトとして解析
+            return response.json();
+        })
+        .then(data => {
+            const groupedStaffs = data.reduce((acc, current) => {
+                const existingStaff = acc.find(item => item.id === current.id);
+                if (existingStaff) {
+                    if (!existingStaff.jobs.includes(current.job_name)) {
+                        existingStaff.jobs.push(current.job_name);
+                    }
+                } else {
+                    acc.push({
+                        id: current.id,
+                        name: current.staff_name,
+                        role: current.role,
+                        jobs: [current.job_name]
+                    });
+                }
+                return acc;
+            }, []);
 
-    // ② 描画処理
-    groupedStaffs.forEach(staff => {
-        const li = document.createElement('li');
-        li.className = 'staff-card';
+        // ② 描画処理
+        groupedStaffs.forEach(staff => {
+            const li = document.createElement('li');
+            li.className = 'staff-card';
 
-        if (!isEditMode) {
-            // --------------------------------------------------
-            // A. 通常の閲覧モード（テキスト表示）
-            // --------------------------------------------------
-            const jobBadges = staff.jobs
-                .map(job => `<span class="job-badge">${job}</span>`)
-                .join(' ');
+            if (!isEditMode) {
+                // --------------------------------------------------
+                // A. 通常の閲覧モード（テキスト表示）
+                // --------------------------------------------------
+                const jobBadges = staff.jobs
+                    .map(job => `<span class="job-badge">${job}</span>`)
+                    .join(' ');
 
-            li.innerHTML = `
+                li.innerHTML = `
                 <div class="staff-header">
                     <span class="staff-id">ID: ${staff.id}</span>
                     <strong class="staff-name">${staff.name}</strong>
@@ -56,29 +69,29 @@ function showStaffList(data) {
                     <span class="job-label">担当職種：</span>${jobBadges}
                 </div>
             `;
-        } else {
-            // --------------------------------------------------
-            // B. 編集モード（フォーム・プルダウン表示）
-            // --------------------------------------------------
-            // 区分のプルダウン選択肢
-            const roleOptions = ROLE_MASTER.map(role =>
-                `<option value="${role}" ${role === staff.role ? 'selected' : ''}>${role}</option>`
-            ).join('');
+            } else {
+                // --------------------------------------------------
+                // B. 編集モード（フォーム・プルダウン表示）
+                // --------------------------------------------------
+                // 区分のプルダウン選択肢
+                const roleOptions = ROLE_MASTER.map(role =>
+                    `<option value="${role}" ${role === staff.role ? 'selected' : ''}>${role}</option>`
+                ).join('');
 
-            // 追加用職種プルダウンの選択肢
-            const addJobOptions = JOB_MASTER
-                .map(job => `<option value="${job}">${job}</option>`)
-                .join('');
+                // 追加用職種プルダウンの選択肢
+                const addJobOptions = JOB_MASTER
+                    .map(job => `<option value="${job}">${job}</option>`)
+                    .join('');
 
-            // 登録中の職種（チェックボックス ＋ 削除用ボタン）
-            const jobCheckboxes = staff.jobs.map(job => `
+                // 登録中の職種（チェックボックス ＋ 削除用ボタン）
+                const jobCheckboxes = staff.jobs.map(job => `
                 <label class="edit-job-item">
                     <input type="checkbox" name="job_${staff.id}" value="${job}" checked>
                     ${job}
                 </label>
             `).join('');
 
-            li.innerHTML = `
+                li.innerHTML = `
                 <div class="edit-staff-form" data-id="${staff.id}">
                     <div class="edit-row">
                         <span class="staff-id">ID: ${staff.id}</span>
@@ -109,10 +122,15 @@ function showStaffList(data) {
                     </div>
                 </div>
             `;
-        }
+            }
 
-        listEl.appendChild(li);
+            listEl.appendChild(li);
+        });
+        
     });
+    // .catch (error => {
+    //     console.error('データ取得エラー:', error);
+    // });
 }
 
 // --------------------------------------------------
@@ -166,11 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 再描画
-        showStaffList(rawDataFromDb);
+        showStaffList();
     });
 
     // 初回描画
-    showStaffList(rawDataFromDb);
+    showStaffList();
 });
 
 
