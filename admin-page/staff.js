@@ -18,6 +18,7 @@ async function fetchJobMaster() {
         return response.json();
     })
     .then(data=>{
+        alert(data);
        JOB_MASTER =  data;
     })
 }
