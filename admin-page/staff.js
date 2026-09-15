@@ -45,6 +45,10 @@ function showStaffList(data) {
             <div class="staff-jobs">
                 <span class="job-label">担当職種：</span>${jobBadges}
             </div>
+            <div>
+                <button type="button" class="staff-Edit-button">
+                </button>
+            </div>
         `;
         listEl.appendChild(li);
     });
