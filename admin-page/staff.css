@@ -104,13 +104,25 @@
     /* 【任意】文字を太字にする */
 }
 
-/* 編集ボタンのハイライト */
+/* --------------------------------------------------
+ * 8. 職種ラベル（「担当職種：」のテキスト）
+ * -------------------------------------------------- */
+.job-label {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* --------------------------------------------------
+ * 9. 編集ボタン（クリック時のトグル用）
+ * -------------------------------------------------- */
 #staff-Edit-button.editing {
     background-color: #e53e3e;
     color: white;
 }
 
-/* 編集フォームの内部レイアウト */
+/* --------------------------------------------------
+ * 10. 編集フォーム内部レイアウト
+ * -------------------------------------------------- */
 .edit-staff-form {
     display: flex;
     flex-direction: column;
@@ -121,6 +133,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.edit-row-jobs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .edit-input-name {
@@ -141,21 +160,50 @@
 .edit-job-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
+    gap: 6px;
 }
 
-.edit-job-item {
+/* --------------------------------------------------
+ * 11. 編集時の職種バッジ（×ボタン付き）
+ * -------------------------------------------------- */
+.edit-job-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    background: #edf2f7;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
+    gap: 6px;
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+    border: 1px solid #bee3f8;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
 }
 
+/* 💡 ×ボタン（即時削除用） */
+.btn-delete-job {
+    background: transparent;
+    border: none;
+    color: #e53e3e;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+    padding: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-delete-job:hover {
+    background-color: #fed7d7;
+    color: #9b2c2c;
+}
+
+/* --------------------------------------------------
+ * 12. 職種追加エリア
+ * -------------------------------------------------- */
 .add-job-area {
     display: flex;
     align-items: center;
@@ -164,10 +212,16 @@
 }
 
 .btn-add-job {
-    padding: 3px 10px;
+    padding: 4px 10px;
     background-color: #3182ce;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.btn-add-job:hover {
+    background-color: #2b6cb0;
 }
