@@ -18,7 +18,7 @@ async function fetchJobMaster() {
         return response.json();
     })
     .then(data=>{
-        const JOB_MASTER = await data;
+        const JOB_MASTER = await data.json();
     })
 }
 // 現在「編集モード」かどうかを管理するフラグ
