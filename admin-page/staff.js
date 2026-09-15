@@ -1,12 +1,26 @@
-const rawDataFromDb = [
-    { id: '1', staff_name: '山田 太郎', role: 'アルバイト', job_name: 'ホール' },
-    { id: '1', staff_name: '山田 太郎', role: 'アルバイト', job_name: 'キッチン' }, // ID 1 は複数職種
-    { id: '2', staff_name: '佐藤 花子', role: '正社員', job_name: 'キッチン' },
-    { id: '3', staff_name: '鈴木 一郎', role: 'パート', job_name: 'レジ' }
-];
-const JOB_MASTER = ['ホール', 'キッチン', 'レジ', '仕込み', '清掃'];
-const ROLE_MASTER = ['正社員', 'パート', 'アルバイト'];
 
+
+const JOB_MASTER = [];
+const ROLE_MASTER = ['正社員', 'パート', 'アルバイト'];
+async function fetchJobMaster() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/joblist',{
+        method: 'GET',
+            headers: {
+
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+    .then(response =>{
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        // 💡 レスポンス本文をJSONオブジェクトとして解析
+        return response.json();
+    })
+    .then(data=>{
+        const JOB_MASTER = await data;
+    })
+}
 // 現在「編集モード」かどうかを管理するフラグ
 let isEditMode = false;
 
