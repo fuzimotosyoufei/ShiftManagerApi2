@@ -173,6 +173,22 @@ function addJobToStaff(staffId) {
         <input type="checkbox" name="job_${staffId}" value="${selectedJob}" checked>
         ${selectedJob}
     `;
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injob?staffId=${staffId}&jobname=${selectedJob}`, {
+        method: 'POST',
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+                console.log("できたよ3");
+        }
+        })
+
+        .then(data => {
+            alert(data.message); 
+        });
     container.appendChild(newLabel);
 
     // 選択肢をリセット
