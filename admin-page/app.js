@@ -258,13 +258,19 @@ function CreateCalend(date, ymdata) {
 function switchPage(pageName) {
     const checkPage = document.getElementById('page-check');
     const buildPage = document.getElementById('page-build');
+    const staffPage = document.getElementById('page-staff');
     if (pageName == 'check') {
         checkPage.style.display = 'block';
         buildPage.style.display = 'none';
+        staffPage.style.display = 'none';
     } else if (pageName == 'build') {
         checkPage.style.display = 'none';
         buildPage.style.display = 'block';
-
+        staffPage.style.display = 'none';
+    } else if (pageName == 'staff') {
+        checkPage.style.display = 'none';
+        buildPage.style.display = 'none';
+        staffPage.style.display = 'block';
     }
 }
 
