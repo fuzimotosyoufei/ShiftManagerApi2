@@ -1,6 +1,6 @@
 
 
-const JOB_MASTER = [];
+let JOB_MASTER = [];
 const ROLE_MASTER = ['正社員', 'パート', 'アルバイト'];
 async function fetchJobMaster() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/joblist',{
@@ -18,7 +18,7 @@ async function fetchJobMaster() {
         return response.json();
     })
     .then(data=>{
-        const JOB_MASTER = await data.json();
+       JOB_MASTER =  data;
     })
 }
 // 現在「編集モード」かどうかを管理するフラグ
