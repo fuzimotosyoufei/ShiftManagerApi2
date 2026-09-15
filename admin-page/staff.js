@@ -18,7 +18,7 @@ async function fetchJobMaster() {
         return response.json();
     })
     .then(data=>{
-        alert(data);
+        // alert(data);
        JOB_MASTER =  data;
     })
 }
@@ -183,6 +183,7 @@ function addJobToStaff(staffId) {
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+    fetchJobMaster()
     const editBtn = document.getElementById('staff-Edit-button');
 
     editBtn.addEventListener('click', () => {
