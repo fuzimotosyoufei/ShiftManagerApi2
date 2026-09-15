@@ -13,8 +13,9 @@ function showStaffList() {
         const li = document.createElement('li');
         li.textContent = `${staff.name} | 職種: ${staff.job} | 区分: ${staff.role} | 状態: ${staff.status}`;
         listEl.appendChild(li);
-    })
-    document.addEventListener('DOMContentLoaded', () => {
-        showStaffList();
     });
+
 }
+document.addEventListener('DOMContentLoaded', () => {
+    showStaffList();
+});
