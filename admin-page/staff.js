@@ -195,7 +195,7 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
     if (!confirm(`「${jobName}」を削除しますか？`)) return;
 
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljob?staffId=${staffId}&jobname=${jobName}`, {
-        method: 'DELETE',
+        method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
