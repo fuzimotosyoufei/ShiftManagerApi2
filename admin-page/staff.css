@@ -115,9 +115,28 @@
 /* --------------------------------------------------
  * 9. 編集ボタン（クリック時のトグル用）
  * -------------------------------------------------- */
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+    width: 100%;
+}
+
 #staff-Edit-button.editing {
     background-color: #e53e3e;
     color: white;
+    width: 100px;
+    height: 40px;
+}
+
+#staff-Insert-button {
+    background-color: #3182ce;
+    color: white;
+    width: 100px;
+    height: 40px;
 }
 
 /* --------------------------------------------------
