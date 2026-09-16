@@ -127,7 +127,7 @@ function showStaffList() {
 
                         <!-- 職種追加プルダウン -->
                         <div class="add-job-area">
-                            <select class="add-job-select" id="add-job-select-${staff.id}">
+                            <select class="add-job-select" id="add-job-select-${staff.id}" " onchange="addJobToStaff('${staff.id}')">
                                 <option value="" disabled selected>＋ 職種を追加...</option>
                                 ${addJobOptions}
                             </select>
@@ -167,7 +167,7 @@ async function addJobToStaff(staffId) {
 
             try {
                 const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
-                    method: 'POST',
+                    method: 'GET',
                     headers: { 'ngrok-skip-browser-warning': 'true' }
                 });
 
