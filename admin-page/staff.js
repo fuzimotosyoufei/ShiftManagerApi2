@@ -92,9 +92,9 @@ function showStaffList() {
                     `<option value="${role}" ${role === staff.role ? 'selected' : ''}>${role}</option>`
                 ).join('');
 
-                const addJobOptions = JOB_MASTER
+                const addJobOptions = JOB_MASTER//回して職種を追加している
                     .map(job => `<option value="${job}">${job}</option>`)
-                    .join('');
+                    .join('') + `<option value="__NEW__">＋ 新しい職種を追加...</option>`;//joinを消すことでカンマが消えて綺麗になる
 
                 // 登録中の職種（×ボタン付きバッジ）
                 const jobBadges = staff.jobs.map(job => `
@@ -148,50 +148,88 @@ function showStaffList() {
 // 職種を動的に追加する関数
 // --------------------------------------------------
 function addJobToStaff(staffId) {
-    const selectEl = document.getElementById(`add-job-select-${staffId}`);
-    const selectedJob = selectEl.value;
-    if (!selectedJob) return;
+        const selectEl = document.getElementById(`add-job-select-${staffId}`);
+        const selectedJob = selectEl.value;
+        if (!selectedJob) return;
 
-    const container = document.getElementById(`job-container-${staffId}`);
+      
+        // 💡 「＋ 新しい職種を追加...」が選択された場合の処理
+        if (selectedJob === '__NEW__') {
+            const newJobName = prompt('新しい職種名を入力してください：');
 
-    // 1. 重複チェック（既存のバッジテキスト内に選択された職種名があるか）
-    const existingBadges = Array.from(container.querySelectorAll('.edit-job-badge'));
-    const exists = existingBadges.some(el => el.textContent.includes(selectedJob));
-    if (exists) {
-        alert('すでに存在する職種です。');
-        return;
+            // キャンセルされたか、未入力の場合は元に戻す
+            if (!newJobName || !newJobName.trim()) {
+                selectEl.selectedIndex = 0;
+                return;
+            }
+
+            const trimmedJobName = newJobName.trim();
+
+            try {
+                const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
+                    method: 'POST',
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                });
+
+                if (!response.ok) throw new Error('マスター追加に失敗しました');
+
+                // 2. メモリ上のマスター配列にも追加
+                if (!JOB_MASTER.includes(trimmedJobName)) {
+                    JOB_MASTER.push(trimmedJobName);
+                }
+
+                selectedJob = trimmedJobName;
+            } catch (e) {
+                alert('職種マスターの登録に失敗しました。');
+                selectEl.selectedIndex = 0;
+                return;
+            }
+
+            
+        }
+
+        const container = document.getElementById(`job-container-${staffId}`);
+
+        // 1. 重複チェック（既存のバッジテキスト内に選択された職種名があるか）
+        const existingBadges = Array.from(container.querySelectorAll('.edit-job-badge'));
+        const exists = existingBadges.some(el => el.textContent.includes(selectedJob));
+        if (exists) {
+            alert('すでに存在する職種です。');
+            return;
+        }
+
+
+        // 2. API（POST）通信
+        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injob?staffId=${staffId}&jobname=${encodeURIComponent(selectedJob)}`, {
+            method: 'POST',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('追加に失敗しました');
+                return response.json();
+            })
+            .then(data => {
+                // 3. DB追加成功後に、×ボタン付きバッジ要素を作成してDOMに追加
+                const newBadge = document.createElement('span');
+                newBadge.className = 'edit-job-badge';
+                newBadge.innerHTML = `
+                ${selectedJob}
+                <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staffId}, '${selectedJob}', this)">×</button>
+            `;
+
+                container.appendChild(newBadge);
+                
+                // 選択肢（プルダウン）を初期状態に戻す
+                selectEl.selectedIndex = 0;
+            })
+            .catch(error => {
+                console.error('職種追加エラー:', error);
+                alert('職種の追加に失敗しました。');
+            });
     }
 
-    // 2. API（POST）通信
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injob?staffId=${staffId}&jobname=${encodeURIComponent(selectedJob)}`, {
-        method: 'POST',
-        headers: {
-            'ngrok-skip-browser-warning': 'true'
-        }
-    })
-        .then(response => {
-            if (!response.ok) throw new Error('追加に失敗しました');
-            return response.json();
-        })
-        .then(data => {
-            // 3. DB追加成功後に、×ボタン付きバッジ要素を作成してDOMに追加
-            const newBadge = document.createElement('span');
-            newBadge.className = 'edit-job-badge';
-            newBadge.innerHTML = `
-            ${selectedJob}
-            <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staffId}, '${selectedJob}', this)">×</button>
-        `;
-
-            container.appendChild(newBadge);
-
-            // 選択肢（プルダウン）を初期状態に戻す
-            selectEl.selectedIndex = 0;
-        })
-        .catch(error => {
-            console.error('職種追加エラー:', error);
-            alert('職種の追加に失敗しました。');
-        });
-}
 function updateRole(staffId,rolName){
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/updaterole?staffId=${staffId}&rolename=${rolName}`, {
         method: 'GET',
