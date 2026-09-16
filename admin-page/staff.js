@@ -127,7 +127,7 @@ function showStaffList() {
 
                         <!-- 職種追加プルダウン -->
                         <div class="add-job-area">
-                            <select class="add-job-select" id="add-job-select-${staff.id}" " onchange="addJobToStaff('${staff.id}')">
+                            <select class="add-job-select" id="add-job-select-${staff.id}" " onchange="InJob('${staff.id}')">
                                 <option value="" disabled selected>＋ 職種を追加...</option>
                                 ${addJobOptions}
                             </select>
@@ -148,45 +148,45 @@ function showStaffList() {
 // 職種を動的に追加する関数
 // --------------------------------------------------
 async function addJobToStaff(staffId) {
-        const selectEl = document.getElementById(`add-job-select-${staffId}`);
-        const selectedJob = selectEl.value;
-        if (!selectedJob) return;
+        // const selectEl = document.getElementById(`add-job-select-${staffId}`);
+        // const selectedJob = selectEl.value;
+        // if (!selectedJob) return;
 
       
-        // 💡 「＋ 新しい職種を追加...」が選択された場合の処理
-        if (selectedJob === '__NEW__') {
-            const newJobName = prompt('新しい職種名を入力してください：');
+        // // 💡 「＋ 新しい職種を追加...」が選択された場合の処理
+        // if (selectedJob === '__NEW__') {
+        //     const newJobName = prompt('新しい職種名を入力してください：');
 
-            // キャンセルされたか、未入力の場合は元に戻す
-            if (!newJobName || !newJobName.trim()) {
-                selectEl.selectedIndex = 0;
-                return;
-            }
+        //     // キャンセルされたか、未入力の場合は元に戻す
+        //     if (!newJobName || !newJobName.trim()) {
+        //         selectEl.selectedIndex = 0;
+        //         return;
+        //     }
 
-            const trimmedJobName = newJobName.trim();
+        //     const trimmedJobName = newJobName.trim();
 
-            try {
-                const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
-                    method: 'GET',
-                    headers: { 'ngrok-skip-browser-warning': 'true' }
-                });
+        //     try {
+        //         const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
+        //             method: 'GET',
+        //             headers: { 'ngrok-skip-browser-warning': 'true' }
+        //         });
 
-                if (!response.ok) throw new Error('マスター追加に失敗しました');
+        //         if (!response.ok) throw new Error('マスター追加に失敗しました');
 
-                // 2. メモリ上のマスター配列にも追加
-                if (!JOB_MASTER.includes(trimmedJobName)) {
-                    JOB_MASTER.push(trimmedJobName);
-                }
+        //         // 2. メモリ上のマスター配列にも追加
+        //         if (!JOB_MASTER.includes(trimmedJobName)) {
+        //             JOB_MASTER.push(trimmedJobName);
+        //         }
 
-                selectedJob = trimmedJobName;
-            } catch (e) {
-                alert('職種マスターの登録に失敗しました。');
-                selectEl.selectedIndex = 0;
-                return;
-            }
+        //         selectedJob = trimmedJobName;
+        //     } catch (e) {
+        //         alert('職種マスターの登録に失敗しました。');
+        //         selectEl.selectedIndex = 0;
+        //         return;
+        //     }
 
             
-        }
+        // }
 
         const container = document.getElementById(`job-container-${staffId}`);
 
@@ -229,6 +229,47 @@ async function addJobToStaff(staffId) {
                 alert('職種の追加に失敗しました。');
             });
     }
+async function InJob(staffId) {//新しい職種を追加する処理
+    const selectEl = document.getElementById(`add-job-select-${staffId}`);
+    const selectedJob = selectEl.value;
+    if (!selectedJob) return;
+
+
+    // 💡 「＋ 新しい職種を追加...」が選択された場合の処理
+    if (selectedJob === '__NEW__') {
+        const newJobName = prompt('新しい職種名を入力してください：');
+
+        // キャンセルされたか、未入力の場合は元に戻す
+        if (!newJobName || !newJobName.trim()) {
+            selectEl.selectedIndex = 0;
+            return;
+        }
+
+        const trimmedJobName = newJobName.trim();
+
+        try {
+            const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
+                method: 'GET',
+                headers: { 'ngrok-skip-browser-warning': 'true' }
+            });
+
+            if (!response.ok) throw new Error('マスター追加に失敗しました');
+
+            // 2. メモリ上のマスター配列にも追加
+            if (!JOB_MASTER.includes(trimmedJobName)) {
+                JOB_MASTER.push(trimmedJobName);
+            }
+
+            selectedJob = trimmedJobName;
+        } catch (e) {
+            alert('職種マスターの登録に失敗しました。');
+            selectEl.selectedIndex = 0;
+            return;
+        }
+
+
+    }
+}
 
 function updateRole(staffId,rolName){
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/updaterole?staffId=${staffId}&rolename=${rolName}`, {
