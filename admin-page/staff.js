@@ -147,7 +147,7 @@ function showStaffList() {
 // --------------------------------------------------
 // 職種を動的に追加する関数
 // --------------------------------------------------
-function addJobToStaff(staffId) {
+async function addJobToStaff(staffId) {
         const selectEl = document.getElementById(`add-job-select-${staffId}`);
         const selectedJob = selectEl.value;
         if (!selectedJob) return;
