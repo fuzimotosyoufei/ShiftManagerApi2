@@ -148,46 +148,7 @@ function showStaffList() {
 // 職種を動的に追加する関数
 // --------------------------------------------------
 async function addJobToStaff(staffId) {
-        // const selectEl = document.getElementById(`add-job-select-${staffId}`);
-        // const selectedJob = selectEl.value;
-        // if (!selectedJob) return;
-
-      
-        // // 💡 「＋ 新しい職種を追加...」が選択された場合の処理
-        // if (selectedJob === '__NEW__') {
-        //     const newJobName = prompt('新しい職種名を入力してください：');
-
-        //     // キャンセルされたか、未入力の場合は元に戻す
-        //     if (!newJobName || !newJobName.trim()) {
-        //         selectEl.selectedIndex = 0;
-        //         return;
-        //     }
-
-        //     const trimmedJobName = newJobName.trim();
-
-        //     try {
-        //         const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/injobmaster?jobname=${encodeURIComponent(trimmedJobName)}`, {
-        //             method: 'GET',
-        //             headers: { 'ngrok-skip-browser-warning': 'true' }
-        //         });
-
-        //         if (!response.ok) throw new Error('マスター追加に失敗しました');
-
-        //         // 2. メモリ上のマスター配列にも追加
-        //         if (!JOB_MASTER.includes(trimmedJobName)) {
-        //             JOB_MASTER.push(trimmedJobName);
-        //         }
-
-        //         selectedJob = trimmedJobName;
-        //     } catch (e) {
-        //         alert('職種マスターの登録に失敗しました。');
-        //         selectEl.selectedIndex = 0;
-        //         return;
-        //     }
-
-            
-        // }
-
+       
         const container = document.getElementById(`job-container-${staffId}`);
 
         // 1. 重複チェック（既存のバッジテキスト内に選択された職種名があるか）
@@ -262,7 +223,7 @@ async function InJob(staffId) {//新しい職種を追加する処理
 
             selectedJob = trimmedJobName;
         } catch (e) {
-            alert('職種マスターの登録に失敗しました。');
+            console.error('エラー詳細:', e);
             selectEl.selectedIndex = 0;
             return;
         }
