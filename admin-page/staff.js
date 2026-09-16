@@ -1,7 +1,7 @@
 
 
 let JOB_MASTER = [];
-const ROLE_MASTER = ['正社員', 'パート', 'アルバイト'];
+const ROLE_MASTER = ['正社員', '準社員', 'パート'];
 async function fetchJobMaster() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/joblist',{
         method: 'GET',
