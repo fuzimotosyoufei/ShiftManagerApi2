@@ -191,29 +191,30 @@ function addJobToStaff(staffId) {
     selectEl.selectedIndex = 0;
 }
 
-// function deleteJobFromStaff(staffId, jobName, buttonEl) {
-//     if (!confirm(`「${jobName}」を削除しますか？`)) return;
+function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は押されたバツから一番近い枠削除するために使う
+    if (!confirm(`「${jobName}」を削除しますか？`)) return;
 
-//     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljob?staffId=${staffId}&jobname=${encodeURIComponent(jobName)}`, {
-//         method: 'DELETE',
-//         headers: {
-//             'ngrok-skip-browser-warning': 'true'
-//         }
-//     })
-//         .then(response => {
-//             if (!response.ok) throw new Error('削除に失敗しました');
-//             return response.json();
-//         })
-//         .then(data => {
-//             // DB削除成功後に画面からバッジを取り除く
-//             const badgeEl = buttonEl.closest('.edit-job-badge');
-//             if (badgeEl) badgeEl.remove();
-//         })
-//         .catch(error => {
-//             console.error('職種削除エラー:', error);
-//             alert('職種の削除に失敗しました。');
-//         });
-// }
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljob?staffId=${staffId}&jobname=${jobName}`, {
+        method: 'DELETE',
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('削除に失敗しました');
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            // DB削除成功後に画面からバッジを取り除く
+            const badgeEl = buttonEl.closest('.edit-job-badge');
+            if (badgeEl) badgeEl.remove();
+        })
+        .catch(error => {
+            console.error('職種削除エラー:', error);
+            alert('職種の削除に失敗しました。');
+        });
+}
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
@@ -226,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isEditMode = !isEditMode;
 
         if (isEditMode) {
-            editBtn.textContent = '編集を保存/終了';
+            editBtn.textContent = 'スタッフ編集終了';
             editBtn.classList.add('editing');
         } else {
             editBtn.textContent = 'スタッフ編集';
