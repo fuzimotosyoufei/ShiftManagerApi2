@@ -192,7 +192,7 @@ function addJobToStaff(staffId) {
             alert('職種の追加に失敗しました。');
         });
 }
-function UpdateRole(staffId,rolName){
+function updateRole(staffId,rolName){
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/updaterole?staffId=${staffId}&rolename=${rolName}`, {
         method: 'GET',
         headers: {
