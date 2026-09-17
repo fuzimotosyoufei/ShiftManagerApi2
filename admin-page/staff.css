@@ -128,7 +128,14 @@
 #staff-Edit-button.editing {
     background-color: #e53e3e;
     color: white;
-    width: 100px;
+    width: 1200px;
+    height: 40px;
+}
+
+#staff-Edit-button {
+    background-color: #aea9a9;
+    color: white;
+    width: 120px;
     height: 40px;
 }
 
@@ -243,4 +250,34 @@
 
 .btn-add-job:hover {
     background-color: #2b6cb0;
+}
+
+.modal-staff-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-staff-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+#modal-staff-button {
+    width: 100px;
+    height: 40px;
+}
+
+.modal-staff-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-staff-content h5 {
+    font-size: 10px;
+    flex: 1;
+    text-align: center;
+    margin: 0
 }

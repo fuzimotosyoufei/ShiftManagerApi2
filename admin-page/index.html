@@ -88,7 +88,28 @@
                 <div class="button-container">
                     <button type="button" id="staff-Edit-button">スタッフ編集
                     </button>
-                    <button type="button" id="staff-Insert-button">スタッフ追加
+                    <button type="button" id="staff-Insert-button" onclick=" InsertStaff()">スタッフ追加
+
+                        <dialog id="my-staff-modal">
+                            <div class="modal-staff-content">
+                                <div class="modal-staff-header">
+                                    <h5>タイトルとか</h5>
+                                    <button type="button" id="modal-staff-button">
+                                        閉じる
+                                    </button>
+                                </div>
+                                <div class="modal-staff-body">
+                                    <p>イベント名入力:
+                                        <input type="text" name="name" id="modal-body-text"></input>
+                                    </p>
+                                    <p><input type="button" value="決定" id="modal-body-button"></p>
+                                    <!-- <label for="event-date">実施日：</label>
+                                    <input type="date" id="event-calend" name="event-date"> -->
+                                </div>
+                            </div>
+                        </dialog>
+
+
                     </button>
                 </div>
                 

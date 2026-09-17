@@ -277,6 +277,9 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
             alert('職種の削除に失敗しました。');
         });
 }
+function InsertStaff  () {
+    const modal = document.querySelector('#my-staff-modal')
+}
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
