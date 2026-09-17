@@ -355,7 +355,7 @@ function StaffApplications() {
            return response.json();
        })
        .then(data => {
-           alert(data.id);
+           alert(data[0].id);
            showStaffList();
            // DB削除成功後に画面からバッジを取り除く
        })
@@ -363,6 +363,18 @@ function StaffApplications() {
            console.error('登録失敗しましたエラー:', error);
            alert('スタッフの登録に失敗しました。');
        });
+
+    //    .then(data => {
+    //        // 💡 配列なので、最初の1件目を表示する場合は [0] をつけます
+    //        if (data.length > 0) {
+    //            alert(`1件目のID: ${data[0].id} / 名前: ${data[0].staff_name}`);
+    //        } else {
+    //            alert('データが0件でした');
+    //        }
+
+    //        // 💡 取得したデータ（配列）を関数に渡す
+    //        showStaffList(data);
+    //    })
 }
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
