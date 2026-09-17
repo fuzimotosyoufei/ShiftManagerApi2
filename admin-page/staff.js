@@ -305,8 +305,8 @@ function InsertStaff() {
         alert('すべての項目を入力してください。');
         return;
     }
-
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/inManualstaff?name=${name}&role=${role}&job=${job}`, {
+    
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${name}&role=${role}&job=${job}`, {
         method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
