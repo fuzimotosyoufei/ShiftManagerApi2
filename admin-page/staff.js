@@ -356,8 +356,8 @@ function StaffApplications() {
        })
        .then(data => {
            alert(data[0].id);
-           showStaffList();
            StaffApplicationsList(data);
+    
            // DB削除成功後に画面からバッジを取り除く
        })
        .catch(error => {
@@ -428,6 +428,7 @@ function StaffApplicationsList(data) {
                     </div>
                 `;
 listEl.appendChild(li);
+        showStaffList();
 })
 }
 // --------------------------------------------------
