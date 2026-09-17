@@ -296,6 +296,9 @@ function CloseStaff() {
     const modal = document.querySelector('#my-staff-modal');
     modal.close(); // これでモーダルが閉じる
 }
+function InsertStaff() {
+    
+} 
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
