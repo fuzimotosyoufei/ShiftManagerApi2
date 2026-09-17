@@ -2,7 +2,7 @@ let JOB_MASTER = [];
 const ROLE_MASTER = ['正社員', '準社員', 'パート'];
 
 // --------------------------------------------------
-// 共通処理：APIからのフラットなデータをIDごとにグループ化し、jobsを配列にまとめる関数
+// 共通処理：APIからのデータをIDごとにグループ化し、jobsを配列にまとめる関数
 // --------------------------------------------------
 function formatStaffData(rawData) {
     if (!rawData || !Array.isArray(rawData)) return [];
@@ -450,6 +450,14 @@ function StaffApplicationsList(data) {
                             </div>
                         </div>
                        </div>
+                       <!-- 職種追加プルダウン領域を表示するコードを追加 -->
+                        <div class="add-job-area">
+                            <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
+                                <option value="" disabled selected>＋ 職種を追加...</option>
+                                ${addJobOptions}
+                            </select>
+                            <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
+                        </div>
                     </div>
                 `;
 listEl.appendChild(li);
