@@ -1,7 +1,32 @@
-
-
 let JOB_MASTER = [];
 const ROLE_MASTER = ['正社員', '準社員', 'パート'];
+
+// --------------------------------------------------
+// 共通処理：APIからのフラットなデータをIDごとにグループ化し、jobsを配列にまとめる関数
+// --------------------------------------------------
+function formatStaffData(rawData) {
+    if (!rawData || !Array.isArray(rawData)) return [];
+
+    return rawData.reduce((acc, current) => {
+        const existingStaff = acc.find(item => item.id === current.id);
+        if (existingStaff) {
+            if (current.job_name && !existingStaff.jobs.includes(current.job_name)) {
+                existingStaff.jobs.push(current.job_name);
+            }
+        } else {
+            acc.push({
+                id: current.id,
+                name: current.staff_name || current.name || '',
+                role: current.role || '',
+                line_id: current.line_id || '',
+                status: current.status || '',
+                jobs: current.job_name ? [current.job_name] : []
+            });
+        }
+        return acc;
+    }, []);
+}
+
 async function fetchJobMaster() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/joblist',{
         method: 'GET',
@@ -28,6 +53,7 @@ let isEditMode = false;
 // 画面表示関数（引数でモードを判定）
 function showStaffList() {
     const listEl = document.getElementById('staff-list');
+    if (!listEl) return;
     listEl.innerHTML = '';
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/stafflist', {
         method: 'GET',
@@ -44,22 +70,8 @@ function showStaffList() {
             return response.json();
         })
         .then(data => {
-            const groupedStaffs = data.reduce((acc, current) => {
-                const existingStaff = acc.find(item => item.id === current.id);
-                if (existingStaff) {
-                    if (!existingStaff.jobs.includes(current.job_name)) {
-                        existingStaff.jobs.push(current.job_name);
-                    }
-                } else {
-                    acc.push({
-                        id: current.id,
-                        name: current.staff_name,
-                        role: current.role,
-                        jobs: [current.job_name]
-                    });
-                }
-                return acc;
-            }, []);
+            // 💡 共通関数でデータを整形
+            const groupedStaffs = formatStaffData(data);
 
         // ② 描画処理
         groupedStaffs.forEach(staff => {
@@ -127,7 +139,7 @@ function showStaffList() {
 
                         <!-- 職種追加プルダウン -->
                         <div class="add-job-area">
-                            <select class="add-job-select" id="add-job-select-${staff.id}" " onchange="InJob('${staff.id}')">
+                            <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
                                 <option value="" disabled selected>＋ 職種を追加...</option>
                                 ${addJobOptions}
                             </select>
@@ -148,7 +160,12 @@ function showStaffList() {
 // 職種を動的に追加する関数
 // --------------------------------------------------
 async function addJobToStaff(staffId) {
-       
+        const selectEl = document.getElementById(`add-job-select-${staffId}`);
+        if (!selectEl) return;
+        const selectedJob = selectEl.value;
+
+        if (!selectedJob || selectedJob === '__NEW__') return;
+
         const container = document.getElementById(`job-container-${staffId}`);
 
         // 1. 重複チェック（既存のバッジテキスト内に選択された職種名があるか）
@@ -192,6 +209,7 @@ async function addJobToStaff(staffId) {
     }
 async function InJob(staffId) {//新しい職種を追加する処理
     const selectEl = document.getElementById(`add-job-select-${staffId}`);
+    if (!selectEl) return;
     let selectedJob = selectEl.value;
     if (!selectedJob) return;
 
@@ -234,7 +252,7 @@ async function InJob(staffId) {//新しい職種を追加する処理
 }
 
 function updateRole(staffId,rolName){
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/updaterole?staffId=${staffId}&rolename=${rolName}`, {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/updaterole?staffId=${staffId}&rolename=${encodeURIComponent(rolName)}`, {
         method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -245,7 +263,7 @@ function updateRole(staffId,rolName){
             return response.json();
         })
         .then(data => {
-            alert(data.message);
+            alert(data.message || '更新が完了しました');
             // DB削除成功後に画面からバッジを取り除く
         })
         .catch(error => {
@@ -256,7 +274,7 @@ function updateRole(staffId,rolName){
 function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は押されたバツから一番近い枠削除するために使う職種の削除処理
     if (!confirm(`「${jobName}」を削除しますか？`)) return;
 
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljob?staffId=${staffId}&jobname=${jobName}`, {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljob?staffId=${staffId}&jobname=${encodeURIComponent(jobName)}`, {
         method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -267,7 +285,7 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
             return response.json();
         })
         .then(data => {
-            alert(data.message);
+            alert(data.message || '削除しました');
             // DB削除成功後に画面からバッジを取り除く
             const badgeEl = buttonEl.closest('.edit-job-badge');
             if (badgeEl) badgeEl.remove();
@@ -280,6 +298,7 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
 // モーダルを開く処理
 function OpenStaff() {
     const modal = document.querySelector('#my-staff-modal');
+    if (!modal) return;
 
     const roleSelect = document.querySelector('#modal-body-role-select');
     roleSelect.innerHTML = '<option value="" disabled selected>選択してください</option>' +
@@ -294,19 +313,20 @@ function OpenStaff() {
 // モーダルを閉じる処理
 function CloseStaff() {
     const modal = document.querySelector('#my-staff-modal');
-    modal.close(); // これでモーダルが閉じる
+    if (modal) modal.close(); // これでモーダルが閉じる
 }
 function InsertStaff() {
     const name = document.querySelector('#modal-body-name-text').value;
     const role = document.querySelector('#modal-body-role-select').value;
     const job = document.querySelector('#modal-body-job-select').value;
+    const modal = document.querySelector('#my-staff-modal');
 
     if (!name || !role || !job) {
         alert('すべての項目を入力してください。');
         return;
     }
     
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${name}&role=${role}&job=${job}`, {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${encodeURIComponent(name)}&role=${encodeURIComponent(role)}&job=${encodeURIComponent(job)}`, {
         method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -317,8 +337,8 @@ function InsertStaff() {
             return response.json();
         })
         .then(data => {
-            alert(data.message);
-            modal.close();
+            alert(data.message || '登録が完了しました');
+            if (modal) modal.close();
             showStaffList();
             // DB削除成功後に画面からバッジを取り除く
         })
@@ -336,7 +356,8 @@ function switchTab(tabId, button) {
         btn.classList.remove('active');
     });
     // 指定されたタブコンテンツを表示する
-    document.getElementById(tabId).classList.add('active');
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) targetTab.classList.add('active');
     // 選択されたタブボタンにactiveクラスを追加
     button.classList.add('active');
     if(tabId === 'content-tab2') {
@@ -355,7 +376,7 @@ function StaffApplications() {
            return response.json();
        })
        .then(data => {
-           alert(data[0].id);
+           if (data.length > 0) alert(data[0].id);
            StaffApplicationsList(data);
     
            // DB削除成功後に画面からバッジを取り除く
@@ -379,16 +400,20 @@ function StaffApplications() {
 }
 function StaffApplicationsList(data) {
     const listEl = document.getElementById('staff-application-list');
+    if (!listEl) return;
 
     listEl.innerHTML = '';
 
+    // 💡 共通関数を使って rawData を整形し、jobs 配列を自動生成する
+    const groupedStaffs = formatStaffData(data);
+
     // 2. データが空の場合の表示（親切設計）
-    if (!data || data.length === 0) {
+    if (!groupedStaffs || groupedStaffs.length === 0) {
         listEl.innerHTML = '<p>現在、申請はありません。</p>';
         return;
     }
     
-    data.forEach(staff => {
+    groupedStaffs.forEach(staff => {
         const li = document.createElement('li');
         li.style.listStyle = 'none';
         const roleOptions = ROLE_MASTER.map(role =>
@@ -409,10 +434,10 @@ function StaffApplicationsList(data) {
     li.innerHTML = `
                     <div class="staff-Application-form" data-id="${staff.id}">
                        <div class="staff-Application-row">
-                           <span class="staff-Application-id">ID: ${staff.line_id}</span>
+                           <span class="staff-Application-id">ID: ${staff.line_id || staff.id}</span>
                            <strong class="staff-Application-name">${staff.name}</strong>
                            <span class="role-Application-badge">${staff.status}</span>
-                              <!-- 区分プルダウン -->
+                             <!-- 区分プルダウン -->
                             <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
                                 ${roleOptions}
                             </select>
@@ -428,7 +453,7 @@ function StaffApplicationsList(data) {
                     </div>
                 `;
 listEl.appendChild(li);
-        showStaffList();
+        // showStaffList();
 })
 }
 // --------------------------------------------------
@@ -438,22 +463,24 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchJobMaster()
     const editBtn = document.getElementById('staff-Edit-button');
 
-    editBtn.addEventListener('click', () => {
-        // モードを反転
-        isEditMode = !isEditMode;
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            // モードを反転
+            isEditMode = !isEditMode;
 
-        if (isEditMode) {
-            editBtn.textContent = 'スタッフ編集終了';
-            editBtn.classList.add('editing');
-        } else {
-            editBtn.textContent = 'スタッフ編集';
-            editBtn.classList.remove('editing');
-            // ※ここでC# APIへUPDATE処理を呼び出す処理を接続できます
-        }
+            if (isEditMode) {
+                editBtn.textContent = 'スタッフ編集終了';
+                editBtn.classList.add('editing');
+            } else {
+                editBtn.textContent = 'スタッフ編集';
+                editBtn.classList.remove('editing');
+                // ※ここでC# APIへUPDATE処理を呼び出す処理を接続できます
+            }
 
-        // 再描画
-        showStaffList();
-    });
+            // 再描画
+            showStaffList();
+        });
+    }
 
     // 初回描画
     showStaffList();
@@ -512,4 +539,3 @@ document.addEventListener('DOMContentLoaded', () => {
 //     showStaffList(rawDataFromDb);
 // });
 // 実行
-
