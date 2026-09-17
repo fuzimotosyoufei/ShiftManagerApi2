@@ -332,8 +332,13 @@ function switchTab(tabId, button) {
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
     // 指定されたタブコンテンツを表示する
     document.getElementById(tabId).classList.add('active');
+    // 選択されたタブボタンにactiveクラスを追加
+    button.classList.add('active');
 }
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
