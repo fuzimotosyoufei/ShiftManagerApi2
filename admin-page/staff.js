@@ -327,6 +327,14 @@ function InsertStaff() {
             alert('スタッフの登録に失敗しました。');
         });
 }
+function switchTab(tabId, button) {
+    // すべてのタブコンテンツを非表示にする
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    // 指定されたタブコンテンツを表示する
+    document.getElementById(tabId).classList.add('active');
+}
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------

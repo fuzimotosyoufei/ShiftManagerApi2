@@ -294,6 +294,10 @@
     /* アクティブな時だけ表示 */
     display: block;
 }
+.tab-btn.active {
+    background-color: #3182ce;
+    color: white;
+}
 .tab-buttons label {
     padding: 10px 20px;
     background-color: #f0f0f0;
