@@ -297,8 +297,35 @@ function CloseStaff() {
     modal.close(); // これでモーダルが閉じる
 }
 function InsertStaff() {
-    
-} 
+    const name = document.querySelector('#modal-body-name-text').value;
+    const role = document.querySelector('#modal-body-role-select').value;
+    const job = document.querySelector('#modal-body-job-select').value;
+
+    if (!name || !role || !job) {
+        alert('すべての項目を入力してください。');
+        return;
+    }
+
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/inManualstaff?name=${name}&role=${role}&job=${job}`, {
+        method: 'GET',
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('削除に失敗しました');
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            showStaffList();
+            // DB削除成功後に画面からバッジを取り除く
+        })
+        .catch(error => {
+            console.error('登録失敗しましたエラー:', error);
+            alert('スタッフの登録に失敗しました。');
+        });
+}
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
