@@ -355,7 +355,7 @@ function StaffApplications() {
            return response.json();
        })
        .then(data => {
-           alert(data);
+           alert(data.id);
            showStaffList();
            // DB削除成功後に画面からバッジを取り除く
        })
