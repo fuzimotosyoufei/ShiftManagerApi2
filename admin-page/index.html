@@ -86,7 +86,13 @@
             <div id="page-staff" class="content-staff">
                 <div class="tab-buttons">
                 </div>
-                <label><input type="radio" id="tab1" name="TAB" checked>スタッフ管理タブ
+                <div class="tab-button">
+                    <input type="radio" id="tab1" name="TAB" checked>
+                    <label for="tab1">スタッフ管理</label>
+                    <input type="radio" id="tab2" name="TAB">
+                    <label for="tab2">スタッフ申請・登録管理</label>
+                </div>
+                <label><input type="radio" class=tab-content id="content-tab1" name="TAB" checked>スタッフ管理タブ
                     <h2>👤 スタッフ管理</h2>
                     <div class="button-container">
                         <button type="button" id="staff-Edit-button">スタッフ編集
@@ -124,12 +130,12 @@
                     <ul id="staff-list"></ul>
             </div>
             </label>
-            <label><input type="radio" id="tab2" name="TAB">スタッフ申請タブ
+            <label><input type="radio" class=tab-content id="content-tab2" name="TAB">スタッフ申請タブ
                 <p>👤 スタッフ申請・登録管理（デモ版）</p>
                 <div class="staff-Application-container">
-                    <class="staff-Application-body">
+                    <div class="staff-Application-body">
                         <h3>スタッフ申請・登録管理</h3>
-                    </class>
+                    </div>
                 </div>
             </label>
         </div>

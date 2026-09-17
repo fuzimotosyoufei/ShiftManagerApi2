@@ -283,6 +283,30 @@
     margin: 0
 }
 
+.tab-button {
+    display: flex;
+    gap: 10px;
+}
+
+.tab-buttons label {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    /* 下の線を消してカードっぽくする */
+    border-radius: 6px 6px 0 0;
+    /* 上の角だけ丸くする */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* .tab-buttons input[type="radio"]:checked+label {
+    background-color: #007bff;
+    /* 選択中の背景色（青） */
+/* color: #fff; */
+/* 文字色（白） */
+/* border-color: #007bff; */
+/* }  */
 .staff-Application-container {
     border: 2px solid #e53e3e;
     border-radius: 8px;
