@@ -336,7 +336,7 @@
     gap: 10px;
 }
 
-.staff-application-list li {
+#staff-application-list li {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
     padding: 12 px 15px;
