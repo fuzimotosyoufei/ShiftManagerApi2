@@ -357,6 +357,7 @@ function StaffApplications() {
        .then(data => {
            alert(data[0].id);
            showStaffList();
+           StaffApplicationsList(data);
            // DB削除成功後に画面からバッジを取り除く
        })
        .catch(error => {
@@ -375,6 +376,31 @@ function StaffApplications() {
     //        // 💡 取得したデータ（配列）を関数に渡す
     //        showStaffList(data);
     //    })
+}
+function StaffApplicationsList(data) {
+    const listEl = document.getElementById('staff-application-list');
+
+    listEl.innerHTML = '';
+
+    // 2. データが空の場合の表示（親切設計）
+    if (!data || data.length === 0) {
+        listEl.innerHTML = '<p>現在、申請はありません。</p>';
+        return;
+    }
+    const li = document.createElement('li');
+    li.style.listStyle = 'none';
+    data.forEach(staff => {
+    li.innerHTML = `
+                    <div class="staff-Application-form" data-id="${staff.id}">
+                       <div class="staff-Application-row">
+                           <span class="staff-Application-id">ID: ${staff.line_id}</span>
+                           <strong class="staff-Application-name">${staff.name}</strong>
+                           <span class="role-Application-badge">${staff.status}</span>
+                       </div>
+                    </div>
+                `;
+listEl.appendChild(li);
+})
 }
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替

@@ -325,3 +325,9 @@
     box-sizing: border-box
         /* ぼーたボックスで100%よりでかくならずいい感じになる */
 }
+
+.staff-Application-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
