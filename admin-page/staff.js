@@ -339,6 +339,30 @@ function switchTab(tabId, button) {
     document.getElementById(tabId).classList.add('active');
     // 選択されたタブボタンにactiveクラスを追加
     button.classList.add('active');
+    if(tabId === 'content-tab2') {
+        StaffApplications();    
+    }
+}
+function StaffApplications() {
+   fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffapplicationlist', {
+       method: 'GET',
+       headers: {
+           'ngrok-skip-browser-warning': 'true'
+       }
+   })
+       .then(response => {
+           if (!response.ok) throw new Error('削除に失敗しました');
+           return response.json();
+       })
+       .then(data => {
+           alert(data);
+           showStaffList();
+           // DB削除成功後に画面からバッジを取り除く
+       })
+       .catch(error => {
+           console.error('登録失敗しましたエラー:', error);
+           alert('スタッフの登録に失敗しました。');
+       });
 }
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
