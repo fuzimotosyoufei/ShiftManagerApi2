@@ -287,17 +287,21 @@
     display: flex;
     gap: 10px;
 }
+
 .tab-content {
     display: none;
 }
+
 .tab-content.active {
     /* アクティブな時だけ表示 */
     display: block;
 }
+
 .tab-btn.active {
     background-color: #3182ce;
     color: white;
 }
+
 .tab-buttons label {
     padding: 10px 20px;
     background-color: #f0f0f0;
@@ -318,8 +322,8 @@
 /* border-color: #007bff; */
 /* }  */
 .staff-Application-container {
-    border: 2px solid #e53e3e;
-    border-radius: 8px;
+    border: 2px solid #ffffff;
+    /* border-radius: 8px; */
 
     width: 100%;
     box-sizing: border-box
@@ -330,4 +334,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.staff-application-list li {
+    border: solid 1px #006fe6;
+    margin-bottom: 20px;
+    padding: 12 px 15px;
+    backgound-color: #b0d6d6;
 }
