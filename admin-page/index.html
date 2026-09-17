@@ -84,43 +84,49 @@
 
             </div>
             <div id="page-staff" class="content-staff">
-                <h2>👤 スタッフ申請・登録管理（デモ版）</h2>
-                <div class="button-container">
-                    <button type="button" id="staff-Edit-button">スタッフ編集
-                    </button>
-                    <button type="button" id="staff-Insert-button" onclick=" OpenStaff()">スタッフ追加
-                    </button>
+                <div class="tab-buttons">
                 </div>
-                <dialog id="my-staff-modal">
-                    <div class="modal-staff-content">
-                        <div class="modal-staff-header">
-                            <h5>タイトルとか</h5>
-                            <button type="button" id="modal-staff-button" onclick="CloseStaff()">
-                                閉じる
-                            </button>
-                        </div>
-                        <div class="modal-staff-body">
-                            <p>名前入力:
-                                <input type="text" name="name" id="modal-body-name-text"></input>
-                            </p>
-                            <p>役割選択:
-                                <select  id="modal-body-role-select">
-                                    <option value="" disabled selected>選択してください</option>
-                                </select>
-                            </p>
-                            <p>役職選択:
-                                <select  id="modal-body-job-select">
-                                    <option value="" disabled selected>選択してください</option>
-                                </select>
-                            </p>
-                            <p><input type="button" value="決定" id="modal-body-button" onclick="InsertStaff()"></p>
-                
-                        </div>
+                <label><input type="radio" id="tab1" name="TAB" checked>
+                    <h2>👤 スタッフ管理</h2>
+                    <div class="button-container">
+                        <button type="button" id="staff-Edit-button">スタッフ編集
+                        </button>
+                        <button type="button" id="staff-Insert-button" onclick=" OpenStaff()">スタッフ追加
+                        </button>
                     </div>
-                </dialog>
-                
-                <ul id="staff-list"></ul>
+                    <dialog id="my-staff-modal">
+                        <div class="modal-staff-content">
+                            <div class="modal-staff-header">
+                                <h5>タイトルとか</h5>
+                                <button type="button" id="modal-staff-button" onclick="CloseStaff()">
+                                    閉じる
+                                </button>
+                            </div>
+                            <div class="modal-staff-body">
+                                <p>名前入力:
+                                    <input type="text" name="name" id="modal-body-name-text"></input>
+                                </p>
+                                <p>役割選択:
+                                    <select id="modal-body-role-select">
+                                        <option value="" disabled selected>選択してください</option>
+                                    </select>
+                                </p>
+                                <p>役職選択:
+                                    <select id="modal-body-job-select">
+                                        <option value="" disabled selected>選択してください</option>
+                                    </select>
+                                </p>
+                                <p><input type="button" value="決定" id="modal-body-button" onclick="InsertStaff()"></p>
+
+                            </div>
+                        </div>
+                    </dialog>
+                    <ul id="staff-list"></ul>
             </div>
+            </label>
+            <label><input type="radio" id="tab2" name="TAB">
+                <p>👤 スタッフ申請・登録管理（デモ版）</p>
+            </label>
         </div>
         <script src="app.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -130,5 +136,3 @@
 </body>
 
 </html>
-
-

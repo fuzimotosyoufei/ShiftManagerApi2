@@ -318,6 +318,7 @@ function InsertStaff() {
         })
         .then(data => {
             alert(data.message);
+            modal.close();
             showStaffList();
             // DB削除成功後に画面からバッジを取り除く
         })
