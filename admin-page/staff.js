@@ -283,7 +283,7 @@ function OpenStaff() {
 
     const roleSelect = document.querySelector('#modal-body-role-select');
     roleSelect.innerHTML = '<option value="" disabled selected>選択してください</option>' +
-        ROLES.map(role => `<option value="${role}">${role}</option>`).join('');
+        ROLE_MASTER.map(role => `<option value="${role}">${role}</option>`).join('');
     const jobSelect = document.querySelector('#modal-body-job-select');
     jobSelect.innerHTML = `<option value="" disabled selected>選択してください</option>` +
         JOB_MASTER.map(job => `<option value="${job}">${job}</option>`).join('');
