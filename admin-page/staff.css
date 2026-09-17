@@ -287,7 +287,13 @@
     display: flex;
     gap: 10px;
 }
-
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    /* アクティブな時だけ表示 */
+    display: block;
+}
 .tab-buttons label {
     padding: 10px 20px;
     background-color: #f0f0f0;
