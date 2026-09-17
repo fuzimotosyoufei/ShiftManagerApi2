@@ -280,6 +280,14 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
 // モーダルを開く処理
 function InsertStaff() {
     const modal = document.querySelector('#my-staff-modal');
+
+    const roleSelect = document.querySelector('#modal-body-role-select');
+    roleSelect.innerHTML = '<option value="" disabled selected>選択してください</option>' +
+        ROLES.map(role => `<option value="${role}">${role}</option>`).join('');
+    const jobSelect = document.querySelector('#modal-body-job-select');
+    jobSelect.innerHTML = `<option value="" disabled selected>選択してください</option>` +
+        JOB_MASTER.map(job => `<option value="${job}">${job}</option>`).join('');
+
     modal.showModal(); // これで背景が暗くなる標準モーダルが開く
 }
 
