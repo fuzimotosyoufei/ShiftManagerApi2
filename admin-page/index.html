@@ -88,14 +88,14 @@
                 <div class="button-container">
                     <button type="button" id="staff-Edit-button">スタッフ編集
                     </button>
-                    <button type="button" id="staff-Insert-button" onclick=" InsertStaff()">スタッフ追加
+                    <button type="button" id="staff-Insert-button" onclick=" OpenStaff()">スタッフ追加
                     </button>
                 </div>
                 <dialog id="my-staff-modal">
                     <div class="modal-staff-content">
                         <div class="modal-staff-header">
                             <h5>タイトルとか</h5>
-                            <button type="button" id="modal-staff-button" onclick="closeStaff()">
+                            <button type="button" id="modal-staff-button" onclick="CloseStaff()">
                                 閉じる
                             </button>
                         </div>
@@ -109,7 +109,7 @@
                                 </select>
                             </p>
                             <p>役職選択:
-                                <select  id="modal-body-position-select">
+                                <select  id="modal-body-job-select">
                                     <option value="" disabled selected>選択してください</option>
                                 </select>
                             </p>

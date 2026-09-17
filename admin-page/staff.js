@@ -278,7 +278,7 @@ function deleteJobFromStaff(staffId, jobName, buttonEl) {//buttonELの認識は�
         });
 }
 // モーダルを開く処理
-function InsertStaff() {
+function OpenStaff() {
     const modal = document.querySelector('#my-staff-modal');
 
     const roleSelect = document.querySelector('#modal-body-role-select');
