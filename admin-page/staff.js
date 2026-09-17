@@ -284,7 +284,7 @@ function InsertStaff() {
 }
 
 // モーダルを閉じる処理
-function CloseStaffModal() {
+function CloseStaff() {
     const modal = document.querySelector('#my-staff-modal');
     modal.close(); // これでモーダルが閉じる
 }
