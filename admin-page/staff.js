@@ -387,15 +387,43 @@ function StaffApplicationsList(data) {
         listEl.innerHTML = '<p>現在、申請はありません。</p>';
         return;
     }
-    const li = document.createElement('li');
-    li.style.listStyle = 'none';
+    
     data.forEach(staff => {
+        const li = document.createElement('li');
+        li.style.listStyle = 'none';
+        const roleOptions = ROLE_MASTER.map(role =>
+            `<option value="${role}" ${role === staff.role ? 'selected' : ''}>${role}</option>`
+        ).join('');
+
+        const addJobOptions = JOB_MASTER//回して職種を追加している
+            .map(job => `<option value="${job}">${job}</option>`)
+            .join('') + `<option value="__NEW__">＋ 新しい職種を追加...</option>`;//joinを消すことでカンマが消えて綺麗になる
+
+        // 登録中の職種（×ボタン付きバッジ）
+        const jobBadges = staff.jobs.map(job => `
+                    <span class="edit-job-badge">
+                        ${job}
+                        <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staff.id}, '${job}', this)">×</button>
+                    </span>
+                `).join('');
     li.innerHTML = `
                     <div class="staff-Application-form" data-id="${staff.id}">
                        <div class="staff-Application-row">
                            <span class="staff-Application-id">ID: ${staff.line_id}</span>
                            <strong class="staff-Application-name">${staff.name}</strong>
                            <span class="role-Application-badge">${staff.status}</span>
+                              <!-- 区分プルダウン -->
+                            <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
+                                ${roleOptions}
+                            </select>
+                        </div>
+
+                        <div class="edit-row-jobs">
+                            <span class="job-label">担当職種：</span>
+                            <div class="edit-job-list" id="job-container-${staff.id}">
+                                ${jobBadges}
+                            </div>
+                        </div>
                        </div>
                     </div>
                 `;
