@@ -460,14 +460,41 @@ listEl.appendChild(li);
         // showStaffList();
 })
 }
-function staffApplicationsConsent(staffId, lineId, name, status, newStatus) {
+function staffApplicationsConsent(staffId, lineId, name, status, count) {
     //役職選んでないとはじくように設定して
     //役職を送る方法を考えて
-    if (newStatus   === 1) {
+    if (count  === 1) {
         // 承諾処理（プルダウンで選ばれた職種を追加して申請を完了）
         const selectedJob = document.getElementById(`add-job-select-${staffId}`).value;
-        console.log(`スタッフID: ${staffId} の申請を承諾（追加職種: ${selectedJob}）`);
-    } else if (status === 2) {
+        const selectedRole = document.querySelector(`.edit-select-role[data-id="${staffId}"]`).value;
+        if (!selectedJob ) {
+            alert('職種を選択してください。');
+            return;
+        }else{
+            console.log(`スタッフID: ${staffId} ${status}の申請を承諾（追加職種: ${selectedJob}）${selectedRole}`);
+            fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffapplications', {
+                method: 'GET',
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('削除に失敗しました');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length > 0) alert(data[0].id);
+                    StaffApplicationsList(data);
+
+                    // DB削除成功後に画面からバッジを取り除く
+                })
+                .catch(error => {
+                    console.error('登録失敗しましたエラー:', error);
+                    alert('スタッフの登録に失敗しました。');
+                }); 
+        }
+        
+    } else if (count === 2) {
         // 却下処理（何も追加せずに申請を却下）
         console.log(`スタッフID: ${staffId} の申請を却下`);
     }
