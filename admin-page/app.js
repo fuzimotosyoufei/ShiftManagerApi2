@@ -220,7 +220,22 @@ function CreateCalend(date, ymdata) {
                     option.textContent = opt || "";
                     if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
                     select.appendChild(option);
-                })
+                });
+
+                select.addEventListener('change',  (e) =>{
+                    const selectedValue = e.target.value;
+                    const staffId = staff.id;
+                    const date = dateStr;
+                    console.log(`スタッフID: ${staffId}, 日付: ${date}, 選択された値: ${selectedValue}`);
+                    // ここでfetchを使ってサーバーに送信する処理を追加できます。
+                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&year=${ymdata.year}&month=${ymdata.month}`, {
+                        method: 'POST',
+                        headers: {
+                            'ngrok-skip-browser-warning': 'true'
+                        },
+                    })
+
+                });
                 shiftTd.appendChild(select);
             } else {
                 console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
