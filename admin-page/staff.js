@@ -326,7 +326,7 @@ function InsertStaff() {
         return;
     }
     
-    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${encodeURIComponent(name)}&role=${encodeURIComponent(role)}&job=${encodeURIComponent(job)}`, {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${encodeURIComponent(name)}&line_id=${"null"}&role=${encodeURIComponent(role)}&job=${encodeURIComponent(job)}`, {
         method: 'GET',
         headers: {
             'ngrok-skip-browser-warning': 'true'
@@ -472,14 +472,53 @@ function staffApplicationsConsent(staffId, lineId, name, status, count) {
             return;
         }else{
             console.log(`スタッフID: ${staffId} ${status}の申請を承諾（追加職種: ${selectedJob}）${selectedRole}`);
-          
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inManualstaff?name=${encodeURIComponent(name)}&line_id=${encodeURIComponent(lineId)}&role=${encodeURIComponent(selectedRole)}&job=${encodeURIComponent(selectedJob)}`, {
+                method: 'GET',
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('削除に失敗しました');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message || '登録が完了しました');
+                    staffApplicationsCheck(staffId, count);
+                    // DB削除成功後に画面からバッジを取り除く
+                })
+                .catch(error => {
+                    console.error('登録失敗しましたエラー:', error);
+                    alert('スタッフの登録に失敗しました。');
+                });
         }
         
     } else if (count === 2) {
         // 却下処理（何も追加せずに申請を却下）
         console.log(`スタッフID: ${staffId} ${status}の申請を却下`);
+        staffApplicationsCheck(staffId, count);
     }
 }
+function staffApplicationsCheck(staffId, count) {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffapplicationsCheck?id=${encodeURIComponent(staffId)}&count=${encodeURIComponent(count)}`, {
+        method: 'GET',
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('チェックに失敗しました');
+            return response.json();
+        })
+        .then(data => {
+            showStaffList();
+            // DB削除成功後に画面からバッジを取り除く
+        })
+        .catch(error => {
+            console.error('チェック失敗しましたエラー:', error);
+        });
+}
+
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
 // --------------------------------------------------
