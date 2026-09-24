@@ -221,6 +221,7 @@ function CreateCalend(date, ymdata) {
                     if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
                     select.appendChild(option);
                 })
+                shiftTd.appendChild(select);
             } else {
                 console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
                 shiftTd.textContent = yer;//要注意
