@@ -222,7 +222,7 @@ function CreateCalend(date, ymdata) {
                     select.appendChild(option);
                 });
 
-                select.addEventListener('change',  (e) =>{
+                select.addEventListener('change', (e) => {
                     const selectedValue = e.target.value;
                     const staffId = staff.id;
                     const date = dateStr;
@@ -233,17 +233,20 @@ function CreateCalend(date, ymdata) {
                         headers: {
                             'ngrok-skip-browser-warning': 'true'
                         }
-                         .then(response => {
-                             if (!response.ok) throw new Error('ロールの更新に失敗しました');
-                             return response.json();
-                         })
-                            .then(data => {
-                                alert(data.message || '更新が完了しました');
-                                // DB削除成功後に画面からバッジを取り除く
-                            })
                     })
-
-                });
+                        .then(response => {
+                            if (!response.ok) throw new Error('ロールの更新に失敗しました');
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.message || '更新が完了しました');
+                            // DB削除成功後に画面からバッジを取り除く
+                        })
+                })
+                    .catch(error => {
+                        console.error('エラー:', error);
+                        alert('更新に失敗しました。');
+                    });
                 shiftTd.appendChild(select);
             } else {
                 console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
