@@ -466,7 +466,7 @@ function staffApplicationsConsent(staffId, lineId, name, status, count) {
     if (count  === 1) {
         // 承諾処理（プルダウンで選ばれた職種を追加して申請を完了）
         const selectedJob = document.getElementById(`add-job-select-${staffId}`).value;
-        const selectedRole = document.querySelector(`.edit-select-role[data-id="${staffId}"]`).value;
+        const selectedRole = document.querySelector(`.staff-Application-form[data-id="${staffId}"] .edit-select-role`).value;
         if (!selectedJob ) {
             alert('職種を選択してください。');
             return;
