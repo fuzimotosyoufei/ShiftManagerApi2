@@ -431,38 +431,46 @@ function StaffApplicationsList(data) {
                         <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staff.id}, '${job}', this)">×</button>
                     </span>
                 `).join('');
-    li.innerHTML = `
-                    <div class="staff-Application-form" data-id="${staff.id}">
-                       <div class="staff-Application-row">
-                           <span class="staff-Application-id">ID: ${staff.line_id || staff.id}</span>
-                           <strong class="staff-Application-name">${staff.name}</strong>
-                           <span class="role-Application-badge">${staff.status}</span>
-                             <!-- 区分プルダウン -->
-                            <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
-                                ${roleOptions}
-                            </select>
-                        </div>
+        li.innerHTML = `
+            <div class="staff-Application-form" data-id="${staff.id}">
+                <div class="staff-Application-row">
+                    <strong class="staff-Application-name">${staff.name}</strong>
+                    <span class="role-Application-badge">${staff.status}</span>
+                    <!-- 区分プルダウン -->
+                    <select class="edit-select-role" onchange="updateRole('${staff.id}', this.value)">
+                        ${roleOptions}
+                    </select>
+                </div>
 
-                        <div class="edit-row-jobs">
-                            <span class="job-label">担当職種：</span>
-                            <div class="edit-job-list" id="job-container-${staff.id}">
-                                ${jobBadges}
-                            </div>
-                        </div>
-                       </div>
-                       <!-- 職種追加プルダウン領域を表示するコードを追加 -->
-                        <div class="add-job-area">
-                            <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
-                                <option value="" disabled selected>＋ 職種を追加...</option>
-                                ${addJobOptions}
-                            </select>
-                            <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
-                        </div>
-                    </div>
-                `;
+                <!-- 職種選択と申請ボタン領域 -->
+                <div class="add-job-area">
+                    <label for="add-job-select-${staff.id}">担当職種：</label>
+                    <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
+                        <option value="" disabled selected>＋ 職种を選択...</option>
+                        ${addJobOptions}
+                    </select>
+
+                    <!-- 1: 承諾 / 2: 却下 -->
+                    <button type="button" class="btn-add-job" onclick="staffApplicationsConsent('${staff.id}', '${staff.line_id}','${staff.name}','${staff.status}',1)">申請を承諾</button>
+                    <button type="button" class="btn-add-job" onclick="staffApplicationsConsent('${staff.id}', '${staff.line_id}','${staff.name}','${staff.status}',2)">申請を却下</button>
+                </div>
+            </div>
+    `;
 listEl.appendChild(li);
         // showStaffList();
 })
+}
+function staffApplicationsConsent(staffId, lineId, name, status, newStatus) {
+    //役職選んでないとはじくように設定して
+    //役職を送る方法を考えて
+    if (newStatus   === 1) {
+        // 承諾処理（プルダウンで選ばれた職種を追加して申請を完了）
+        const selectedJob = document.getElementById(`add-job-select-${staffId}`).value;
+        console.log(`スタッフID: ${staffId} の申請を承諾（追加職種: ${selectedJob}）`);
+    } else if (status === 2) {
+        // 却下処理（何も追加せずに申請を却下）
+        console.log(`スタッフID: ${staffId} の申請を却下`);
+    }
 }
 // --------------------------------------------------
 // イベント設定：編集ボタン押下でモード切替
