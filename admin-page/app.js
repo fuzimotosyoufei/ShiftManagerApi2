@@ -196,7 +196,7 @@ function CreateCalend(date, ymdata) {
 
 
 
-        for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ
+        for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ//要調べて
             // const shiftTd = document.createElement('td');
             // shiftTd.textContent = "希望";
             // tr.appendChild(shiftTd);
@@ -205,8 +205,24 @@ function CreateCalend(date, ymdata) {
             const shiftTd = document.createElement('td');
             const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
-            // shiftTd.textContent = yer;
-            shiftTd.textContent = yer;//要注意
+
+            if(!staff.line_id || staff.line_id === "null") {
+                const select = doucment.createElement('select');
+                select.classList.add('manual-shift-select');
+                select.setAttribute('data-staff-id', staff.id);
+                select.setAttribute('data-date', dateStr);
+
+                const options = ["", "日勤", "遅番", "休み"];
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt || ""; 
+                    if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
+                    select.appendChild(option);
+                })
+            }else {
+                shiftTd.textContent = yer;//要注意
+            }
             tr.appendChild(shiftTd);
 
         }
