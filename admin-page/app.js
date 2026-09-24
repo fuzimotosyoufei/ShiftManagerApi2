@@ -226,9 +226,10 @@ function CreateCalend(date, ymdata) {
                     const selectedValue = e.target.value;
                     const staffId = staff.id;
                     const date = dateStr;
+                    console.log(`選択された値: ${dateStr}`);
                     console.log(`スタッフID: ${staffId}, 日付: ${date}, 選択された値: ${selectedValue}`);
                     // ここでfetchを使ってサーバーに送信する処理を追加できます。
-                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&year=${ymdata.year}&month=${ymdata.month}`, {
+                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&selectedValue=${selectedValue}&year=${ymdata.year}&month=${ymdata.month}`, {
                         method: 'POST',
                         headers: {
                             'ngrok-skip-browser-warning': 'true'
