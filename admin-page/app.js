@@ -206,8 +206,8 @@ function CreateCalend(date, ymdata) {
             const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
 
-            if(!staff.line_id || staff.line_id === "null") {
-                const select = doucment.createElement('select');
+            if (!staff.line_id || staff.line_id === "null") {
+                const select = document.createElement('select');
                 select.classList.add('manual-shift-select');
                 select.setAttribute('data-staff-id', staff.id);
                 select.setAttribute('data-date', dateStr);
@@ -216,11 +216,11 @@ function CreateCalend(date, ymdata) {
                 options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt;
-                    option.textContent = opt || ""; 
+                    option.textContent = opt || "";
                     if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
                     select.appendChild(option);
                 })
-            }else {
+            } else {
                 shiftTd.textContent = yer;//要注意
             }
             tr.appendChild(shiftTd);
