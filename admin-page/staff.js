@@ -372,7 +372,7 @@ function StaffApplications() {
        }
    })
        .then(response => {
-           if (!response.ok) throw new Error('削除に失敗しました');
+           if (!response.ok) throw new Error('表示に');
            return response.json();
        })
        .then(data => {
@@ -511,7 +511,7 @@ function staffApplicationsCheck(staffId, count) {
             return response.json();
         })
         .then(data => {
-            showStaffList();
+            StaffApplications();
             // DB削除成功後に画面からバッジを取り除く
         })
         .catch(error => {
