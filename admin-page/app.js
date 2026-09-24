@@ -207,6 +207,7 @@ function CreateCalend(date, ymdata) {
             const yer = shiftLookup[dateStr] || "";
 
             if (!staff.line_id || staff.line_id === "null") {
+                console.log("動いたよstaff.line_idがnull" + staff.line_id);
                 const select = document.createElement('select');
                 select.classList.add('manual-shift-select');
                 select.setAttribute('data-staff-id', staff.id);
@@ -221,6 +222,7 @@ function CreateCalend(date, ymdata) {
                     select.appendChild(option);
                 })
             } else {
+                console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
                 shiftTd.textContent = yer;//要注意
             }
             tr.appendChild(shiftTd);
