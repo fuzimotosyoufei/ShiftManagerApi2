@@ -232,7 +232,15 @@ function CreateCalend(date, ymdata) {
                         method: 'POST',
                         headers: {
                             'ngrok-skip-browser-warning': 'true'
-                        },
+                        }
+                         .then(response => {
+                             if (!response.ok) throw new Error('ロールの更新に失敗しました');
+                             return response.json();
+                         })
+                            .then(data => {
+                                alert(data.message || '更新が完了しました');
+                                // DB削除成功後に画面からバッジを取り除く
+                            })
                     })
 
                 });
