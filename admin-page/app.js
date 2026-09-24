@@ -240,13 +240,13 @@ function CreateCalend(date, ymdata) {
                         })
                         .then(data => {
                             alert(data.message || '更新が完了しました');
-                            // DB削除成功後に画面からバッジを取り除く
+
                         })
-                })
-                    .catch(error => {
-                        console.error('エラー:', error);
-                        alert('更新に失敗しました。');
-                    });
+                        .catch(error => {
+                            console.error('エラー:', error);
+                            alert('更新に失敗しました。');
+                        });
+                });
                 shiftTd.appendChild(select);
             } else {
                 console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
