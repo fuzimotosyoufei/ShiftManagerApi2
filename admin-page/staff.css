@@ -370,8 +370,14 @@
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.2s;
+    margin-left: auto;
+    display: none;
 }
 
 .btn-delete-master-job:hover {
     background-color: #c53030;
+}
+.btn-delete-master-job.editing {
+    display: inline-block;
+    /* 表示させる */
 }

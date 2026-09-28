@@ -601,7 +601,7 @@ function staffApplicationsCheck(staffId, count) {
 document.addEventListener('DOMContentLoaded', () => {
     fetchJobMaster()
     const editBtn = document.getElementById('staff-Edit-button');
-
+    const deleteBtn = document.querySelector('btn-delete-master-job');
     if (editBtn) {
         editBtn.addEventListener('click', () => {
             // モードを反転
@@ -610,9 +610,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isEditMode) {
                 editBtn.textContent = 'スタッフ編集終了';
                 editBtn.classList.add('editing');
+                deleteBtn.classList.add('editing'); // 削除ボタンを表示
             } else {
                 editBtn.textContent = 'スタッフ編集';
                 editBtn.classList.remove('editing');
+                deleteBtn.classList.remove('editing');
                 // ※ここでC# APIへUPDATE処理を呼び出す処理を接続できます
             }
 
