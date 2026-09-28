@@ -601,7 +601,7 @@ function staffApplicationsCheck(staffId, count) {
 document.addEventListener('DOMContentLoaded', () => {
     fetchJobMaster()
     const editBtn = document.getElementById('staff-Edit-button');
-    const deleteBtn = document.querySelector('btn-delete-master-job');
+    const deleteBtn = document.getElementById('job-Master-button');
     if (editBtn) {
         editBtn.addEventListener('click', () => {
             // モードを反転
