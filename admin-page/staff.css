@@ -342,3 +342,36 @@
     padding: 12 px 15px;
     backgound-color: #b0d6d6;
 }
+
+/* 職種マスター削除ボタン (トップ画面) */
+.btn-job-master {
+    background-color: #718096;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-job-master:hover {
+    background-color: #4a5568;
+}
+
+/* モーダル内 削除確定ボタン */
+.btn-delete-master-job {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-delete-master-job:hover {
+    background-color: #c53030;
+}

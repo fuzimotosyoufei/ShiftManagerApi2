@@ -97,7 +97,9 @@
                         </button>
                         <button type="button" id="staff-Insert-button" onclick=" OpenStaff()">スタッフ追加
                         </button>
+                        <button type="button" id="job-Master-button" onclick="JobDelete()" class="btn-job-master">🏷️ 職種削除</button>
                     </div>
+
                     <dialog id="my-staff-modal">
                         <div class="modal-staff-content">
                             <div class="modal-staff-header">
@@ -127,6 +129,28 @@
                     </dialog>
                     <ul id="staff-list"></ul>
                 </div>
+
+                <dialog>
+
+                </dialog>
+                <dialog id="my-job-modal">
+                    <div class="modal-staff-content">
+                        <div class="modal-staff-header">
+                            <h5>🏷️ 職種マスター削除</h5>
+                            <button type="button" onclick="CloseJobDelete()">閉じる</button>
+                        </div>
+                        <div class="modal-staff-body">
+                            <div>
+                                <p style="font-weight: bold; margin-bottom: 8px;">削除する職種を選択してください：</p>
+                                <select id="delete-master-job-select" style="padding: 6px; font-size: 0.95rem; margin-right: 8px;">
+                                    <option value="" disabled selected>選択してください...</option>
+                                </select>
+                                <button type="button" class="btn-delete-master-job" onclick="deleteJobMasterFromModal()">削除</button>
+                            </div>
+                        </div>
+                    </div>
+                </dialog>
+
                 <div class="tab-content" id="content-tab2">
                     <p>👤 スタッフ申請・登録管理（デモ版）</p>
                     <div class="staff-Application-container">

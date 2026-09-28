@@ -144,7 +144,7 @@ function showStaffList() {
                                 ${addJobOptions}
                             </select>
                             <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
-                        </div>
+                          
                     </div>
                 `;
             }
@@ -346,6 +346,82 @@ function InsertStaff() {
             console.error('登録失敗しましたエラー:', error);
             alert('スタッフの登録に失敗しました。');
         });
+}
+// --------------------------------------------------
+// 職種マスター削除モーダル関連処理
+// --------------------------------------------------
+
+// モーダルを開く
+function OpenJobDelete() {
+    const dialog = document.getElementById('my-job-modal');
+    updateJobMasterSelectOptions(); // セレクトボックスを最新にする
+    if (dialog) dialog.showModal();
+}
+
+// モーダルを閉じる
+function CloseJobDelete() {
+    const dialog = document.getElementById('my-job-modal');
+    if (dialog) dialog.close();
+}
+
+// モーダル内の削除対象プルダウンを更新する関数
+function updateJobMasterSelectOptions() {
+    const selectEl = document.getElementById('delete-master-job-select');
+    if (!selectEl) return;
+
+    let html = '<option value="" disabled selected>選択してください...</option>';
+    if (typeof JOB_MASTER !== 'undefined' && Array.isArray(JOB_MASTER)) {
+        JOB_MASTER.forEach(job => {
+            html += `<option value="${job}">${job}</option>`;
+        });
+    }
+    selectEl.innerHTML = html;
+}
+
+// 選択した職種をマスターから削除する関数
+async function deleteJobMasterFromModal() {
+    const selectEl = document.getElementById('delete-master-job-select');
+    if (!selectEl) return;
+
+    const jobName = selectEl.value;
+    if (!jobName) {
+        alert('削除する職種を選択してください。');
+        return;
+    }
+
+    if (!confirm(`「${jobName}」を職種マスターから削除しますか？\n（※全ての選択肢から除去されます）`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljobmaster?jobname=${encodeURIComponent(jobName)}`, {
+            method: 'GET',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+
+        if (!response.ok) throw new Error('削除処理に失敗しました');
+
+        // 配列（JOB_MASTER）から対象職種を削除
+        if (typeof JOB_MASTER !== 'undefined') {
+            JOB_MASTER = JOB_MASTER.filter(j => j !== jobName);
+        }
+
+        alert(`「${jobName}」を職種マスターから削除しました。`);
+
+        // モーダル内のプルダウン更新
+        updateJobMasterSelectOptions();
+
+        // スタッフ一覧全体のプルダウンを再描画
+        if (typeof showStaffList === 'function') {
+            showStaffList();
+        }
+
+    } catch (error) {
+        console.error('職種マスター削除エラー:', error);
+        alert('職種の削除に失敗しました。');
+    }
 }
 function switchTab(tabId, button) {
     // すべてのタブコンテンツを非表示にする
