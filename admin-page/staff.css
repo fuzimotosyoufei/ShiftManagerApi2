@@ -361,7 +361,7 @@
 }
 
 #job-Master-button {
-    display: none;
+    /* display: none; */
 }
 
 /* モーダル内 削除確定ボタン */
@@ -384,5 +384,5 @@
 
 .btn-delete-master-job.editing {
     display: inline-block;
-    /* 表示させる */
+   
 }
