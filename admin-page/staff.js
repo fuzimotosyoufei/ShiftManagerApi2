@@ -394,44 +394,41 @@ async function deleteJobMasterFromModal() {
     }
 
     try {
-        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljobmaster?jobname=${encodeURIComponent(jobName)}`, {
+        const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deljobmaster?jobname=${encodeURIComponent(jobName)}`, {
             method: 'GET',
             headers: {
                 'ngrok-skip-browser-warning': 'true'
             }
-        })
-            .then(response => {
-                  if (!response.ok) throw new Error('削除に失敗しました');
-                  return response.json();
-              })
-            .then(data => {
-                if(data.message === '全てのスタッフから削除される職種をなくしてください') {
-                    alert(data.message);
-                    return;
-                }else {
-                    // メモリ上のマスター配列から削除
-                    if (typeof JOB_MASTER !== 'undefined') {
-                        JOB_MASTER = JOB_MASTER.filter(j => j !== jobName);
-                    }
+        });
 
-                    alert(`「${jobName}」を職種マスターから削除しました。`);
+        if (!response.ok) throw new Error('削除に失敗しました');
 
-                    // モーダル内のプルダウン更新
-                    updateJobMasterSelectOptions();
+        const data = await response.json();
 
-                    // スタッフ一覧全体のプルダウンを再描画
-                    if (typeof showStaffList === 'function') {
-                        showStaffList();
-                    }
-                }
-            })
+        if (data.message === '全てのスタッフから削除される職種をなくしてください') {
+            alert(data.message);
+            return;
+        }
+
+        // メモリ上のマスター配列から削除
+        if (typeof JOB_MASTER !== 'undefined') {
+            JOB_MASTER = JOB_MASTER.filter(j => j !== jobName);
+        }
+
+        alert(`「${jobName}」を職種マスターから削除しました。`);
+
+        // モーダル内のプルダウン更新
+        updateJobMasterSelectOptions();
+
+        // スタッフ一覧全体のプルダウンを再描画
+        if (typeof showStaffList === 'function') {
+            showStaffList();
+        }
+
     } catch (error) {
         console.error('職種マスター削除エラー:', error);
         alert('職種の削除に失敗しました。');
     }
-
-        
-  
 }
 function switchTab(tabId, button) {
     // すべてのタブコンテンツを非表示にする
