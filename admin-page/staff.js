@@ -123,7 +123,9 @@ function showStaffList() {
                             
                             <!-- 名前変更インプット -->
                             <input type="text" class="edit-input-name" value="${staff.name}" placeholder="名前">
-                            
+
+                            <button type="button" class="btn-change-name" onclick="addchangename('${staff.id}', this)">名前変更</button>
+                          
                             <!-- 区分プルダウン -->
                             <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
                                 ${roleOptions}
@@ -156,6 +158,45 @@ function showStaffList() {
             console.error('データ取得エラー:', error);
         });
 }
+//名前の変更
+// 💡 async を追加
+async function addchangename(staffId, buttonEl) {
+    const inputEl = buttonEl.parentElement.querySelector('.edit-input-name');
+    const newName = inputEl ? inputEl.value : '';
+
+    if (!newName.trim()) {
+        alert('名前を入力してください。');
+        return;
+    }
+
+    // 💡 try...catch でエラーハンドリング
+    try {
+        const response = await fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/namechangename?staffId=${staffId}&newName=${encodeURIComponent(newName)}`, {
+            method: 'GET',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+
+        if (!response.ok) throw new Error('名前変更に失敗しました');
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        // 成功したら一覧を再描画
+        if (typeof showStaffList === 'function') {
+            showStaffList();
+        }
+
+    } catch (error) {
+        console.error('名前変更エラー:', error);
+        alert('名前の変更に失敗しました。');
+    }
+}
+
+
+
 // --------------------------------------------------
 // 職種を動的に追加する関数
 // --------------------------------------------------
