@@ -304,7 +304,7 @@
                             userName = profile.displayName;
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
-                           
+
                             checkUserid(lineid, userName);
                         });
                     }
@@ -336,7 +336,7 @@
                         // display を 'flex' に変更して表示
                         document.getElementById('register-modal').style.display = 'flex';
                     } else {
-                         alert("OK許可が出るまで待ってね");
+
                         CalendarData(lineid);
                     }
                 });
@@ -404,6 +404,7 @@
 
 
         function CalendarData(lineid) {
+            alert("OK許可が出るまで待ってね11");
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true'
@@ -415,6 +416,7 @@
 
                 })
                 .then(data => {
+                    alert("OK許可が出るまで待ってね222");
                     console.log("C#から届いた生データはこれだ！:", data);
                     const year = data.year;
                     const month = data.month;
@@ -433,14 +435,17 @@
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
+                    alert("OK許可が出るまで待ってね333");
                     //すでにその月のカレンダーに入力していてそれを表示する処理-----------------------------------------------------------------------------------------------------------------------------------------    
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
+
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しましたたたた'); return response.json(); })
                         .then(staff_id => {
                             if (staff_id === null) {
                                 console.log("スタッフがまだ登録されてないよ")
                                 Event(null);
                             } else {
+                                alert("OK許可が出るまで待ってね444");
                                 console.log("スタッフがすでにあるかのデータだよ", staff_id);
                                 // alert(staff_id);
 
