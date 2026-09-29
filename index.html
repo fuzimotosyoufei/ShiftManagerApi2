@@ -303,7 +303,7 @@
                         liff.getProfile().then(profile => {
                             userName = profile.displayName;
                             lineid = profile.userId;
-                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" + lineid;
+                            document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん" ;
 
                             checkUserid(lineid, userName);
                         });
@@ -418,17 +418,16 @@
                     const year = data.year;
                     const month = data.month;
                     periods_id = data.id;
+
+                    const prevLastDateObj = new Date(year, month - 1, 0);
+                    const prevYear = prevLastDateObj.getFullYear();
+                    const prevMonthStr = String(prevLastDateObj.getMonth() + 1).padStart(2, '0');
+                    const prevDayStr = String(prevLastDateObj.getDate()).padStart(2, '0');//前の月の最終日の計算
+
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
-
-
                     const lastDay = new Date(year, month, 1).getDate();//多分5月のはじめを計算している
                     alert(lastDay);
-                    //const lastDay = new Date(year, month+1, 0).getDate();
-
-                    //  const lastDay = new Date(year, month, 0).getDate();//もっとまじめに考えたほうがいい
-
-                    // // 1桁の日の場合に '01' や '09' のようにゼロパディング（2桁化）する
                     const endDayStr = String(lastDay).padStart(2, '0');
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
@@ -455,7 +454,7 @@
                                         document.getElementById("Text-message").value = data.memo || "";
                                         Event(shift_reqs_id);
 
-                                        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                                        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}&prev_date=${prevDateStr}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                             .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
                                             .then(dates => {
                                                 console.log("日付", dates);
@@ -531,13 +530,18 @@
                 dateClick: function (info) {
 
                     const clickedDate = info.dateStr;//日付をclickeDateに入れている
+
                     console.log("データ", info.dateStr)
                     console.log("データ", typeof info)
                     const existsindex = selectedDates.findIndex(item =>//これには番号が入っている
                         item.date == clickedDate
 
                     );
+                    if(前日と翌日の日を取得する処理){
 
+                    }else{
+
+                    
                     if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
                         if (selectedDates[existsindex].mode == selectstamps) {
                             selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
@@ -565,6 +569,7 @@
                     }
 
                 }
+            }
             });
 
             // refreshCalendarEvents();
@@ -580,7 +585,7 @@
             } else if (stamp === "夜勤") {
                 element.style.backgroundColor = '#9b59b6';
             } else {
-                element.style.backgroundColor = '#fef9e7';
+                element.style.backgroundColor = '#b9ce31';
             }
 
             let label = element.querySelector('.shift-stamp-label');
