@@ -390,12 +390,12 @@
                     })
                     .then(data => {
                         // 200 OK のとき（「申請を受け付けました」等）
-                        alert(data.message);
+                        // alert(data.message);
                         document.getElementById('register-modal').style.display = 'none';
                     })
                     .catch(error => {
                         // 400 エラーのとき（「現在管理者による承認待ち（申請中）です。」等）
-                        alert(error.message);
+                        // alert(error.message);
                     });
 
             }
@@ -427,7 +427,7 @@
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
                     const lastDay = new Date(year, month, 1).getDate();//多分5月のはじめを計算している
-                    alert(lastDay);
+                    // alert(lastDay);
                     const endDayStr = String(lastDay).padStart(2, '0');
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
