@@ -537,10 +537,7 @@
                         item.date == clickedDate
 
                     );
-                    if (前日と翌日の日を取得する処理) {
-
-                    } else {
-
+                  
 
                         if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
                             if (selectedDates[existsindex].mode == selectstamps) {
@@ -566,7 +563,7 @@
                                 mode: selectstamps
                             });//何かが足りない
                             updateCellColor(info.dayEl, selectstamps);
-                        }
+                        
 
                     }
                 }
@@ -822,7 +819,7 @@
                 })
                 .then(data => {
                     // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
-                    alert(data.message);
+                    // alert(data.message);
 
                     // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
                     if (liff.isInClient()) {
