@@ -304,7 +304,7 @@
                             userName = profile.displayName;
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
-
+                            alert("OK許可が出るまで待ってね");
                             checkUserid(lineid, userName);
                         });
                     }
@@ -441,7 +441,7 @@
                                 Event(null);
                             } else {
                                 console.log("スタッフがすでにあるかのデータだよ", staff_id);
-                                alert(staff_id);
+                                // alert(staff_id);
 
                                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
