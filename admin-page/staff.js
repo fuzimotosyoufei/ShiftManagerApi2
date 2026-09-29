@@ -564,6 +564,7 @@ function StaffApplicationsList(data) {
                     <select class="edit-select-role" onchange="updateRole('${staff.id}', this.value)">
                         ${roleOptions}
                     </select>
+                    <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}')">スタッフを削除</button>
                 </div>
 
                 <!-- 職種選択と申請ボタン領域 -->

@@ -336,6 +336,19 @@
     gap: 10px;
 }
 
+.staff-Application-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.btn-staff-delete {
+    background-color: #e72b06;
+    text-align: center;
+    position: absolute;
+    right: 0;
+}
+
 #staff-application-list li {
     border: solid 1px #006fe6;
     margin-bottom: 20px;
@@ -384,5 +397,5 @@
 
 .btn-delete-master-job.editing {
     display: inline-block;
-   
+
 }
