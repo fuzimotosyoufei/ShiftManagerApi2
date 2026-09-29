@@ -158,6 +158,7 @@
 .edit-row {
     display: flex;
     align-items: center;
+    position: relative;
     gap: 10px;
 }
 
@@ -166,6 +167,12 @@
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+}
+.btn-staff-delete {
+    background-color: #e72b06;
+    text-align: center;
+    position: absolute;
+    right: 0;
 }
 
 .edit-input-name {
@@ -336,18 +343,13 @@
     gap: 10px;
 }
 
-.staff-Application-row {
-    position: relative;
+/* .staff-Application-row {
+    
     display: flex;
     align-items: center;
-}
+} */
 
-.btn-staff-delete {
-    background-color: #e72b06;
-    text-align: center;
-    position: absolute;
-    right: 0;
-}
+
 
 #staff-application-list li {
     border: solid 1px #006fe6;
