@@ -163,7 +163,24 @@ function deleteStaff(staffId, staffName){
     const result = window.confirm(`${staffName}'さんを本当に削除しますか？`);
 
     if (result) {
-        // OKが押された場合のみ削除処理を実行
+        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/deletestaff?staffId=${staffId}`, {
+            method: 'POST',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('削除に失敗しました');
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message || 'スタッフを削除しました');
+                showStaffList();
+            })
+            .catch(error => {
+                console.error('職種追加エラー:', error);
+                alert('職種の追加に失敗しました。');
+            });
         console.log("削除を実行しました");
         // ここにDB更新やAPI呼び出しの処理を書く
     } else {
