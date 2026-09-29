@@ -130,7 +130,7 @@ function showStaffList() {
                             <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
                                 ${roleOptions}
                             </select>
-                             <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}')">スタッフを削除</button>
+                             <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}', '${staff.name}')">スタッフを削除</button>
                         </div>
 
                         <div class="edit-row-jobs">
@@ -159,8 +159,8 @@ function showStaffList() {
             console.error('データ取得エラー:', error);
         });
 }
-function deleteStaff(staffId){
-    const result = window.confirm(`${staffName}さんを本当に削除しますか？`);
+function deleteStaff(staffId, staffName){
+    const result = window.confirm(`${staffName}'さんを本当に削除しますか？`);
 
     if (result) {
         // OKが押された場合のみ削除処理を実行
