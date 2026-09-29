@@ -542,6 +542,11 @@
                         if (selectedDates[existsindex].mode == selectstamps) {
                             selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
                             info.dayEl.style.backgroundColor = '#ffffff';
+
+                            const label = info.dayEl.querySelector('.shift-stamp-label');
+                            if (label) {
+                                label.remove();
+                            }
                         } else {
                             selectedDates.splice(existsindex, 1); // まず古いデータを消す
                             selectedDates.push({
@@ -577,6 +582,28 @@
             } else {
                 element.style.backgroundColor = '#fef9e7';
             }
+
+            let label = element.querySelector('.shift-stamp-label');
+
+            if (!label) {
+                // なければ作成して追加
+                label = document.createElement('div');
+                label.className = 'shift-stamp-label';
+                // 見やすさのためのスタイリング
+                label.style.color = '#ffffff'; // 白文字
+                label.style.fontWeight = 'bold';
+                label.style.fontSize = '12px';
+                label.style.textAlign = 'center';
+                label.style.marginTop = '4px';
+                label.style.pointerEvents = 'none'; // クリックイベントを通過させる
+
+                // 日付セルのフレーム内に追加（FullCalendarのセル構成に合わせる）
+                const dayFrame = element.querySelector('.fc-daygrid-day-frame') || element;
+                dayFrame.appendChild(label);
+            }
+
+            // テキストの設定
+            label.textContent = stamp;
         }
 
         // イベント欄の作成----------------------------------------------------------------------------------------------------------------------------------------
