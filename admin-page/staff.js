@@ -159,8 +159,18 @@ function showStaffList() {
             console.error('データ取得エラー:', error);
         });
 }
-//名前の変更
-// 💡 async を追加
+function deleteStaff(staffId){
+    const result = window.confirm(`${staffName}さんを本当に削除しますか？`);
+
+    if (result) {
+        // OKが押された場合のみ削除処理を実行
+        console.log("削除を実行しました");
+        // ここにDB更新やAPI呼び出しの処理を書く
+    } else {
+        // キャンセルされた場合
+        console.log("削除をキャンセルしました");
+    }
+}
 async function addchangename(staffId, buttonEl) {
     const inputEl = buttonEl.parentElement.querySelector('.edit-input-name');
     const newName = inputEl ? inputEl.value : '';
