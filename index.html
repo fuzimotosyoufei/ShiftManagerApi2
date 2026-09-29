@@ -822,7 +822,7 @@
                 })
                 .then(data => {
                     // C#側から return Ok(new { message = "..." }) で返ってきた文字を表示
-                    alert(data.message);
+                    // alert(data.message);
 
                     // LINEの中で開いている場合は、送信後に自動でトーク画面を閉じる
                     if (liff.isInClient()) {
