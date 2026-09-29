@@ -404,7 +404,7 @@
 
 
         function CalendarData(lineid) {
-            alert("OK許可が出るまで待ってね11");
+            
             fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/calendar', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true'
@@ -416,7 +416,7 @@
 
                 })
                 .then(data => {
-                    alert("OK許可が出るまで待ってね222");
+                    
                     console.log("C#から届いた生データはこれだ！:", data);
                     const year = data.year;
                     const month = data.month;
@@ -430,7 +430,7 @@
                     const startMonthStr = String(month).padStart(2, '0');
                     startDateStr = `${year}-${startMonthStr}-01`;
                     const lastDay = new Date(year, month, 1).getDate();//多分5月のはじめを計算している
-                    alert(lastDay);
+                    // alert(lastDay);
                     const endDayStr = String(lastDay).padStart(2, '0');
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
