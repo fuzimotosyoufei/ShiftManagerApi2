@@ -175,8 +175,11 @@
         <h2>📅 シフト希望休申請</h2>
         <div class="palette-container">
             <button class="stamp-btn" data-mode="日勤" onclick="selectstamp('日勤')">日勤</button>
+            <button class="stamp-btn " data-mode="早番" onclick="selectstamp('早番')">早番</button>
             <button class="stamp-btn" data-mode="遅番" onclick="selectstamp('遅番')">遅番</button>
+            <button class="stamp-btn " data-mode="夜勤" onclick="selectstamp('夜勤')">夜勤</button>
             <button class="stamp-btn UN" data-mode="休み" onclick="selectstamp('休み')">休み</button>
+
         </div>
         <div id="calendar"></div>
         <h2>備考欄</h2>
@@ -567,6 +570,10 @@
                 element.style.backgroundColor = '#ff4d4d';
             } else if (stamp === "日勤") {
                 element.style.backgroundColor = '#3498db';
+            } else if (stamp === "早番") {
+                element.style.backgroundColor = '#2ecc71';
+            } else if (stamp === "夜勤") {
+                element.style.backgroundColor = '#9b59b6';
             } else {
                 element.style.backgroundColor = '#fef9e7';
             }
