@@ -304,7 +304,7 @@
                             userName = profile.displayName;
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
-                            alert("OK許可が出るまで待ってね");
+                           
                             checkUserid(lineid, userName);
                         });
                     }
@@ -336,6 +336,7 @@
                         // display を 'flex' に変更して表示
                         document.getElementById('register-modal').style.display = 'flex';
                     } else {
+                         alert("OK許可が出るまで待ってね");
                         CalendarData(lineid);
                     }
                 });
