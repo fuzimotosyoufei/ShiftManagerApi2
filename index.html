@@ -188,7 +188,7 @@
 
 
         </div>
-        <div class="palette-container">
+        <!-- <div class="palette-container">
             <h2>15日は職員会議です。参加の意思を確認します。</h2>
             <div class="radio-sample-container">
                 <label class="radio-label">
@@ -212,7 +212,7 @@
                     <input type="radio" disabled> いいえ
                 </label>
             </div>
-        </div>
+        </div> -->
 
     </div>
 
@@ -325,7 +325,7 @@
                 })
                 .then(data => {
                     if (!data.message) {
-                        alert("ダメ重だよ");
+                        alert("失敗しました");
                         document.getElementById('modal-line-name').value = lineid;
                         // loadJobOptions();
                         const staff = document.getElementById('modal-staff-name');
