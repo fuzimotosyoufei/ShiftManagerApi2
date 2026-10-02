@@ -304,7 +304,7 @@
                             userName = profile.displayName;
                             lineid = profile.userId;
                             document.getElementById('user-info').innerText = "こんにちは、" + userName + " さん";
-                             alert(lineid, userName);
+
                             checkUserid(lineid, userName);
                         });
                     }
@@ -442,6 +442,7 @@
                         .then(response => { if (!response.ok) throw new Error('データの取得に失敗しました'); return response.json(); })
                         .then(staff_id => {
                             if (!staff_id || staff_id.staffId === null || staff_id.staffId === undefined) {
+                                console.log(staff_id)
                                 console.log("スタッフがまだ登録されてないよ")
                                 Event(null);
                             } else {
