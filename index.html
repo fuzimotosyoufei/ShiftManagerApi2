@@ -435,7 +435,7 @@
                     endDateStr = `${year}-${startMonthStr}-${lastDay}`;
 
                     initCalendar(startDateStr, endDateStr);
-                  
+
                     //すでにその月のカレンダーに入力していてそれを表示する処理-----------------------------------------------------------------------------------------------------------------------------------------    
                     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/staffid?line_id=${lineid}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })//？から後が送るデータ送るデータは受け取る側の変数名と同じにすることでデータを渡すことができるline_idからstaffidがあるかの処理 今はカレンダー送信を押したときにこの処理をしているため二重に処理を行っている初めにこの処理をしたら大丈夫になると思う
 
@@ -545,39 +545,39 @@
                         item.date == clickedDate
 
                     );
-                    if (前日と翌日の日を取得する処理) {
+                    // if (前日と翌日の日を取得する処理) {
 
-                    } else {
+                    // } else {
 
 
-                        if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
-                            if (selectedDates[existsindex].mode == selectstamps) {
-                                selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
-                                info.dayEl.style.backgroundColor = '#ffffff';
+                    if (existsindex !== -1) {//selectedDatesは選んでいる日付を一時的に入れる配列 includesはカレンダーで選ばれているかを判定 配列の中に今カレンダーでクリックされている日付があるかを判定して言う
+                        if (selectedDates[existsindex].mode == selectstamps) {
+                            selectedDates.splice(existsindex, 1)//リストの番号とそこから何個消すでプログラムを書いている
+                            info.dayEl.style.backgroundColor = '#ffffff';
 
-                                const label = info.dayEl.querySelector('.shift-stamp-label');
-                                if (label) {
-                                    label.remove();
-                                }
-                            } else {
-                                selectedDates.splice(existsindex, 1); // まず古いデータを消す
-                                selectedDates.push({
-                                    date: clickedDate,
-                                    mode: selectstamps
-                                });
-                                updateCellColor(info.dayEl, selectstamps);
-
+                            const label = info.dayEl.querySelector('.shift-stamp-label');
+                            if (label) {
+                                label.remove();
                             }
                         } else {
+                            selectedDates.splice(existsindex, 1); // まず古いデータを消す
                             selectedDates.push({
                                 date: clickedDate,
                                 mode: selectstamps
-                            });//何かが足りない
+                            });
                             updateCellColor(info.dayEl, selectstamps);
-                        }
 
+                        }
+                    } else {
+                        selectedDates.push({
+                            date: clickedDate,
+                            mode: selectstamps
+                        });//何かが足りない
+                        updateCellColor(info.dayEl, selectstamps);
                     }
+
                 }
+                // }
             });
 
             // refreshCalendarEvents();
