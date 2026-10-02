@@ -493,20 +493,27 @@
         function Event(shift_reqs_id) {
             console.log("データこれ", shift_reqs_id);
 
-            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
-                // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event', { headers: { 'ngrok-skip-browser-warning': 'true' } })
-                .then(response => { if (!response.ok) throw new Error('データの取得に失敗しまし'); return response.json(); })
+            // shift_reqs_id が null、undefined、空文字などの場合は処理を中断する
+            if (!shift_reqs_id) {
+                console.warn("shift_reqs_id が指定されていないため、取得処理をスキップしました。");
+                return;
+            }
+
+            fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, {
+                headers: { 'ngrok-skip-browser-warning': 'true' }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('データの取得に失敗しました');
+                    return response.json();
+                })
                 .then(data => {
                     console.log("データこれ", data);
-
                     initEvent(data);
-
                 })
                 .catch(error => {
                     console.error('エラー', error);
-                })
+                });
         }
-
         //カレンダーの履歴の色を変える処理作成処理----------------------------------------------------------------------------------------------------------------------------------------
         function HistoryDay(calendar, date, mode) {
             const dayEl = calendarEl.querySelector(`[data-date="${date}"]`);
