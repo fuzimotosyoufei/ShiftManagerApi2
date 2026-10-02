@@ -302,14 +302,11 @@ async function InJob(staffId) {//新しい職種を追加する処理
             });
 
             if (!response.ok) throw new Error('マスター追加に失敗しました');
-
-            // 2. メモリ上のマスター配列にも追加
-            // if (!JOB_MASTER.includes(trimmedJobName)) {
-            //     JOB_MASTER.push(trimmedJobName);
-            // }
+            const data = response.json();
             JOB_MASTER.push(trimmedJobName);
             selectedJob = trimmedJobName;
-            showStaffList();
+            alert(data.message);
+            updateJobMasterSelectOptions();
         } catch (e) {
             console.error('エラー詳細:', e);
             selectEl.selectedIndex = 0;
