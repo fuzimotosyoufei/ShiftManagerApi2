@@ -13,7 +13,7 @@ namespace ShiftManagerApi2.Controllers
     public class ShiftController : ControllerBase
 
     {
-
+        
         // 📥 届いたシフトデータを一時的に溜めておくためのリスト（メモリ上の簡易DB）
         private static readonly List<ShiftSubmission> _shiftList = new List<ShiftSubmission>();
 
@@ -31,7 +31,7 @@ namespace ShiftManagerApi2.Controllers
 
             if (data == null || string.IsNullOrEmpty(data.Name))
             {
-                return BadRequest(new { message = "データが正しく送信されませんでした。" });
+                return BadRequest(new { message = "データが正しく送信されませんでした。2" });
             }
             //1ラインのIDがあるかを足し舞えている
             try//データベースの処理
@@ -39,6 +39,13 @@ namespace ShiftManagerApi2.Controllers
                 using (var conn = _db.CreateConnection())
                 {
                     staff_id = GetID(data.id, data.Name);
+                    if (staff_id == null || staff_id == 0)
+                    {
+                       return Ok(new { 
+                           line_id =  data.id,
+                           name = data.Name,
+                            });
+                    }
                     reqs_id = GetReqID(staff_id ?? 0, data.Year, data.Month) ?? 0; //??idがnullのときは0を入れるようにしている、最後の??は結果がnullなら0を入れる処理。
                                                                                    //if (staff_id !=0)
                     if (reqs_id != 0)
@@ -47,23 +54,57 @@ namespace ShiftManagerApi2.Controllers
                     }
                     else
                     {
-                        int newReqsId = InsertReqsId(staff_id ?? 0, data.Memo, data.Year, data.Month, data.Dates) ?? 0;//reqs_idの登録処理に行く
-                        a = "たぶんないよ";//新規に入れる処理を書く
+                        Console.WriteLine("実行されたよ1（データがないことを確認した！）");
+                        //int newReqsId = InsertReqsId(staff_id ?? 0, data.Memo, data.Year, data.Month, data.Dates, data.Answer) ?? 0;
+                        //a = "新規登録完了";
                     }
 
                 }
+                //return Ok(new { message = $"🎉 {a} さんのシフト希望を登録しました！" });
+                return Ok(new { message = $" シフト希望の登録が完了しました" });
             }
 
             catch (NpgsqlException ex)
             {
-                return BadRequest(new { message = "データが正しく送信されませんでした。{a}" });
+                Console.WriteLine($"【DBエラー詳細】: {ex.Message}");
+                return BadRequest(new { message = $"DBエラーが発生しました: {ex.Message}" });
+            }
+            // 💡【既存のcatch】その他の一般エラー用
+            catch (Exception ex)
+            {
+                Console.WriteLine($"【全般エラー詳細】: {ex.Message}");
+                return StatusCode(500, new { message = $"サーバーエラー: {ex.Message}" });
             }
 
-            _shiftList.Add(data);
+        }
 
-            // HTML側の alert(data.message) に表示される文字をお返しする
-            return Ok(new { message = $"🎉 {data.Year}{data.Month} {a} さんのシフト希望を登録しました！555555555555" });
+        [HttpGet("CheckUserid")]
+        public IActionResult CheckUsertid([FromQuery(Name ="GetId")] string line_id, [FromQuery(Name = "GetName")] string name)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string CheckUsertid_sql = "SELECT id FROM staff WHERE line_id = @line_id";
+                using (var CheckUsertid_cmd = new NpgsqlCommand(CheckUsertid_sql, conn))
+                {
+                    CheckUsertid_cmd.Parameters.AddWithValue("@line_id", line_id);
+                    var result = CheckUsertid_cmd.ExecuteScalar();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        return Ok(new { 
+                            message = false
+                             });
+                    }
+                    else
+                    {
+                        return Ok(new
+                        {
+                            message = true
+                        });
 
+                    }
+                        
+                }
+            }
         }
 
 
@@ -82,28 +123,35 @@ namespace ShiftManagerApi2.Controllers
                     var result = staff_cmd.ExecuteScalar();
                     if (result == null || result == DBNull.Value)
                     {
-                        return InsertLineId(line_id, name);//ラインIDの新規登録処理に行く
+                        //return InsertLineId(line_id, name);//ラインIDの新規登録処理に行く
+                        return(null);//ラインIDの新規登録処理に行く
+
                     }
                     return Convert.ToInt32(result);//ラインIDがあった場合はそのIDを返す処理に行く
                 }
 
             }
         }
-        private int? InsertLineId(string line_id, string name)//ラインIDの新規追加
-        {
-            using (var conn = _db.CreateConnection())
-            {
-                string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES (@name, @line_id, '介護スタッフ', 'パート')RETURNING id";//選ばせる画面に遷移するようにする　RETURNINGは決まった連番のIDを返してくれる隙間を開けるとエラーが起きる
-                using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
-                {
-                    insert_cmd.Parameters.AddWithValue("@line_id", line_id);
-                    insert_cmd.Parameters.AddWithValue("name", name);
-                    var newId = insert_cmd.ExecuteScalar();
+        //private  int? InsertLineId( string line_id, string name)//ラインIDの新規追加
+        //{
+        //    using (var conn = _db.CreateConnection())
+        //    {
+        //        Console.WriteLine("実行されたよ1（データがないことを確認した！）");
 
-                    return Convert.ToInt32(newId); // 💡 GetIDに戻らず、その場で新しいIDを返してあげるので100%安全！
-                }
-            }
-        }
+        //        bool isAlreadyExists = true;
+
+        //        return Ok(new { action = "showAlert",message = $"DBエラーが発生しました" });
+        //        //string insert_sql = "INSERT INTO staff (staff_name, line_id, role, position) VALUES (@name, @line_id, '介護スタッフ', 'パート')RETURNING id";//選ばせる画面に遷移するようにする　RETURNINGは決まった連番のIDを返してくれる隙間を開けるとエラーが起きる
+        //        //using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+        //        //{
+        //        //    insert_cmd.Parameters.AddWithValue("@line_id", line_id);
+        //        //    insert_cmd.Parameters.AddWithValue("name", name);
+        //        //    var newId = insert_cmd.ExecuteScalar();
+
+        //        //    return Convert.ToInt32(newId); // 💡 GetIDに戻らず、その場で新しいIDを返してあげるので100%安全！
+        //        //}
+        //    }
+        //}
         private int? GetReqID(int staff_id, int year, int month)//その月にすでに登録されているかどうかを確認する処理、なければ新規登録する処理に行く、あればそのIDを返す処理に行く
         {
             using (var conn = _db.CreateConnection())
@@ -125,7 +173,7 @@ namespace ShiftManagerApi2.Controllers
                 }
             }
         }
-        private int? InsertReqsId(int staff_id, string memo, int year, int month, List<ShiftDateItem> dates)//新しいshift_reqsを追加する処理と新しいshift_req_data追加する処理
+        private int? InsertReqsId(int staff_id, string memo, int year, int month, List<ShiftDateItem> dates, List<EventAnswerItem> answers)//新しいshift_reqsを追加する処理と新しいshift_req_data追加する処理
 
         {
             using (var conn = _db.CreateConnection())
@@ -141,21 +189,23 @@ namespace ShiftManagerApi2.Controllers
                     var req_id = insert_cmd.ExecuteScalar();
 
                     return Convert.ToInt32(req_id);
-                    //次に登録する処理を書く
-                                                   //var dates_insert_sql = "INSERT INTO shift_req_dates (req_id, date, mode) VALUES (@req_id, @dates, @mode)";
-                                                   //using (var insert_dates__cmd = new NpgsqlCommand(dates_insert_sql, conn))
-                                                   //{
-                                                   //    foreach(var date in dates)
-                                                   //    {
-                                                   //        insert_cmd.Parameters.Clear();
-                                                   //        insert_cmd.Parameters.AddWithValue("@req_id", req_id);
-                                                   //        insert_cmd.Parameters.AddWithValue("@date", date.Date);
-                                                   //        insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
-                                                   //    }
 
-                    //}新規処理のエラーが治るまで封印
-                }//新しいshift_req_data追加する処理
+                    //var dates_insert_sql = "INSERT INTO shift_req_dates (req_id, date, mode) VALUES (@req_id, @dates, @mode)";
+                    //using (var insert_dates__cmd = new NpgsqlCommand(dates_insert_sql, conn))
+                    //{
+                    //    foreach (var date in dates)
+                    //    {
+                    //        insert_cmd.Parameters.Clear();
+                    //        insert_cmd.Parameters.AddWithValue("@req_id", req_id);
+                    //        insert_cmd.Parameters.AddWithValue("@date", date.Date);
+                    //        insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
+                    //        return Convert.ToInt32(req_id);
+                    //    }
+                    //    return Convert.ToInt32(req_id);
+                    //    //}新規処理のエラーが治るまで封印
+                    //}//新しいshift_req_data追加する処理
 
+                }
             }
         }
 
@@ -199,7 +249,7 @@ namespace ShiftManagerApi2.Controllers
                         insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
                         insert_cmd.ExecuteNonQuery();
                     }
-                    return "多分変更で来たよyoyoyo";
+                    return "変更が完了しました";
                 }
             }
         }
@@ -311,17 +361,19 @@ namespace ShiftManagerApi2.Controllers
             }
         }
         [HttpGet("event")]//その月に配信されているイベントを返す処理
-        public IActionResult GetEvent([FromQuery (Name = "shit_reqs_id")]  int? reqs_id)//ログインした瞬間にshit_reqs_idを作るようにするかもそしたら変わる
+        public IActionResult GetEvent([FromQuery (Name = "shift_reqs_id")]  int? reqs_id)//ログインした瞬間にshit_reqs_idを作るようにするかもそしたら変わる
         {
+            Console.WriteLine("ここ",reqs_id);
             var eventList = new List<object>();
             using (var conn = _db.CreateConnection())
             {
                 string event_sql = " SELECT e.id, e.name, e.content , a.answer FROM event e INNER JOIN(SELECT id FROM shift_periods WHERE status = '配信中')p ON p.id = e.periods_id LEFT JOIN(SELECT event_id, answer, reqs_id FROM event_answer WHERE reqs_id = @reqs_id)a ON a.event_id = e.id ";
                 using (var event_cmd = new NpgsqlCommand(event_sql, conn))
                 {
+                    event_cmd.Parameters.AddWithValue("@reqs_id", reqs_id == null ? DBNull.Value : reqs_id  );
                     using (var result = event_cmd.ExecuteReader())
                     {
-                        event_cmd.Parameters.AddWithValue("@reqs_id", reqs_id);
+                      
                         while (result.Read())
                         {
                             var singleEvent = new {
@@ -344,26 +396,42 @@ namespace ShiftManagerApi2.Controllers
         [HttpGet("shift_reqs")]
         public IActionResult Getshift_reqs([FromQuery(Name ="staff_id")] int staff_id,[FromQuery(Name = "periods_id")] int periods_id)
         {
+
+            Console.WriteLine($"staff_id: {staff_id}");
+            Console.WriteLine($"periods_id: {periods_id}");
             using (var conn = _db.CreateConnection())
             {
-                string shift_reqs_sql = "SELECT id FROM shift_reqs WHERE staff_id = @staff_id AND periods_id = @periods_id";
+                string shift_reqs_sql = "SELECT id ,memo FROM shift_reqs WHERE staff_id = @staff_id AND periods_id = @periods_id";
                 using (var shift_reqs_cmd = new NpgsqlCommand(shift_reqs_sql, conn))
                 {
                     shift_reqs_cmd.Parameters.AddWithValue("@staff_id", staff_id);
                     shift_reqs_cmd.Parameters.AddWithValue("@periods_id", periods_id);
-                    var result = shift_reqs_cmd.ExecuteScalar();
-                    if (result == null || result == DBNull.Value)
+                    Console.WriteLine($"staff_id: {staff_id}");
+                    using (var result = shift_reqs_cmd.ExecuteReader())
+                        
                     {
-                        return Ok(null);
+                        Console.WriteLine($"staff_id: {staff_id}");
+                        if (result.Read())
+                        {
+                            int shift_reqsId = result.GetInt32(0);
+                            string memo = result.IsDBNull(1) ? "" : result.GetString(1); // 2列目: memo
+                            Console.WriteLine($"staff_id: {shift_reqsId}");
+                            return Ok(new { id = shift_reqsId, memo = memo });
+                        }
+                        else
+                        {
+                            Console.WriteLine($"staff_id: {periods_id}");
+                            return Ok(null);
+                        }
                     }
-                    int shift_reqsId = Convert.ToInt32(result);
-                    return Ok(shift_reqsId);
+                   
                 }
             }
         }
         [HttpGet("shift_dates")]
-        public IActionResult Getdates([FromQuery(Name = "shift_reqs_id")] int req_id)
+        public IActionResult Getdates([FromQuery(Name = "shift_reqs_id")] int req_id,[FromQuery(Name = "prev_date")] string? prev_date)
         {
+            Console.WriteLine(prev_date);
             var dates_List = new List<object> ();
             using (var conn = _db.CreateConnection())
             {
@@ -377,7 +445,6 @@ namespace ShiftManagerApi2.Controllers
                         {
                             var SingreDates = new
                             {
-                               
                                 date = (DateOnly)result["date"],
                                 mode = result["mode"].ToString()
                             };
@@ -389,17 +456,104 @@ namespace ShiftManagerApi2.Controllers
             }
             return Ok(dates_List);
         }
-        //[HttpGet("event/answer")]//その月に配信されているイベントをすでに回答している場合、その回答を返す処理
-        //public IActionResult GetEventAnswer()
-        //{
-        //    var answerList = new List<object>();
-        //    using (var conn = _db.CreateConnection())
-        //    {
-        //        string answer_sql = ""
-        //    }
-        //}
+        [HttpGet("GetJobList")]
+        public IActionResult GetJobList()
+        {
+            var dates_List = new List<object>();
+            using (var conn = _db.CreateConnection())
+            {
+                string Job_dates_sql = "SELECT * FROM job_master";
+                using (var Job_dates_cmd = new NpgsqlCommand(Job_dates_sql, conn))
+                {
+                  
+                    using (var result = Job_dates_cmd.ExecuteReader())
+                    {
+                        while (result.Read())
+                        {
+                            var SingreDates = new
+                            {
+                               
+                                id = Convert.ToInt32(result["job_id"]),
+                                name = result["job_name"].ToString()
+                            };
+                            dates_List.Add(SingreDates);
+                        }
+                    }
 
-    }
+                }
+            }
+            return Ok(dates_List);
+        }
+        [HttpGet("staff_apply")]
+        public IActionResult staff_apply([FromQuery(Name = "line_id")] string line_id, [FromQuery(Name = "staffName")] string staffName)
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                // 💡 1. まず staff テーブル（正社員・スタッフ本登録テーブル）にすでに存在するか確認する
+                string checkStaffSql = "SELECT COUNT(1) FROM staff WHERE line_id = @line_id";
+                using (var checkStaffCmd = new NpgsqlCommand(checkStaffSql, conn))
+                {
+                    checkStaffCmd.Parameters.AddWithValue("@line_id", line_id);
+                    long staffCount = (long)checkStaffCmd.ExecuteScalar();
+
+                    if (staffCount > 0)
+                    {
+                        // すでに staff テーブルに登録されている場合
+                        return BadRequest(new { message = "すでに登録（承認）されています。" });
+                    }
+                }
+
+                // 💡 2. 次に staff_apply テーブルで「承認待ち（status = 0）」の状態がないか確認する
+                string checkApplySql = "SELECT status FROM staff_apply WHERE line_id = @line_id ORDER BY id DESC LIMIT 1";
+                using (var checkApplyCmd = new NpgsqlCommand(checkApplySql, conn))
+                {
+                    checkApplyCmd.Parameters.AddWithValue("@line_id", line_id);
+                    var result = checkApplyCmd.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        int currentStatus = Convert.ToInt32(result);
+                        Console.WriteLine(currentStatus);
+                        if (currentStatus == 0)
+                        {
+                            Console.WriteLine(currentStatus);
+                            // 0: 承認待ち
+                            return BadRequest(new { message = "現在管理者による承認待ち（申請中）です。" });
+                        }
+                        // status が 2（却下）などの場合は if を抜けてそのまま再申請に進む
+                    }
+                }
+
+                 //💡 3.staff に未存在かつ申請中でもない場合、新規申請を実行する
+                string insertSql = "INSERT INTO staff_apply (line_id, name, status, created_at) VALUES (@line_id, @name, 0, NOW())";
+                using (var insertCmd = new NpgsqlCommand(insertSql, conn))
+                {
+                    insertCmd.Parameters.AddWithValue("@line_id", line_id);
+                    insertCmd.Parameters.AddWithValue("@name", staffName);
+
+                    int rowsAffected = insertCmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok(new { message = "スタッフ登録の申請を受け付けました。" });
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "申請処理に失敗しました。" });
+                    }
+                }
+            }
+        }
+            //[HttpGet("event/answer")]//その月に配信されているイベントをすでに回答している場合、その回答を返す処理
+            //public IActionResult GetEventAnswer()
+            //{
+            //    var answerList = new List<object>();
+            //    using (var conn = _db.CreateConnection())
+            //    {
+            //        string answer_sql = ""
+            //    }
+            //}
+
+        }
 }
 
 
