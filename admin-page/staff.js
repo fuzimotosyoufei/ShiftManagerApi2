@@ -306,7 +306,7 @@ async function InJob(staffId) {//新しい職種を追加する処理
             JOB_MASTER.push(trimmedJobName);
             selectedJob = trimmedJobName;
             alert(data.message);
-            updateJobMasterSelectOptions();
+            showStaffList();
         } catch (e) {
             console.error('エラー詳細:', e);
             selectEl.selectedIndex = 0;
