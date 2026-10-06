@@ -23,7 +23,7 @@
         <div class="main-content">
 
             <div id="page-check" class="content-check">
-                <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')"></button>
+                <!-- <button class="btn-clear" onclick="alert('C#のデータ削除機能は後ほど実装します！')"></button> -->
 
                 <!-- <table id="shift_create" class="design01">
                     <tr id="shift_name">
@@ -87,7 +87,8 @@
                 <div class="tab-buttons">
                 </div>
                 <div class="tab-button">
-                    <button type="button" class="tab-btn active" onclick="switchTab('content-tab1', this)">スタッフ管理</button>
+                    <button type="button" class="tab-btn active"
+                        onclick="switchTab('content-tab1', this)">スタッフ管理</button>
                     <button type="button" class="tab-btn" onclick="switchTab('content-tab2', this)">スタッフ申請・登録管理</button>
                 </div>
                 <div class="tab-content active" id="content-tab1">
@@ -95,10 +96,11 @@
                     <div class="button-container">
                         <button type="button" id="staff-Edit-button">スタッフ編集
                         </button>
-                        <button type="button" id="job-Master-button" onclick="OpenJobDelete()" class="btn-job-master">🏷️ 職種削除</button>
+                        <button type="button" id="job-Master-button" onclick="OpenJobDelete()"
+                            class="btn-job-master">🏷️ 職種削除</button>
                         <button type="button" id="staff-Insert-button" onclick=" OpenStaff()">スタッフ追加
                         </button>
-              
+
                     </div>
 
                     <dialog id="my-staff-modal">
@@ -143,10 +145,12 @@
                         <div class="modal-staff-body">
                             <div>
                                 <p style="font-weight: bold; margin-bottom: 8px;">削除する職種を選択してください：</p>
-                                <select id="delete-master-job-select" style="padding: 6px; font-size: 0.95rem; margin-right: 8px;">
+                                <select id="delete-master-job-select"
+                                    style="padding: 6px; font-size: 0.95rem; margin-right: 8px;">
                                     <option value="" disabled selected>選択してください...</option>
                                 </select>
-                                <button type="button" class="btn-delete-master-job" onclick="deleteJobMasterFromModal()">削除</button>
+                                <button type="button" class="btn-delete-master-job"
+                                    onclick="deleteJobMasterFromModal()">削除</button>
                             </div>
                         </div>
                     </div>
@@ -159,14 +163,14 @@
                             <h3>スタッフ申請・登録管理</h3>
                             <ul id="staff-application-list" style="padding: 0;"></ul>
                         </div>
-                        </div>
                     </div>
                 </div>
             </div>
-            <script src="app.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-            <script src="cleatecalend.js"></script>
-            <script src="staff.js"></script>
+        </div>
+        <script src="app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+        <script src="cleatecalend.js"></script>
+        <script src="staff.js"></script>
 
 </body>
 
