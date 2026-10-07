@@ -189,7 +189,7 @@
             <button class="stamp-btn" data-mode="遅番" onclick="workstamp('遅番')">遅番</button>
             <button class="stamp-btn " data-mode="夜勤" onclick="workstamp('夜勤')">夜勤</button>
             <button class="stamp-btn UN" data-mode="休み" onclick="workstamp('休み')">休み</button>
-        
+
         </div>
         <h2>備考欄</h2>
         <textarea type="text" id="Text-message" placeholder="ここに文字を入力"></textarea>
@@ -298,13 +298,13 @@
             event.target.classList.add('UN');
 
         }
-        let workstampList = [] ;
+        let workstampList = [];
         function workstamp(mode) {
             const btn = event.currentTarget; // クリックされたボタンを取得
             const isSelected = btn.classList.toggle('UN'); // 'UN' クラスをトグル（追加/削除）する
-           if(isSelected){
-               workstampList.push(mode); // 選択された場合、リストに追加
-            }else{
+            if (isSelected) {
+                workstampList.push(mode); // 選択された場合、リストに追加
+            } else {
                 workstampList = workstampList.filter(item => item !== mode); // 選択解除された場合、リストから削除
             }
             //event.targetで何が押されたかを指定できるonclickでどこの部分でボタンを押されているかを事前に聞いているから使える
@@ -818,7 +818,8 @@
             const calendData = calendar.getDate();
             const calYear = calendData.getFullYear();
             const calMonth = calendData.getMonth() + 1;
-
+            const workstampList = workstampList; // 勤務希望のスタンプリストを取得
+            alert(workstampList);
             sortedDates.forEach(element => {
                 console.log(element.date),
                     console.log(element.mode)
@@ -828,11 +829,13 @@
             const sendData = {
                 name: userName,    // C#の Name にマッピングされます
                 dates: sortedDates, // C#の Dates にマッピングされます
+                workstamps: workstampList, // 勤務希望のスタンプリストを追加
                 memo: bikouText,
                 year: calYear,
                 month: calMonth,
                 id: lineid,
                 answer: event_ans
+
             };
             console.log(sendData);
 
