@@ -94,9 +94,11 @@ function CalendarData(ymdata) {
 //月の判定ができてないよ
 
 function CreateCalend(date, ymdata) {
+    const yearAndDay = document.getElementById('yearandday');
     const tbody = document.getElementById('shift_name');
     const tbody2 = document.getElementById('shift_create');
     tbody.innerHTML = ''; // 一度中身をクリア
+    yearAndDay.innerHTML = `${ymdata.year}年${ymdata.month}月分`;
     tbody2.innerHTML = '';//スタッフデータもクリア
 
     console.log("できたよ１1");
@@ -213,7 +215,7 @@ function CreateCalend(date, ymdata) {
                 select.setAttribute('data-staff-id', staff.id);
                 select.setAttribute('data-date', dateStr);
 
-                const options = ["", "日勤","早番", "遅番","夜勤", "休み"];
+                const options = ["", "日勤", "早番", "遅番", "夜勤", "休み"];
                 options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt;
