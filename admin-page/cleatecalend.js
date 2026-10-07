@@ -31,6 +31,38 @@ function StartCalendar() {
 }
 function InitCalendar(start, end) {
 
+    // calendar = new FullCalendar.Calendar(calendarEl, {
+    //     initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
+    //     locale: 'ja',//言語
+    //     initialDate: start,
+    //     // カレンダー上部のヘッダー設定
+    //     customButtons: {//この下に書いたやつは全部ボタンになる
+    //         myCustomButton: {
+    //             text: 'カレンダー作成',
+    //             click: function () {
+    //                 const button = document.querySelector('.fc-myCustomButton-button');//いま画面にあるボタンの要素を取得する
+    //                 if (button) {//そもそもbuttonが画面上にない可能性があるからifをしている
+    //                     if (button.innerText === 'カレンダー作成') {
+    //                         const carendDate = calendar.getDate();
+    //                         const carendYear = carendDate.getFullYear();
+    //                         const carendMonth = carendDate.getMonth() + 1;
+    //                         CreatePeriods(carendYear, carendMonth)
+    //                         alert('まだ作ってないよ');
+    //                     } else if (button.innerText === 'カレンダー編集') {//今は配信中に変えるだけだけどその他の機能を思いついたらここに追加
+    //                         if (currentPeriodId) {
+    //                             UpdateStatus(currentPeriodId);
+    //                         }
+    //                     } else if (button.innerText === 'カレンダー配信中') {
+    //                         alert('今配信中');
+
+    //                         // fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/AgainCalendar')
+
+    //                     }
+    //                 }
+
+    //             }
+    //         }
+    //     },
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',//何週間か月のカレンダーにするかを決めれる
         locale: 'ja',//言語
@@ -38,20 +70,20 @@ function InitCalendar(start, end) {
         // カレンダー上部のヘッダー設定
         customButtons: {//この下に書いたやつは全部ボタンになる
             myCustomButton: {
-                text: 'カレンダー作成',
+                text: 'カレンダー編集',
                 click: function () {
                     const button = document.querySelector('.fc-myCustomButton-button');//いま画面にあるボタンの要素を取得する
                     if (button) {//そもそもbuttonが画面上にない可能性があるからifをしている
-                        if (button.innerText === 'カレンダー作成') {
-                            const carendDate = calendar.getDate();
-                            const carendYear = carendDate.getFullYear();
-                            const carendMonth = carendDate.getMonth() + 1;
-                            CreatePeriods(carendYear, carendMonth)
-                            alert('まだ作ってないよ');
-                        } else if (button.innerText === 'カレンダー編集') {//今は配信中に変えるだけだけどその他の機能を思いついたらここに追加
-                            if (currentPeriodId) {
-                                UpdateStatus(currentPeriodId);
-                            }
+                        if (button.innerText === 'カレンダー編集') {
+                            UpdateStatus(currentPeriodId)//ここ注意かも
+                            // if(ここにもう作られているか作られていないかの判定を入れる){
+                            //     UpdateStatus(currentPeriodId);//作られている場合編集中に変えるだけ
+                            // }else{
+                            //     const carendDate = calendar.getDate();
+                            //     const carendYear = carendDate.getFullYear();
+                            //     const carendMonth = carendDate.getMonth() + 1;
+                            //     CreatePeriods(carendYear, carendMonth)//この後 UpdateStatus(currentPeriodId);これをして編集中に変えるだけにする
+                            // }
                         } else if (button.innerText === 'カレンダー配信中') {
                             alert('今配信中');
 
@@ -63,6 +95,7 @@ function InitCalendar(start, end) {
                 }
             }
         },
+
 
 
         headerToolbar: {
@@ -135,7 +168,7 @@ function InitCalendar(start, end) {
                             if (!response.ok) {
                                 throw new Error('データの取得に失敗したよ');
                             } else {
-                                GetEvent(data.id);
+                                GetEvent(data.id,carendMonth);
                                 return response.json();
                             }
 
@@ -172,6 +205,52 @@ function InputEventCalend() {
 }
 
 
+// function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動させたときに画面に表示するやつ
+//     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('データの取得に失敗したよ');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             InputEventCalend()
+//             const button = document.querySelector('.fc-myCustomButton-button');
+//             console.log(data);
+//             if (data.id === null) {
+//                 currentPeriodId = null; // 🎯 未作成月なのでIDをリセット
+//                 console.log("カレンダーIDがnull（未作成）なので、イベントの取得はしません！");
+//                 if (button) {
+//                     button.innerText = 'カレンダー作成';
+//                 }
+//                 const eventAddBtn = document.querySelector('#event-settings-button');
+//                 if (eventAddBtn) {
+//                     eventAddBtn.disabled = true;
+//                 }
+//                 const nullevent = [
+//                     { name: '未作成' }
+//                 ];
+//                 CreateEvent(nullevent,Month);
+//             } else {
+//                 currentPeriodId = data.id;//どのカレンダーかを区別するための番号
+//                 if (button) {
+
+//                     if (data.status === '配信中') {
+//                         button.innerText = 'カレンダー配信中';
+
+//                     } else {
+//                         button.innerText = 'カレンダー編集';
+//                     }
+
+//                 }
+//                 const eventAddBtn = document.querySelector('#event-settings-button');
+//                 if (eventAddBtn) {
+//                     eventAddBtn.disabled = false;
+//                 }
+//                 GetEvent(data.id, Month);
+//             }
+//         })
+// }
 function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動させたときに画面に表示するやつ
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/bullidcalender?Getyear=${Year}&Getmonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
@@ -185,23 +264,12 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
             const button = document.querySelector('.fc-myCustomButton-button');
             console.log(data);
             if (data.id === null) {
-                currentPeriodId = null; // 🎯 未作成月なのでIDをリセット
-                console.log("カレンダーIDがnull（未作成）なので、イベントの取得はしません！");
-                if (button) {
-                    button.innerText = 'カレンダー作成';
-                }
-                const eventAddBtn = document.querySelector('#event-settings-button');
-                if (eventAddBtn) {
-                    eventAddBtn.disabled = true;
-                }
-                const nullevent = [
-                    { name: '未作成' }
-                ];
-                CreateEvent(nullevent, Year);
+                //ここ
+                CreatePeriods(Year, Month);//作成処理
             } else {
                 currentPeriodId = data.id;//どのカレンダーかを区別するための番号
                 if (button) {
-
+                 
                     if (data.status === '配信中') {
                         button.innerText = 'カレンダー配信中';
 
@@ -214,12 +282,13 @@ function GetCalendar(Year, Month) {//これはカレンダーを矢印で移動�
                 if (eventAddBtn) {
                     eventAddBtn.disabled = false;
                 }
-                GetEvent(data.id, Year)
+                GetEvent(data.id, Month);
             }
         })
 }
 
-function GetEvent(Id, Year) {//カレンダーのidからイベントを探す
+
+function GetEvent(Id, Month) {//カレンダーのidからイベントを探す
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/event?GetId=${Id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok) {
@@ -229,11 +298,11 @@ function GetEvent(Id, Year) {//カレンダーのidからイベントを探す
             return response.json(); // 正常なときだけここにたどり着く
         })
         .then(date => {
-            CreateEvent(date, Year)
+            CreateEvent(date, Month)
         })
 }
 
-function CreateEvent(Event, Year) {//イベントの枠を作成
+function CreateEvent(Event, Month) {//イベントの枠を作成
     const eventList = document.getElementById('event-list')
     eventList.innerHTML = '';//一度中を空にする
     Event.forEach(item => {
@@ -241,7 +310,7 @@ function CreateEvent(Event, Year) {//イベントの枠を作成
         <div class="event-list-mein">
             <div class="event-info">
                 <h3>${item.name}</h3>
-                <p class="event-day">${Year}月${item.day}日</p>
+                <p class="event-day">${Month}月${item.day}日</p>
             </div>
             <button type="button" class="event-ded-button" data-id="${item.id}">削除ボタン</button>
 
@@ -272,7 +341,7 @@ if (eventList) {
     })
 }
 
-function CreatePeriods(Year, Month) {//カレンダーのidからイベントを探す
+function CreatePeriods(Year, Month) {
     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/CreatePeriods?GetYear=${Year}&GetMonth=${Month}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
         .then(response => {
             if (!response.ok) {
