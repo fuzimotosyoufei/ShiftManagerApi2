@@ -69,6 +69,7 @@ function CalendarData(ymdata) {
         .then(date => {
 
             console.log('これデータ', date);
+            console.log('これデータ', ymdata);
             CreateCalend(date, ymdata)
         })
 
