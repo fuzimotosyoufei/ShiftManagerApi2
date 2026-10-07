@@ -53,17 +53,18 @@
 
  /* 文字 */
  h1 {
-     font-size: 50px;
+     font-size: 30px;
      text-align: center;
      color: #333;
      /* margin-top: 0; */
  }
-h1#yearandday {
-    font-size: 50px;
-    text-align: center;
-    color: #333;
-      /* margin-top: 0; */
-}
+
+ h1#yearandday {
+     font-size: 20px;
+     text-align: center;
+     color: #333;
+     /* margin-top: 0; */
+ }
 
 
  /* ==========================================
@@ -89,8 +90,9 @@ h1#yearandday {
      display: none;
      /* 最初は隠しておく */
  }
- .content-staff{
-    display: none;
+
+ .content-staff {
+     display: none;
  }
 
  /* シフトカードたちのデザイン（元のやつをそのままキープ） */
