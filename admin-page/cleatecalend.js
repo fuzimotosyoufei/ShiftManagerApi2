@@ -350,7 +350,7 @@ function CreatePeriods(Year, Month) {
             return response.json(); // 正常なときだけここにたどり着く
         })
         .then(data => {
-            alert(data.message); // 「新しいシフト期間が作成されました。」を表示
+            //alert(data.message); // 「新しいシフト期間が作成されました。」を表示
 
 
             // これにより GetCalendar 内で button.innerText が 'カレンダー編集' に変わり、二重作成を防げます！

@@ -53,11 +53,18 @@
 
  /* 文字 */
  h1 {
-     font-size: 18px;
+     font-size: 50px;
      text-align: center;
      color: #333;
      /* margin-top: 0; */
  }
+h1#yearandday {
+    font-size: 50px;
+    text-align: center;
+    color: #333;
+      /* margin-top: 0; */
+}
+
 
  /* ==========================================
            4. 画面表示エリア（右側のメインコンテンツ領域）
