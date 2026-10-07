@@ -53,14 +53,14 @@
 
  /* 文字 */
  h1 {
-     font-size: 30px;
+     font-size: 40px;
      text-align: center;
      color: #333;
      /* margin-top: 0; */
  }
 
  h1#yearandday {
-     font-size: 20px;
+     font-size: 30px;
      text-align: center;
      color: #333;
      /* margin-top: 0; */
