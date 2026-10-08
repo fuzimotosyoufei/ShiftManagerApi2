@@ -1,4 +1,5 @@
 let JOB_MASTER = [];
+let WORK_MASTER = [];
 const ROLE_MASTER = ['正社員', '準社員', 'パート'];
 
 // --------------------------------------------------
@@ -45,6 +46,26 @@ async function fetchJobMaster() {
     .then(data=>{
         // alert(data);
        JOB_MASTER =  data;
+    })
+}
+async function fetchWorkMaster() {
+    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/worklist',{
+        method: 'GET',
+            headers: {
+
+            'ngrok-skip-browser-warning': 'true'
+        }
+    })
+    .then(response =>{
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        // 💡 レスポンス本文をJSONオブジェクトとして解析
+        return response.json();
+    })
+    .then(data=>{
+        // alert(data);
+       WORK_MASTER =  data;
     })
 }
 // 現在「編集モード」かどうかを管理するフラグ
@@ -115,38 +136,47 @@ function showStaffList() {
                         <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staff.id}, '${job}', this)">×</button>
                     </span>
                 `).join('');
-
+                const activeWorkChecked = WORK_MASTER
                 li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
-                        <div class="edit-row">
-                            <span class="staff-id">ID: ${staff.id}</span>
+                        <div class="form-left">
+                            <div class="edit-row">
+                                <span class="staff-id">ID: ${staff.id}</span>
+                                
+                                <!-- 名前変更インプット -->
+                                <input type="text" class="edit-input-name" value="${staff.name}" placeholder="名前">
+
+                                <button type="button" class="btn-change-name" onclick="addchangename('${staff.id}', this)">名前変更</button>
                             
-                            <!-- 名前変更インプット -->
-                            <input type="text" class="edit-input-name" value="${staff.name}" placeholder="名前">
+                                <!-- 区分プルダウン -->
+                                <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
+                                    ${roleOptions}
+                                </select>
+                                <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}', '${staff.name}')">スタッフを削除</button>
+                            </div>
 
-                            <button type="button" class="btn-change-name" onclick="addchangename('${staff.id}', this)">名前変更</button>
-                          
-                            <!-- 区分プルダウン -->
-                            <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
-                                ${roleOptions}
-                            </select>
-                             <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}', '${staff.name}')">スタッフを削除</button>
-                        </div>
+                            <div class="edit-row-jobs">
+                                <span class="job-label">担当職種：</span>
+                                <div class="edit-job-list" id="job-container-${staff.id}">
+                                    ${jobBadges}
+                                </div>
+                            </div>
 
-                        <div class="edit-row-jobs">
-                            <span class="job-label">担当職種：</span>
-                            <div class="edit-job-list" id="job-container-${staff.id}">
-                                ${jobBadges}
+                            <!-- 職種追加プルダウン -->
+                            <div class="add-job-area">
+                                <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
+                                    <option value="" disabled selected>＋ 職種を追加...</option>
+                                    ${addJobOptions}
+                                </select>
+                                <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
                             </div>
                         </div>
-
-                        <!-- 職種追加プルダウン -->
-                        <div class="add-job-area">
-                            <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
-                                <option value="" disabled selected>＋ 職種を追加...</option>
-                                ${addJobOptions}
-                            </select>
-                            <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
+                        <div class="form-right">
+                            <div class="edit-select-work">
+                                <label>
+                                    <input type="checkbox" class="active-work-checkbox" ${activeWorkChecked}>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 `;
