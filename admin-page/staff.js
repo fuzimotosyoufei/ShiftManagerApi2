@@ -65,6 +65,7 @@ async function fetchWorkMaster() {
     })
     .then(data=>{
         alert(data);
+        alert("WORK_MASTERに代入します");
        WORK_MASTER =  data;
     })
 }
