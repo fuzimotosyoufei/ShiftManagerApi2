@@ -710,6 +710,7 @@ function staffApplicationsCheck(staffId, count) {
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     fetchJobMaster()
+    fetchWorkMaster()
     const editBtn = document.getElementById('staff-Edit-button');
     const deleteBtn = document.getElementById('job-Master-button');
     if (editBtn) {
