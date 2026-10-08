@@ -137,6 +137,7 @@ function showStaffList() {
                     </span>
                 `).join('');
                 const activeWorkChecked = WORK_MASTER
+                    .map(work => `<button type="checkbox" class="active-work-checkbox" value="${work}">${work}</button>`).join('');
                 li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
                         <div class="form-left">
@@ -174,7 +175,7 @@ function showStaffList() {
                         <div class="form-right">
                             <div class="edit-select-work">
                                 <label>
-                                    <input type="checkbox" class="active-work-checkbox" ${activeWorkChecked}>
+                                     ${activeWorkChecked}
                                 </label>
                             </div>
                         </div>
