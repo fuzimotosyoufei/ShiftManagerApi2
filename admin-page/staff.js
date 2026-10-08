@@ -147,7 +147,7 @@ function showStaffList() {
                                 ${addJobOptions}
                             </select>
                             <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
-                          
+                        </div>
                     </div>
                 `;
             }
