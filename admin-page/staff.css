@@ -149,11 +149,28 @@
 /* --------------------------------------------------
  * 10. 編集フォーム内部レイアウト
  * -------------------------------------------------- */
+
 .edit-staff-form {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
+    width: 100%;
     gap: 10px;
-    align-items: column;
+    /* align-items: column; */
+}
+
+.form-left {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 10px;
+    */
+}
+
+.form-right {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 10px;
 }
 
 .edit-row {
@@ -405,4 +422,18 @@
 .btn-delete-master-job.editing {
     display: inline-block;
 
+}
+
+/*働く日勤務項目を選択するやつ*/
+.edit-select-work {
+    order: 1;
+    display: flex;
+    gap: 6px;
+    /*gapで両方できる指定しないと両方6px広がるみたいになる*/
+}
+
+.active-work-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: #3182ce;
 }
