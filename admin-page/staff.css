@@ -153,6 +153,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    align-items: center;
 }
 
 .edit-row {
@@ -167,7 +168,9 @@
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    order: 2;
 }
+
 .btn-staff-delete {
     background-color: #e72b06;
     text-align: center;
@@ -180,6 +183,7 @@
     font-size: 1rem;
     border: 1px solid #cbd5e0;
     border-radius: 4px;
+    order: 1;
 }
 
 .edit-select-role,
@@ -242,6 +246,7 @@
     align-items: center;
     gap: 6px;
     margin-top: 6px;
+    order: 3;
 }
 
 .btn-add-job {
