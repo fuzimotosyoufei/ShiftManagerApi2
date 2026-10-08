@@ -64,7 +64,7 @@ async function fetchWorkMaster() {
         return response.json();
     })
     .then(data=>{
-        // alert(data);
+        alert(data);
        WORK_MASTER =  data;
     })
 }
