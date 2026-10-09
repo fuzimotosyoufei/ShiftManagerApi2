@@ -179,7 +179,7 @@ function showStaffList() {
                         .map(work => {
                             const isChecked = staffWorks.includes(work) ? 'checked' : '';
                             return `<label class="work-checkbox-label">
-                            <input type="checkbox" class="active-work-checkbox" onclick="onchange('${staff.id}', '${work}', this)" value="${work}" ${isChecked}>${work}
+                            <input type="checkbox" class="active-work-checkbox" onchange="checkWork('${staff.id}', '${work}', this)" value="${work}" ${isChecked}>${work}
                         </label>`;
                         }).join('');
                     li.innerHTML = `
@@ -234,7 +234,7 @@ function showStaffList() {
             console.error('データ取得エラー:', error);
         });
 }
-function onchange(staffId, work, checkbox) {
+function checkWork(staffId, work, checkbox) {
     if(checkbox.checked){
         fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inwork?staffId=${staffId}&workname=${encodeURIComponent(work)}`, {
             method: 'POST',
