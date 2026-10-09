@@ -5,10 +5,11 @@ const ROLE_MASTER = ['正社員', '準社員', 'パート'];
 // --------------------------------------------------
 // 共通処理：APIからのデータをIDごとにグループ化し、jobsを配列にまとめる関数
 // --------------------------------------------------
-function formatStaffData(rawData) {
-    if (!rawData || !Array.isArray(rawData)) return [];
+function formatStaffData(staffData, worksData = []) {
+    if (!staffData || !Array.isArray(staffData)) return [];
 
-    return rawData.reduce((acc, current) => {
+    // ① staffData から基本情報と職種（jobs）をグループ化（既存の処理）
+    const grouped = staffData.reduce((acc, current) => {
         const existingStaff = acc.find(item => item.id === current.id);
         if (existingStaff) {
             if (current.job_name && !existingStaff.jobs.includes(current.job_name)) {
@@ -21,12 +22,53 @@ function formatStaffData(rawData) {
                 role: current.role || '',
                 line_id: current.line_id || '',
                 status: current.status || '',
-                jobs: current.job_name ? [current.job_name] : []
+                jobs: current.job_name ? [current.job_name] : [],
+                works: [] // 
             });
         }
         return acc;
     }, []);
+
+    // ② worksData が渡されている場合、スタッフID（staff_id）で紐付けて works に追加
+    if (Array.isArray(worksData)) {
+        worksData.forEach(work => {
+            // C#側から返ってくるキー名（staff_id または work_id）に合わせて取得
+            const targetId = work.staff_id || work.work_id;
+            const staff = grouped.find(s => s.id === targetId);
+
+            if (staff && work.work_name) {
+                if (!staff.works.includes(work.work_name)) {
+                    staff.works.push(work.work_name);
+                }
+            }
+        });
+    }
+
+    return grouped;
 }
+// function formatStaffData(rawData) {
+//     if (!rawData || !Array.isArray(rawData)) return [];
+
+//     return rawData.reduce((acc, current) => {
+//         const existingStaff = acc.find(item => item.id === current.id);
+//         if (existingStaff) {
+//             if (current.job_name && !existingStaff.jobs.includes(current.job_name)) {
+//                 existingStaff.jobs.push(current.job_name);
+//             }
+//         } else {
+//             acc.push({
+//                 id: current.id,
+//                 name: current.staff_name || current.name || '',
+//                 role: current.role || '',
+//                 line_id: current.line_id || '',
+//                 status: current.status || '',
+//                 jobs: current.job_name ? [current.job_name] : []
+//             });
+//         }
+//         return acc;
+//     }, []);
+
+// }
 
 async function fetchJobMaster() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/joblist',{
@@ -64,8 +106,8 @@ async function fetchWorkMaster() {
         return response.json();
     })
     .then(data=>{
-        alert(data);
-        alert("WORK_MASTERに代入します");
+        // alert(data);
+        // alert("WORK_MASTERに代入します");
        WORK_MASTER =  data;
     })
 }
@@ -80,8 +122,7 @@ function showStaffList() {
     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/stafflist', {
         method: 'GET',
         headers: {
-
-            'ngrok-skip-browser-warning': 'true'
+'ngrok-skip-browser-warning': 'true'
         }
     })
         .then(response => {
@@ -137,11 +178,15 @@ function showStaffList() {
                         <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staff.id}, '${job}', this)">×</button>
                     </span>
                 `).join('');
+                const staffWorks = staff.works || []; 
                 const activeWorkChecked = WORK_MASTER
-                    .map(work => `
-                        <label class="work-checkbox-label">
-                            <input type="checkbox" class="active-work-checkbox" value="${work}">${work}
-                        </label>`).join('');
+                    .map(work => {
+                        const isChecRed = staffWorks.includes(work) ? 'checked' : '';
+                        return`<label class="work-checkbox-label">
+                            <input type="checkbox" class="active-work-checkbox" value="${work}" ${isChecRed}>${work}
+                        </label>`;
+                        }).join('');
+
                 li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
                         <div class="form-left">
@@ -178,9 +223,7 @@ function showStaffList() {
                         </div>
                         <div class="form-right">
                             <div class="edit-select-work">
-                                <label>
-                                     ${activeWorkChecked}
-                                </label>
+                                    ${activeWorkChecked}
                             </div>
                         </div>
                     </div>
@@ -194,6 +237,122 @@ function showStaffList() {
             console.error('データ取得エラー:', error);
         });
 }
+// function showStaffList() {
+//     const listEl = document.getElementById('staff-list');
+//     if (!listEl) return;
+//     listEl.innerHTML = '';
+//     Promise.all([
+//         fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/stafflist', {
+//             headers: { 'ngrok-skip-browser-warning': 'true' }
+//         }).then(res => res.json()),
+
+//         fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffworks', {
+//             headers: { 'ngrok-skip-browser-warning': 'true' }
+//         }).then(res => res.json())
+//     ])
+//         .then(([staffData, worksData]) => { 
+//             // 💡 共通関数でデータを整形
+//             const groupedStaffs = formatStaffData(staffData, worksData);
+
+//             // ② 描画処理
+//             groupedStaffs.forEach(staff => {
+//                 const li = document.createElement('li');
+//                 li.className = 'staff-card';
+
+//                 if (!isEditMode) {
+//                     // --------------------------------------------------
+//                     // A. 通常の閲覧モード（テキスト表示）
+//                     // --------------------------------------------------
+//                     const jobBadges = staff.jobs
+//                         .map(job => `<span class="job-badge">${job}</span>`)
+//                         .join(' ');
+
+//                     li.innerHTML = `
+//                 <div class="staff-header">
+//                     <span class="staff-id">ID: ${staff.id}</span>
+//                     <strong class="staff-name">${staff.name}</strong>
+//                     <span class="role-badge">${staff.role}</span>
+//                 </div>
+//                 <div class="staff-jobs">
+//                     <span class="job-label">担当職種：</span>${jobBadges}
+//                 </div>
+//             `;
+//                 } else {
+//                     // --------------------------------------------------
+//                     // B. 編集モード（フォーム・プルダウン表示）
+//                     // --------------------------------------------------
+//                     const roleOptions = ROLE_MASTER.map(role =>
+//                         `<option value="${role}" ${role === staff.role ? 'selected' : ''}>${role}</option>`
+//                     ).join('');
+
+//                     const addJobOptions = JOB_MASTER//回して職種を追加している
+//                         .map(job => `<option value="${job}">${job}</option>`)
+//                         .join('') + `<option value="__NEW__">＋ 新しい職種を追加...</option>`;//joinを消すことでカンマが消えて綺麗になる
+
+//                     // 登録中の職種（×ボタン付きバッジ）
+//                     const jobBadges = staff.jobs.map(job => `
+//                     <span class="edit-job-badge">
+//                         ${job}
+//                         <button type="button" class="btn-delete-job" onclick="deleteJobFromStaff(${staff.id}, '${job}', this)">×</button>
+//                     </span>
+//                 `).join('');
+//                     const activeWorkChecked = WORK_MASTER
+//                         .map(work => `
+//                         <label class="work-checkbox-label">
+//                             <input type="checkbox" class="active-work-checkbox" value="${work}">${work}
+//                         </label>`).join('');
+//                     li.innerHTML = `
+//                     <div class="edit-staff-form" data-id="${staff.id}">
+//                         <div class="form-left">
+//                             <div class="edit-row">
+//                                 <span class="staff-id">ID: ${staff.id}</span>
+                                
+//                                 <!-- 名前変更インプット -->
+//                                 <input type="text" class="edit-input-name" value="${staff.name}" placeholder="名前">
+
+//                                 <button type="button" class="btn-change-name" onclick="addchangename('${staff.id}', this)">名前変更</button>
+                            
+//                                 <!-- 区分プルダウン -->
+//                                 <select class="edit-select-role" onchange="updateRole(${staff.id},this.value)">
+//                                     ${roleOptions}
+//                                 </select>
+//                                 <button type="button" class="btn-staff-delete" onclick="deleteStaff('${staff.id}', '${staff.name}')">スタッフを削除</button>
+//                             </div>
+
+//                             <div class="edit-row-jobs">
+//                                 <span class="job-label">担当職種：</span>
+//                                 <div class="edit-job-list" id="job-container-${staff.id}">
+//                                     ${jobBadges}
+//                                 </div>
+//                             </div>
+
+//                             <!-- 職種追加プルダウン -->
+//                             <div class="add-job-area">
+//                                 <select class="add-job-select" id="add-job-select-${staff.id}" onchange="InJob('${staff.id}')">
+//                                     <option value="" disabled selected>＋ 職種を追加...</option>
+//                                     ${addJobOptions}
+//                                 </select>
+//                                 <button type="button" class="btn-add-job" onclick="addJobToStaff('${staff.id}')">追加</button>
+//                             </div>
+//                         </div>
+//                         <div class="form-right">
+//                             <div class="edit-select-work">
+//                                 <label>
+//                                      ${activeWorkChecked}
+//                                 </label>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+//                 }
+
+//                 listEl.appendChild(li);
+//             });
+//         })
+//         .catch(error => {
+//             console.error('データ取得エラー:', error);
+//         });
+// }
 function deleteStaff(staffId, staffName){
     const result = window.confirm(`${staffName}'さんを本当に削除しますか？`);
 
