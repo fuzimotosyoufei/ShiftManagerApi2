@@ -121,7 +121,7 @@ async function fetchUnitMaster() {
         return response.json();
     })
     .then(data=>{
-        alert(data);
+        // alert(data);
         // alert("UNIT_MASTERに代入します");
        UNIT_MASTER =  data;
     })
