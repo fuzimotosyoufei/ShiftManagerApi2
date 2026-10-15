@@ -516,12 +516,12 @@
         function Event(shift_reqs_id) {
             console.log("データこれ", shift_reqs_id);
 
-            // // ★ shift_reqs_id が null、undefined、"null"、または数値でない場合は fetch をスキップする
-            // if (!shift_reqs_id || shift_reqs_id === "null") {
+            // ★ shift_reqs_id が null、undefined、"null"、または数値でない場合は fetch をスキップする
+            if (!shift_reqs_id || shift_reqs_id === "null") {
 
-            //     console.warn("shift_reqs_id が未設定のため、event取得処理をスキップしました");
-            //     return;
-            // }
+                console.warn("shift_reqs_id が未設定のため、event取得処理をスキップしました");
+                return;
+            }
 
             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                 .then(response => { if (!response.ok) throw new Error('データの取得に失敗しました'); return response.json(); })
