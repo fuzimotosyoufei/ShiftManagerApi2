@@ -528,7 +528,7 @@
                         console.error('エラー', error);
                     });
                 // console.warn("shift_reqs_id が未設定のため、event取得処理をスキップしました");
-                // return;
+                return;
             }
 
             fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event?shift_reqs_id=${shift_reqs_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
