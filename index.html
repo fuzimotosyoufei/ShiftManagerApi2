@@ -474,8 +474,8 @@
                                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_reqs?staff_id=${staff_id}&periods_id=${periods_id}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                     .then(response => { if (!response.ok) throw new Error('reqsのid取得に失敗しました'); return response.json(); })
                                     .then(data => {
-                                        if (data === null) {
-                                            console.log("まだ作ってないよ")
+                                        if (!data.exists) {
+                                            console.log("まだ作ってないよ");
                                             Event(null);
                                             return;
                                         }
@@ -818,10 +818,10 @@
             const calendData = calendar.getDate();
             const calYear = calendData.getFullYear();
             const calMonth = calendData.getMonth() + 1;
-        //    const formattedWorkstamps = workstampList.map(stamp => ({
-        //         workstamps: stamp
-        //     }));
-        //     alert(workstampList);
+            //    const formattedWorkstamps = workstampList.map(stamp => ({
+            //         workstamps: stamp
+            //     }));
+            //     alert(workstampList);
             sortedDates.forEach(element => {
                 console.log(element.date),
                     console.log(element.mode)
