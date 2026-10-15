@@ -482,7 +482,7 @@
                                         shift_reqs_id = data.id;
                                         console.log("もうその月に作ってあるよ", shift_reqs_id);
                                         document.getElementById("Text-message").value = data.memo || "";
-                                        Event(shift_reqs_id);
+                                        Event(shift_reqs_id, periods_id);
 
                                         fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/shift_dates?shift_reqs_id=${shift_reqs_id}&prev_date=${prevDayStr}`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
                                             .then(response => { if (!response.ok) throw new Error('日付の取得に失敗しました'); return response.json(); })
@@ -516,9 +516,17 @@
         function Event(shift_reqs_id) {
             console.log("データこれ", shift_reqs_id);
 
-            // ★ shift_reqs_id が null、undefined、"null"、または数値でない場合は fetch をスキップする
+            //まだカレンダに一回も入力していない場合の処理-----------------------------------------------------------------------------------------------------------------------------------------
             if (!shift_reqs_id || shift_reqs_id === "null") {
-
+                fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/shift/event_not`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                    .then(response => { if (!response.ok) throw new Error('データの取得に失敗しました'); return response.json(); })
+                    .then(data => {
+                        console.log("データこれ", data);
+                        initEvent(data);
+                    })
+                    .catch(error => {
+                        console.error('エラー', error);
+                    });
                 console.warn("shift_reqs_id が未設定のため、event取得処理をスキップしました");
                 return;
             }
