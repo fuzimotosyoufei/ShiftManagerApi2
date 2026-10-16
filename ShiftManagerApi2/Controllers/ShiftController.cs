@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Npgsql;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace ShiftManagerApi2.Controllers
                     else
                     {
                         Console.WriteLine("実行されたよ1（データがないことを確認した！）");
-                        //int newReqsId = InsertReqsId(staff_id ?? 0, data.Memo, data.Year, data.Month, data.Dates, data.Answer) ?? 0;
+                        int newReqsId = InsertReqsId(staff_id ?? 0, data.Memo, data.Year, data.Month, data.Dates, data.Answer) ?? 0;
                         //a = "新規登録完了";
                     }
 
@@ -176,6 +177,7 @@ namespace ShiftManagerApi2.Controllers
         private int? InsertReqsId(int staff_id, string memo, int year, int month, List<ShiftDateItem> dates, List<EventAnswerItem> answers)//新しいshift_reqsを追加する処理と新しいshift_req_data追加する処理
 
         {
+            Console.WriteLine("実行されたよ2（データがないことを確認した！）");
             using (var conn = _db.CreateConnection())
             {
                 string insert_sql = "INSERT INTO shift_reqs (staff_id,periods_id,memo) SELECT @staff_id, id, @memo FROM shift_periods WHERE year =@year AND month = @month RETURNING id";
@@ -210,7 +212,7 @@ namespace ShiftManagerApi2.Controllers
         }
 
 
-        private string Update_Req_dates(int reqs_id, string Memo, List<ShiftDateItem> Dates,List<EventAnswerItem> Answer)//既存のshift_idを更新する処理と既存のshift_req_dataを削除して新しく作成する処理
+        private string Update_Req_dates(int reqs_id, string Memo, List<ShiftDateItem> Dates, List<EventAnswerItem> Answer)//既存のshift_idを更新する処理と既存のshift_req_dataを削除して新しく作成する処理
         {
             using (var conn = _db.CreateConnection())
             {
@@ -230,11 +232,11 @@ namespace ShiftManagerApi2.Controllers
                 {
                     dlete_cmd.Parameters.AddWithValue("@id", reqs_id);
                     dlete_cmd.ExecuteNonQuery();
-                    foreach(var InAnswer in Answer)
+                    foreach (var InAnswer in Answer)
                     {
                         InsertEvent_Answer(InAnswer.Id, reqs_id, InAnswer.Answer);//変更がまだ
                     }
-                   
+
 
                 }
                 string insert_sql = "INSERT INTO shift_req_dates (req_id, date,mode) VALUES (@req_id, @date,@mode)";
@@ -249,10 +251,43 @@ namespace ShiftManagerApi2.Controllers
                         insert_cmd.Parameters.AddWithValue("@mode", date.Mode);
                         insert_cmd.ExecuteNonQuery();
                     }
+
                     return "変更が完了しました";
                 }
             }
         }
+        //private void Update_work_styles(int staff_id,List<WorkItem> workItems)
+        //{
+
+        //    using (var conn = _db.CreateConnection())
+        //    {
+        //        string delete_sql = "DELETE FROM work_styles_styles WHERE staff_id = @staff_id";
+        //        using (var delete_cmd = new NpgsqlCommand(delete_sql, conn))
+        //        {
+        //            delete_cmd.Parameters.AddWithValue("@staff_id", staff_id);
+        //            delete_cmd.ExecuteNonQuery();
+        //        }
+        //        foreach (var date in workItems)
+        //        {
+        //            string select_check_sql = "SELECT id FROM work_styles WHERE work_name=@workitems ";
+        //            using (var select_check_cmd = new NpgsqlCommand(select_check_sql, conn))
+        //            {
+        //               select_check_cmd.Parameters.Clear();
+        //               select_check_cmd.Parameters.AddWithValue("@workitems", date.workstamps);
+        //                var result = select_check_cmd.ExecuteScalar();
+        //                string insert_sql = "INSERT INTO staff_work_styles (staff_id,work_style_id) VALUES(@staff_id,@worki_style_id)";
+        //                using (var insert_cmd = new NpgsqlCommand(insert_sql, conn))
+        //                {
+        //                    insert_cmd.Parameters.AddWithValue("@staff_id", staff_id);
+        //                    insert_cmd.Parameters.AddWithValue("worki_style_id", result);
+        //                    insert_cmd.ExecuteNonQuery(); 
+        //                }
+        //            }
+                   
+        //        }
+               
+        //    }
+        //}
         private void InsertEvent_Answer(int event_id,int reqs_id, bool answer)//イベントの回答データベースに回答を入れる処理
         {
             bool isAlreadyExists = true;
@@ -353,9 +388,11 @@ namespace ShiftManagerApi2.Controllers
                     var result = staffid_cmd.ExecuteScalar();
                     if (result == null || result == DBNull.Value)
                     {
+                        Console.WriteLine(result);
                         return Ok(null);
                     }
                     int staffId = Convert.ToInt32(result);//reqs_idがあった場合はそのIDを返す
+                    Console.WriteLine(staffId);
                     return Ok(staffId);
                 }
             }
@@ -381,8 +418,9 @@ namespace ShiftManagerApi2.Controllers
                                 eventName = result["name"].ToString(),
                                 eventContent = result["content"].ToString(),
                                 answer = result["answer"] == DBNull.Value ? (bool?)null : Convert.ToBoolean(result["answer"])
+                             
 
-                        }
+                            }
                         ;
                             eventList.Add(singleEvent);
                         }
@@ -393,6 +431,44 @@ namespace ShiftManagerApi2.Controllers
             return Ok(eventList); 
         
         }
+        [HttpGet("event_not")]//その月に配信されているイベントを返す処理
+        public IActionResult GetEventNot()//ログインした瞬間にshit_reqs_idを作るようにするかもそしたら変わる
+        {
+          
+            var eventList = new List<object>();
+            using (var conn = _db.CreateConnection())
+            {
+                string event_sql = "SELECT * FROM event WHERE event.periods_id =(SELECT shift_periods.id FROM shift_periods WHERE  status = '配信中') ";
+                using (var event_cmd = new NpgsqlCommand(event_sql, conn))
+                {
+                 
+                    using (var result = event_cmd.ExecuteReader())
+                    {
+
+                        while (result.Read())
+                        {
+                            var singleEvent = new
+                            {
+                                eventId = Convert.ToInt32(result["id"]),
+                                eventName = result["name"].ToString(),
+                                eventContent = result["content"].ToString(),
+                                answer = (bool?)null
+
+                            };
+                        
+                            eventList.Add(singleEvent);
+                        }
+
+                    }
+                }
+            }
+            return Ok(eventList);
+
+        }
+
+
+
+
         [HttpGet("shift_reqs")]
         public IActionResult Getshift_reqs([FromQuery(Name ="staff_id")] int staff_id,[FromQuery(Name = "periods_id")] int periods_id)
         {
@@ -407,6 +483,7 @@ namespace ShiftManagerApi2.Controllers
                     shift_reqs_cmd.Parameters.AddWithValue("@staff_id", staff_id);
                     shift_reqs_cmd.Parameters.AddWithValue("@periods_id", periods_id);
                     Console.WriteLine($"staff_id: {staff_id}");
+           
                     using (var result = shift_reqs_cmd.ExecuteReader())
                         
                     {
@@ -415,14 +492,15 @@ namespace ShiftManagerApi2.Controllers
                         {
                             int shift_reqsId = result.GetInt32(0);
                             string memo = result.IsDBNull(1) ? "" : result.GetString(1); // 2列目: memo
-                            Console.WriteLine($"staff_id: {shift_reqsId}");
-                            return Ok(new { id = shift_reqsId, memo = memo });
+                            Console.WriteLine($"staff_idaaa: a");
+                            return Ok(new { exists = true, id = shift_reqsId, memo = memo });
                         }
                         else
                         {
-                            Console.WriteLine($"staff_id: {periods_id}");
-                            return Ok(null);
+                            Console.WriteLine($"staff_idsss: b");
+                            return Ok(new { exists = false });
                         }
+                    
                     }
                    
                 }

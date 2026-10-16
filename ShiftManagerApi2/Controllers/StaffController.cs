@@ -21,7 +21,7 @@ namespace ShiftManagerApi2.Controllers
         {
             using (var conn = _db.CreateConnection())
             {
-                string sql = @"SELECT staff.id, staff.staff_name,  staff.role,  j.job_name FROM staff INNER JOIN job e     ON e.staff_id = staff.id INNER JOIN job_master j ON j.job_id = e.job_id ORDER BY staff.id ASC;";
+                string sql = @"SELECT staff.id, staff.staff_name,  staff.role,  j.job_name FROM staff INNER JOIN job e ON e.staff_id = staff.id INNER JOIN job_master j ON j.job_id = e.job_id ORDER BY staff.id ASC;";
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
                     using (var result = cmd.ExecuteReader())
@@ -39,6 +39,66 @@ namespace ShiftManagerApi2.Controllers
                             staffList.Add(staff);
                         }
                         return Ok(staffList);
+                    }
+                }
+            }
+        }
+        [HttpGet("staffworks")]
+        public IActionResult GetStaffWorks() // メソッド名も判別しやすいものに変更
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string sql = @"SELECT staff_work_styles.staff_id, work_styles.work_name 
+                       FROM staff_work_styles 
+                       INNER JOIN work_styles ON work_styles.id = staff_work_styles.work_style_id";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    using (var result = cmd.ExecuteReader())
+                    {
+                        var workList = new List<object>();
+
+                        
+                        while (result.Read())
+                        {
+                            workList.Add(new
+                            {
+                                staff_id = Convert.ToInt32(result["staff_id"]),
+                                work_name = result["work_name"].ToString()
+                            });
+                        }
+
+                        return Ok(workList); // リスト（配列）として返却
+                    }
+                }
+            }
+        }
+        [HttpGet("staffunits")]
+        public IActionResult GetStaffunits() // メソッド名も判別しやすいものに変更
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string sql = @"SELECT staff_unit_styles.staff_id, unit_styles.unit_name 
+                       FROM staff_unit_styles 
+                       INNER JOIN unit_styles ON unit_styles.id = staff_unit_styles.unit_style_id";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    using (var result = cmd.ExecuteReader())
+                    {
+                        var workList = new List<object>();
+
+
+                        while (result.Read())
+                        {
+                            workList.Add(new
+                            {
+                                unit_id = Convert.ToInt32(result["staff_id"]),
+                                unit_name = result["unit_name"].ToString()
+                            });
+                        }
+
+                        return Ok(workList); // リスト（配列）として返却
                     }
                 }
             }
@@ -64,6 +124,49 @@ namespace ShiftManagerApi2.Controllers
             }
 
         }
+        [HttpGet("worklist")] 
+        public IActionResult GetWorkList()
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string sql = @"SELECT work_name FROM work_styles";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    using (var result = cmd.ExecuteReader())
+                    {
+                        var workList = new List<string>();
+                        while (result.Read())
+                        {
+                            workList.Add(result["work_name"].ToString());
+                        }
+                        return Ok(workList);
+                    }
+                }
+            }
+
+        }
+        [HttpGet("unitlist")]
+        public IActionResult GetunitList()
+        {
+            using (var conn = _db.CreateConnection())
+            {
+                string sql = @"SELECT unit_name FROM unit_styles";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    using (var result = cmd.ExecuteReader())
+                    {
+                        var unitList = new List<string>();
+                        while (result.Read())
+                        {
+                            unitList.Add(result["unit_name"].ToString());
+                        }
+                        return Ok(unitList);
+                    }
+                }
+            }
+
+        }
+
         [HttpPost("injob")]
         public IActionResult InnerJob([FromQuery(Name = "staffId")] int staff_Id, [FromQuery(Name = "jobname")] string job_name)
         {
@@ -464,6 +567,154 @@ namespace ShiftManagerApi2.Controllers
                     else
                     {
                         return BadRequest(new { message = "削除に失敗しました" });
+                    }
+
+
+                }
+
+            }
+        }
+        [HttpPost("inwork")]
+        public IActionResult inwork([FromQuery(Name = "staffId")] int id, [FromQuery(Name = "workname")] string workname)
+        {
+            int workid = 0;
+            using (var conn = _db.CreateConnection())
+            {
+                string select_app_sql = @"SELECT id FROM work_styles WHERE work_name = @workname";
+                using (var select_appl_cmd = new NpgsqlCommand(select_app_sql, conn))
+                {
+                    select_appl_cmd.Parameters.AddWithValue("@workname", workname);
+                     var result = select_appl_cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        workid = Convert.ToInt32(result);
+                    }
+
+                }
+                string insert_appl_sql = @"INSERT INTO staff_work_styles (staff_id,work_style_id) VALUES (@staff_id,@work_style_id) ";//一旦承認済みじゃないやつだけ表示必要に応じて未承諾承認済みを表示するようにする
+                using (var insert_appl_cmd = new NpgsqlCommand(insert_appl_sql, conn))
+                {
+                    insert_appl_cmd.Parameters.AddWithValue("@staff_id", id);
+                    insert_appl_cmd.Parameters.AddWithValue("@work_style_id", workid);
+                    int rowsAffected = insert_appl_cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+
+
+                }
+
+            }
+        }
+        [HttpPost("outwork")]
+        public IActionResult outwork([FromQuery(Name = "staffId")] int id, [FromQuery(Name = "workname")] string workname)
+        {
+            int workid = 0;
+            using (var conn = _db.CreateConnection())
+            {
+                string select_app_sql = @"SELECT id FROM work_styles WHERE work_name = @workname";
+                using (var select_appl_cmd = new NpgsqlCommand(select_app_sql, conn))
+                {
+                    select_appl_cmd.Parameters.AddWithValue("@workname", workname);
+                    var result = select_appl_cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        workid = Convert.ToInt32(result);
+                    }
+
+                }
+                string delete_appl_sql = @"DELETE FROM staff_work_styles WHERE staff_id = @staff_id AND work_style_id = @work_style_id";//一旦承認済みじゃないやつだけ表示必要に応じて未承諾承認済みを表示するようにする
+                using (var delete_appl_cmd = new NpgsqlCommand(delete_appl_sql, conn))
+                {
+                    delete_appl_cmd.Parameters.AddWithValue("@staff_id", id);
+                    delete_appl_cmd.Parameters.AddWithValue("@work_style_id", workid);
+                    int rowsAffected = delete_appl_cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+
+
+                }
+
+            }
+        }
+        [HttpPost("inunit")]
+        public IActionResult inunit([FromQuery(Name = "staffId")] int id, [FromQuery(Name = "unitname")] string unitname)
+        {
+            int unitid = 0;
+            using (var conn = _db.CreateConnection())
+            {
+                string select_app_sql = @"SELECT id FROM unit_styles WHERE unit_name = @unitname";
+                using (var select_appl_cmd = new NpgsqlCommand(select_app_sql, conn))
+                {
+                    select_appl_cmd.Parameters.AddWithValue("@unitname", unitname);
+                    var result = select_appl_cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        unitid = Convert.ToInt32(result);
+                    }
+
+                }
+                string insert_appl_sql = @"INSERT INTO staff_unit_styles (staff_id,unit_style_id) VALUES (@staff_id,@unit_style_id) ";//一旦承認済みじゃないやつだけ表示必要に応じて未承諾承認済みを表示するようにする
+                using (var insert_appl_cmd = new NpgsqlCommand(insert_appl_sql, conn))
+                {
+                    insert_appl_cmd.Parameters.AddWithValue("@staff_id", id);
+                    insert_appl_cmd.Parameters.AddWithValue("@unit_style_id", unitid);
+                    int rowsAffected = insert_appl_cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+
+
+                }
+
+            }
+        }
+        [HttpPost("outunit")]
+        public IActionResult outunit([FromQuery(Name = "staffId")] int id, [FromQuery(Name = "unitname")] string unitname)
+        {
+            int unitid = 0;
+            using (var conn = _db.CreateConnection())
+            {
+                string select_app_sql = @"SELECT id FROM unit_styles WHERE unit_name = @unitname";
+                using (var select_appl_cmd = new NpgsqlCommand(select_app_sql, conn))
+                {
+                    select_appl_cmd.Parameters.AddWithValue("@unitname", unitname);
+                    var result = select_appl_cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        unitid = Convert.ToInt32(result);
+                    }
+
+                }
+                string delete_appl_sql = @"DELETE FROM staff_unit_styles WHERE staff_id = @staff_id AND unit_style_id = @unit_style_id";//一旦承認済みじゃないやつだけ表示必要に応じて未承諾承認済みを表示するようにする
+                using (var delete_appl_cmd = new NpgsqlCommand(delete_appl_sql, conn))
+                {
+                    delete_appl_cmd.Parameters.AddWithValue("@staff_id", id);
+                    delete_appl_cmd.Parameters.AddWithValue("@unit_style_id", unitid);
+                    int rowsAffected = delete_appl_cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest();
                     }
 
 

@@ -13,11 +13,15 @@ namespace ShiftManagerApi2
 
         public bool Answer { get; set; } = false;
     }
+    //public class WorkItem
+    //{
+    //    public String workstamps{ get ; set;} = string.Empty;
+    //}
     
     public class ShiftSubmission
     {
         // 👤 スタッフ名 (userName) を受け取る
-        public string Name { get; set; } = string.Empty;
+        public　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　 　 string Name { get; set; } = string.Empty;
 
         public string Memo { get; set; } = string.Empty;
 
@@ -32,5 +36,6 @@ namespace ShiftManagerApi2
 
         public List<EventAnswerItem> Answer { get; set; }
         
+        //public List<WorkItem> workstamps { get; set; }
     }
 }
