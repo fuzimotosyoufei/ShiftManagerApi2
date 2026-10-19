@@ -53,6 +53,7 @@ function formatStaffData(staffData, worksData = [], unitsData = [], haveData = [
             const staff = grouped.find(s => s.id === targetId);
 
             if (staff && unit.unit_name) {
+
                 if (!staff.units.includes(unit.unit_name)) {
                     staff.units.push(unit.unit_name);
                 }
@@ -66,6 +67,7 @@ function formatStaffData(staffData, worksData = [], unitsData = [], haveData = [
             const staff = grouped.find(s => s.id === targetId);
             if (staff) {
                 // boolean値（true / false）を直接セットする
+                alert(have.check);
                 staff.have = have.check === false ? false : true;
             }
         });
