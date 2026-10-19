@@ -64,11 +64,10 @@ function formatStaffData(staffData, worksData = [], unitsData = [], haveData = [
             // C#側から返ってくるキー名（staff_id または unit_id）に合わせて取得
             const targetId = have.staff_id ;
             const staff = grouped.find(s => s.id === targetId);
-            if (!staff) {
+            if (staff) {
                 // boolean値（true / false）を直接セットする
-                staff.have = have.check === false;
+                staff.have = have.check === true;
             }
-            
         });
     }
 
@@ -227,13 +226,10 @@ function showStaffList() {
                         </label>`;
                         }).join('');
 
-                    const isChecked = !staff.have ? 'checked' : '';//単体のためリストを使わずに行う
+                    const isChecked = staff.have == false? 'checked' : '';//単体のためリストを使わずに行う
                     const activeHaveChecked =  `<label class="have-checkbox-label">
                             <input type="checkbox" class="active-have-checkbox" onchange="checkHave('${staff.id}', this)" value="資格" ${isChecked}>資格
                         </label>`;
-                      
-
-
                     li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
                         <div class="form-left">
