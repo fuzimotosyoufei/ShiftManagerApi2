@@ -231,7 +231,7 @@ function showStaffList() {
 
                     const isChecked = staff.have === false? 'checked' : '';//単体のためリストを使わずに行う
                     const activeHaveChecked =  `<label class="have-checkbox-label">
-                            <input type="checkbox" class="active-have-checkbox" onchange="checkHave('${staff.id}', this)" value="資格" ${isChecked}>資格
+                            <input type="checkbox" class="active-have-checkbox" onchange="checkHave('${staff.id}', this)" value="資格" ${isChecked}>資格未取得
                         </label>`;
                     li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
