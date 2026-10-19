@@ -69,9 +69,7 @@ function formatStaffData(staffData, worksData = [], unitsData = [], haveData = [
                 // boolean値（true / false）を直接セットする
                 
                 staff.have = have.check === false ? false : true;
-                alert(staff.have);
-                alert(have.check);
-                alert(have.staff_id);
+                
             }
         });
     }
