@@ -229,7 +229,7 @@ function showStaffList() {
                         </label>`;
                         }).join('');
 
-                    const isChecked = staff.have == false? 'checked' : '';//単体のためリストを使わずに行う
+                    const isChecked = staff.have === false? 'checked' : '';//単体のためリストを使わずに行う
                     const activeHaveChecked =  `<label class="have-checkbox-label">
                             <input type="checkbox" class="active-have-checkbox" onchange="checkHave('${staff.id}', this)" value="資格" ${isChecked}>資格
                         </label>`;
