@@ -437,7 +437,11 @@
     gap: 6px;
     /*gapで両方できる指定しないと両方6px広がるみたいになる*/
 }
-
+.edit-select-have {
+    order: 3;
+    display: flex;
+    gap: 6px;
+}
 .active-work-checkbox {
     width: 20px;
     height: 20px;

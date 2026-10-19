@@ -6,7 +6,7 @@ const ROLE_MASTER = ['正社員', '準社員', 'パート'];
 // --------------------------------------------------
 // 共通処理：APIからのデータをIDごとにグループ化し、jobsを配列にまとめる関数
 // --------------------------------------------------
-function formatStaffData(staffData, worksData = [], unitsData = []) {
+function formatStaffData(staffData, worksData = [], unitsData = [], haveData = []) {
     if (!staffData || !Array.isArray(staffData)) return [];
 
     // ① staffData から基本情報と職種（jobs）をグループ化（既存の処理）
@@ -25,7 +25,8 @@ function formatStaffData(staffData, worksData = [], unitsData = []) {
                 status: current.status || '',
                 jobs: current.job_name ? [current.job_name] : [],
                 works: [], // 
-                units: [] // 
+                units: [], // 
+                have:[]
             });
         }
         return acc;
@@ -56,6 +57,18 @@ function formatStaffData(staffData, worksData = [], unitsData = []) {
                     staff.units.push(unit.unit_name);
                 }
             }
+        });
+    }
+    if (Array.isArray(haveData)) {
+        haveData.forEach(have => {
+            // C#側から返ってくるキー名（staff_id または unit_id）に合わせて取得
+            const targetId = have.staff_id ;
+            const staff = grouped.find(s => s.id === targetId);
+            if (staff) {
+                // boolean値（true / false）を直接セットする
+                staff.have = have.check === true;
+            }
+            
         });
     }
 
@@ -145,12 +158,15 @@ function showStaffList() {
         }).then(res => res.json()),
         fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffunits', {
             headers: { 'ngrok-skip-browser-warning': 'true' }
-        }).then(res => res.json())
+        }).then(res => res.json()),
+         fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/staffhave', {
+             headers: { 'ngrok-skip-browser-warning': 'true' }
+         }).then(res => res.json())
 
     ])
-        .then(([staffData, worksData, unitsData]) => { 
+        .then(([staffData, worksData, unitsData, haveData]) => { 
             // 💡 共通関数でデータを整形
-            const groupedStaffs = formatStaffData(staffData, worksData, unitsData);
+            const groupedStaffs = formatStaffData(staffData, worksData, unitsData, haveData);
 
             // ② 描画処理
             groupedStaffs.forEach(staff => {
@@ -210,6 +226,14 @@ function showStaffList() {
                             <input type="checkbox" class="active-unit-checkbox" onchange="checkUnit('${staff.id}', '${unit}', this)" value="${unit}" ${isChecked}>${unit}
                         </label>`;
                         }).join('');
+
+                    const isChecked = staff.have ? 'checked' : '';//単体のためリストを使わずに行う
+                    const activeHaveChecked =  `<label class="have-checkbox-label">
+                            <input type="checkbox" class="active-have-checkbox" onchange="checkHave('${staff.id}', this)" value="資格" ${isChecked}>資格
+                        </label>`;
+                      
+
+
                     li.innerHTML = `
                     <div class="edit-staff-form" data-id="${staff.id}">
                         <div class="form-left">
@@ -250,6 +274,9 @@ function showStaffList() {
                             </div>
                             <div class="edit-select-unit">
                                      ${activeUnitChecked}
+                            </div>
+                              <div class="edit-select-have">
+                                     ${activeHaveChecked}
                             </div>
                         </div>
                     </div>
@@ -297,6 +324,24 @@ function checkUnit(staffId, unit, checkbox) {
         });
     }
 }
+function checkHave(staffId, checkbox) {
+    // if (checkbox.checked) {
+    //     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/inunit?staffId=${staffId}&unitname=${encodeURIComponent(unit)}`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'ngrok-skip-browser-warning': 'true'
+    //         }
+    //     });
+    // } else {
+    //     fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/staff/outunit?staffId=${staffId}&unitname=${encodeURIComponent(unit)}`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'ngrok-skip-browser-warning': 'true'
+    //         }
+    //     });
+    // }
+}
+
 
 function deleteStaff(staffId, staffName){
     const result = window.confirm(`${staffName}'さんを本当に削除しますか？`);
