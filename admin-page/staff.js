@@ -66,7 +66,7 @@ function formatStaffData(staffData, worksData = [], unitsData = [], haveData = [
             const staff = grouped.find(s => s.id === targetId);
             if (staff) {
                 // boolean値（true / false）を直接セットする
-                staff.have = have.check === true;
+                staff.have = have.check === false ? false : true;
             }
         });
     }
