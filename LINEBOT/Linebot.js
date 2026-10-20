@@ -7,7 +7,7 @@ const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 }
-const client = new line.Client(config);
+const client = new line.messageingApiClient({ channelAccessToken: config.channelAccessToken });
 const app = express();
 
 app.post('/webhook', line.middleware(config), (req, res) => {
@@ -27,26 +27,35 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
         return Promise.resolve(null);
     }
     console.log(`${event.message.text}`);//イベントの中のmessageの中のtextをログに出力
-    const usertText = event.message.text;
+    const userText = event.message.text;
     let replyText = '';
-    if (usertText === 'こんにちは') {
+    if (userText === 'こんにちは') {
         replyText = 'こんにちは！';
-    } else if (usertText === '元気ですか？') {
+    } else if (userText === '元気ですか？') {
         replyText = '元気です！';
     } else {
         replyText = 'すみません、よくわかりません。';
     }
-    return client.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
-        type: 'text',
-        text: replyText
+    return client.replyMessage({
+        replyToken: event.replyToken,
+        message: [{
+            type: 'text',
+            text: replyText
+        }]
     });
 }
 
 cron.schedule('*/10 * * * *', () => {
-    client.pushMessage('送信先の名前', {
-        type: 'text',
-        text: '定期メッセージ'
-    });
+    const targetUserId = process.env.MY_USER_ID; // 例: .env や 変数から指定
+    if(targetUserId) {
+        client.pushMessage({
+            to: targetUserId,//toで送信先のユーザー名
+            messages: [{
+                type: 'text',
+                text: '10分経過の定期メッセージです！'
+            }]
+        }).catch(err => console.error('Pushエラー:', err));
+    }
 });
 
 const PORT = process.env.PORT || 3000;
