@@ -20,6 +20,7 @@ app.post('/webhook', line.middleware(config), (req, res) => {
         });
 });
 
+
 async function handleEvent(event) {
     console.log(`${event.message.text}`);
     return Promise.resolve(null);
