@@ -1,5 +1,6 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
+const cron = require('node-cron');
 require('dotenv').config();
 
 const config = {
@@ -20,11 +21,34 @@ app.post('/webhook', line.middleware(config), (req, res) => {
         });
 });
 
-
-async function handleEvent(event) {
-    console.log(`${event.message.text}`);
-    return Promise.resolve(null);
+async function handleEvent(event) {//イベントの種類がメッセージかどうかを判定
+    if (event.type !== 'message' || event.message.type !== 'text') {
+        // メッセージ以外のイベントは無視
+        return Promise.resolve(null);
+    }
+    console.log(`${event.message.text}`);//イベントの中のmessageの中のtextをログに出力
+    const usertText = event.message.text;
+    let replyText = '';
+    if (usertText === 'こんにちは') {
+        replyText = 'こんにちは！';
+    } else if (usertText === '元気ですか？') {
+        replyText = '元気です！';
+    } else {
+        replyText = 'すみません、よくわかりません。';
+    }
+    return client.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
+        type: 'text',
+        text: replyText
+    });
 }
+
+cron.schedule('*/10 * * * *', () => {
+    client.pushMessage('送信先の名前', {
+        type: 'text',
+        text: '定期メッセージ'
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
