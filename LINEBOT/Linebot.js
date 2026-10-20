@@ -7,7 +7,7 @@ const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 }
-const client = new line.messagingApi.MessageingApi({ channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN });
+const client = new line.messagingApi.MessagingApiClient({ channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN });
 const app = express();
 
 app.post('/webhook', line.middleware(config), (req, res) => {
