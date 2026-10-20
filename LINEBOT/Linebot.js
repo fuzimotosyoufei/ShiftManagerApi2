@@ -36,14 +36,14 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
     } else {
         replyText = 'すみません、よくわかりません。';
     }
-    return client.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
+    return config.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
         type: 'text',
         text: replyText
     });
 }
 
 cron.schedule('*/10 * * * *', () => {
-    client.pushMessage('送信先の名前', {
+    config.pushMessage('送信先の名前', {
         type: 'text',
         text: '定期メッセージ'
     });
