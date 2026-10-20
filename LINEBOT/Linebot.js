@@ -7,7 +7,7 @@ const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 }
-const client = new line.messageingApiClient({ channelAccessToken: config.channelAccessToken });
+const client = new line.messageingApi.messageingApi({ channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN });
 const app = express();
 
 app.post('/webhook', line.middleware(config), (req, res) => {
@@ -47,7 +47,7 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
 
 cron.schedule('*/10 * * * *', () => {
     const targetUserId = process.env.MY_USER_ID; // 例: .env や 変数から指定
-    if(targetUserId) {
+    if (targetUserId) {
         client.pushMessage({
             to: targetUserId,//toで送信先のユーザー名
             messages: [{
