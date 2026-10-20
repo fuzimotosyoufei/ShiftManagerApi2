@@ -7,7 +7,7 @@ const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 }
-
+const client = new line.Client(config);
 const app = express();
 
 app.post('/webhook', line.middleware(config), (req, res) => {
@@ -36,14 +36,14 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
     } else {
         replyText = 'すみません、よくわかりません。';
     }
-    return config.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
+    return client.replyMessage(event.replyToken, {//replyMessageで返信する最大5個まで同時に送ることができる
         type: 'text',
         text: replyText
     });
 }
 
 cron.schedule('*/10 * * * *', () => {
-    config.pushMessage('送信先の名前', {
+    client.pushMessage('送信先の名前', {
         type: 'text',
         text: '定期メッセージ'
     });
