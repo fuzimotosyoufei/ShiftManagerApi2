@@ -46,7 +46,8 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
 }
 
 cron.schedule('*/10 * * * *', () => {
-    const targetUserId = process.env.MY_USER_ID; // 例: .env や 変数から指定
+    // const targetUserId = process.env.MY_USER_ID; // 例: .env や 変数から指定
+    const targetUserId = 'MU13097f2d3fb594b029d76e7e4173fc84';
     if (targetUserId) {
         client.pushMessage({
             to: targetUserId,//toで送信先のユーザー名
