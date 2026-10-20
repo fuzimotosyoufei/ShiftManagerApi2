@@ -38,7 +38,7 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
     }
     return client.replyMessage({
         replyToken: event.replyToken,
-        message: [{
+        messages: [{
             type: 'text',
             text: replyText
         }]
