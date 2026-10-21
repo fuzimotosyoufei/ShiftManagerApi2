@@ -45,7 +45,7 @@ async function handleEvent(event) {//イベントの種類がメッセージか�
     });
 }
 
-cron.schedule('*/10 * * * *', () => {
+cron.schedule('*/10 * * * *', () => {//ここ毎日にする今は実験のため10分ごとに
     const targetUserId = process.env.MY_USER_ID; // 例: .env や 変数から指定
     // const targetUserId = 'U13097f2d3fb594b029d76e7e4173fc84';これでやってみて
     if (targetUserId) {
@@ -57,6 +57,24 @@ cron.schedule('*/10 * * * *', () => {
             }]
         }).catch(err => console.error('Pushエラー:', err));
     }
+});
+
+cron.schedule('*/1 * * * *', () => {//ここ毎日にする今は実験のため10分ごとに
+
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/Build/get_end_date`, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`エラー:${response.status}`);
+            }
+        })
+        .then(date => {
+            date.forEach(item => {
+                alert(item);
+            })
+        })
+
+
+
 });
 
 const PORT = process.env.PORT || 3000;
