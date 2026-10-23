@@ -11,7 +11,20 @@
 </head>
 
 <body>
+    <div class="sp-wrapper">
+        <div id="page-check" class="content-check">
+            <h1>📥 受信したシフト希望一覧（管理画面）</h1>
+            <h1 id="yearandday"> </h1>
+            <table class="design01">
+                <!-- 見出し用（日付や「名前」、イベント名が入る場所） -->
+                <thead id="shift_name"></thead>
 
+                <!-- スタッフデータ行が入る場所 -->
+                <tbody id="shift_create"></tbody>
+            </table>
+            <div id="admin-history-container"></div>
+        </div>
+    </div>
 
     <div class="wrapper">
 
@@ -169,10 +182,11 @@
                 </div>
             </div>
         </div>
-        <script src="app.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-        <script src="cleatecalend.js"></script>
-        <script src="staff.js"></script>
+    </div>
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="cleatecalend.js"></script>
+    <script src="staff.js"></script>
 
 </body>
 
