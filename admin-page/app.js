@@ -109,8 +109,8 @@ function CreateCalend(date, ymdata) {
     tbody.innerHTML = ''; // 一度中身をクリア
     tbody_sp.innerHTML = ''; // 一度中身をクリア
 
-    yearAndDay.innerHTML = `${ymdata.year}年${ymdata.month}月分`;
-    yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月分`;
+    yearAndDay.innerHTML = `${ymdata.year}年${ymdata.month}月`;
+    yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月`;
 
 
     tbody2.innerHTML = '';//スタッフデータもクリア
@@ -173,7 +173,7 @@ function CreateCalend(date, ymdata) {
     });
 
     tbody.appendChild(headerTr);//要注意
-    tbody_sp.appendChild(headerTr);//要注意
+    tbody_sp.appendChild(headerTr.cloneNode(true));//入れるとき同じのを入れると元のがなくなるためコピーを入れなくてはいけない
 
 
     // const weektr = document.createElement('tr')//行を作るならtr
@@ -295,7 +295,7 @@ function CreateCalend(date, ymdata) {
         });
 
         tbody2.appendChild(tr);
-        tbody2_sp.appendChild(tr);
+        tbody2_sp.appendChild(tr.cloneNode(true));//コピー入れなくてはいけない
     });
     //         if (currentEventData[setting.key] === true) {
     //             eventTd.textContent = setting.TrueText;
