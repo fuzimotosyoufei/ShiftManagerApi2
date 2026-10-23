@@ -269,6 +269,34 @@
      color: #1890ff;
  }
 
+
+ /* スマホ画面用 */
+ h1#sp-yearandday {
+     font-size: 30px;
+     text-align: center;
+     color: #333;
+     /* margin-top: 0; */
+ }
+
+ .sp-staff-name {
+
+     /* マウスカーソルをポインターにする場合 */
+     position: relative;
+     /* 画面全体ではなくstaff-nameを基準に枠を表示させる命令 */
+     box-sizing: border-box;
+     transition: outline 0.1s ease;
+     /* アニメーションを滑らかにする場合 */
+ }
+
+ th.sunday {
+     color: #ff4d4f;
+ }
+
+ /* 赤 */
+ th.saturday {
+     color: #1890ff;
+ }
+
  /* 青 */
 
  /* .staff-name {

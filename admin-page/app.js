@@ -94,13 +94,28 @@ function CalendarData(ymdata) {
 // }
 //月の判定ができてないよ
 
+
 function CreateCalend(date, ymdata) {
     const yearAndDay = document.getElementById('yearandday');
+    const yearAndDay_sp = document.getElementById('yearandday-sp');
+
     const tbody = document.getElementById('shift_name');
+    const tbody_sp = document.getElementById('shift_name-sp');
+
     const tbody2 = document.getElementById('shift_create');
+    const tbody2_sp = document.getElementById('shift_create-sp');
+
+
     tbody.innerHTML = ''; // 一度中身をクリア
+    tbody_sp.innerHTML = ''; // 一度中身をクリア
+
     yearAndDay.innerHTML = `${ymdata.year}年${ymdata.month}月分`;
+    yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月分`;
+
+
     tbody2.innerHTML = '';//スタッフデータもクリア
+    tbody2_sp.innerHTML = '';//スタッフデータもクリア
+
 
     console.log("できたよ１1");
     console.log('できたよ２2');
@@ -158,7 +173,7 @@ function CreateCalend(date, ymdata) {
     });
 
     tbody.appendChild(headerTr);//要注意
-
+    tbody_sp.appendChild(headerTr);//要注意
 
 
     // const weektr = document.createElement('tr')//行を作るならtr
@@ -280,6 +295,7 @@ function CreateCalend(date, ymdata) {
         });
 
         tbody2.appendChild(tr);
+        tbody2_sp.appendChild(tr);
     });
     //         if (currentEventData[setting.key] === true) {
     //             eventTd.textContent = setting.TrueText;
