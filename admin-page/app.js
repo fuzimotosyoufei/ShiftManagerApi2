@@ -109,9 +109,6 @@ function CreateCalend_sp(date, ymdata) {
 
     tbody2_sp.innerHTML = '';//スタッフデータもクリア
 
-
-
-
     const eventSetting = [];
     if (date.length > 0 && Array.isArray(date[0].event)) {
         date[0].event.forEach(event => {
@@ -185,12 +182,7 @@ function CreateCalend_sp(date, ymdata) {
                 shiftLookup[shift.date] = shift.mode;
             });
         }
-        for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ//要調べて
-            // const shiftTd = document.createElement('td');
-            // shiftTd.textContent = "希望";
-            // tr.appendChild(shiftTd);
-            // console.log(i);
-            // console.log(i);
+        for (let i = 1; i <= 20; i++) {//曜日に出勤日と希望休を入れるところ//要調べてここに何日までの曜日を入れるかを指定している
             const shiftTd = document.createElement('td');
             const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
             const yer = shiftLookup[dateStr] || "";
@@ -268,6 +260,10 @@ function CreateCalend_sp(date, ymdata) {
         tbody2_sp.appendChild(tr);//コピー入れなくてはいけない
     });
 }
+
+
+
+
 
 function CreateCalend(date, ymdata) {
     const yearAndDay = document.getElementById('yearandday');
