@@ -1,3 +1,4 @@
+let weekList = [];
 const staffShifts = [
     {
         id: 1,
@@ -95,170 +96,160 @@ function CalendarData(ymdata) {
 // }
 //月の判定ができてないよ
 function CreateCalend_sp(date, ymdata) {
-    const yearAndDay_sp = document.getElementById('yearandday-sp');
 
-    const tbody_sp = document.getElementById('shift_name-sp');
-
-    const tbody2_sp = document.getElementById('shift_create-sp');
-
-
-    tbody_sp.innerHTML = ''; // 一度中身をクリア
-
-    yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月`;
-
-
-    tbody2_sp.innerHTML = '';//スタッフデータもクリア
-
-    const eventSetting = [];
-    if (date.length > 0 && Array.isArray(date[0].event)) {
-        date[0].event.forEach(event => {
-            const setting = {
-                key: event.name,
-                TrueText: 'OK',
-                FalseText: 'NO',
-                NullText: '未入力'
-            };
-            eventSetting.push(setting);
-        });
-    }
-
-    // // ヘッダー行 (tr) の作成
-    const headerTr = document.createElement('tr');//要注意
-
-
-
-
-    const thn = document.createElement('th')
-    thn.classList.add('name');
-    thn.textContent = "名前";
-    headerTr.appendChild(thn);
-
-    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
     const days = new Date(ymdata.year, ymdata.month, 0).getDate();
-    for (let i = 1; i <= days; i++) {//日を入れている
-        const th = document.createElement('th')
-        const dateObj = new Date(ymdata.year, ymdata.month - 1, i);//曜日の計算
-        const dayOfWeek = dateObj.getDay();//曜日が数字として帰ってきて日なら0月なら1みたいにこれに配列を当てはめて曜日を出している
-        const dayStr = dayNames[dayOfWeek];
 
-        // ★ 2. 1つのセル（th）の中に日付と曜日を改行を入れてセット
-        th.innerHTML = `${i}<br><span class="day-label">${dayStr}</span>`;
-        if (dayOfWeek === 0) th.classList.add('sunday');
-        if (dayOfWeek === 6) th.classList.add('saturday');
-        headerTr.appendChild(th);
+    const firstDayObj = new Date(ymdata.year, ymdata.month - 1, 1);
+    const firstDyaOfWeek = firstDayObj.getDay();
+    const leadingBlanks = (firstDyaOfWeek === 0) ? 6 : firstDyaOfWeek - 1;
+
+    const allDay = [];
+    for (let i = 0; i < leadingBlanks; i++) {
+        allDay.push({ dayNum: "", dateStr: "", isEmpty: true });
+    }
+    for (let i = 1; i <= days; i++) {
+        const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        allDay.push({ dayNum: i, dateStr: dateStr, isEmpty: false })
+    }
+    while (allDay.length % 7 !== 0) {
+        allDay.push({ dayNum: "", dateStr: "", isEmpty: false })
+    }
+    weekList = [];
+    for (let i = 0; i < allDay.length; i += 7) {
+        weekList.push(allDay.slice(i, i + 7));
     }
 
-    eventSetting.forEach(setting => {//イベントの処理
-        const the = document.createElement('th')
-        the.classList.add('yasumi');
-        the.textContent = setting.key;
-        headerTr.appendChild(the);
-    });
-
-    tbody_sp.appendChild(headerTr);//入れるとき同じのを入れると元のがなくなるためコピーを入れなくてはいけない
+    CreateCalendDisplay_sp(0, date, ymdata);
 
 
-    date.forEach(staff => {//初期値がいる名前追加
-        // console.log(staff);
-        const td = document.createElement('td')
-        td.classList.add('staff-name');
-        const tr = document.createElement('tr')
-        td.textContent = staff.name;
-
-        if (staff.memo && staff.memo.trim() !== "")//メモがあるかとメモが空白だけではないかを確かめている
-        {
-
-            const memoText = staff.memo || "メモはありません"
-            td.classList.add('has-memo');
-            td.classList.add('memo-name');
-            td.setAttribute('data-memo', memoText)
-        };
-
-        tr.appendChild(td);
-        const shiftLookup = {};
-        if (staff.day != null) {
-            console.log("辞書処理");
-            staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
-                shiftLookup[shift.date] = shift.mode;
-            });
-        }
-        for (let i = 1; i <= 20; i++) {//曜日に出勤日と希望休を入れるところ//要調べてここに何日までの曜日を入れるかを指定している
-            const shiftTd = document.createElement('td');
-            const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
-            const yer = shiftLookup[dateStr] || "";
-
-            if (!staff.line_id || staff.line_id === "null") {
-                console.log("動いたよstaff.line_idがnull" + staff.line_id);
-                const select = document.createElement('select');
-                select.classList.add('manual-shift-select');
-                select.setAttribute('data-staff-id', staff.id);
-                select.setAttribute('data-date', dateStr);
-
-                const options = ["", "日勤", "早番", "遅番", "夜勤", "休み"];
-                options.forEach(opt => {
-                    const option = document.createElement('option');
-                    option.value = opt;
-                    option.textContent = opt || "";
-                    if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
-                    select.appendChild(option);
-                });
-                select.addEventListener('change', (e) => {
-                    const selectedValue = e.target.value;
-                    const staffId = staff.id;
-                    const date = dateStr;
-                    console.log(`選択された値: ${dateStr}`);
-                    console.log(`スタッフID: ${staff.id}, 日付: ${date}, 選択された値: ${selectedValue}`);
-                    // ここでfetchを使ってサーバーに送信する処理を追加できます。
-                    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&dateStr=${date}&selectedValue=${selectedValue}&year=${ymdata.year}&month=${ymdata.month}`, {
-                        method: 'POST',
-                        headers: {
-                            'ngrok-skip-browser-warning': 'true'
-                        }
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error('ロールの更新に失敗しました');
-                            return response.json();
-                        })
-                        .then(data => {
-                            alert(data.message || '更新が完了しました');
-
-                        })
-                        .catch(error => {
-                            console.error('エラー:', error);
-                            alert('更新に失敗しました。');
-                        });
-                });
-                shiftTd.appendChild(select);
-            } else {
-                console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
-                shiftTd.textContent = yer;//要注意
-            }
-            tr.appendChild(shiftTd);
-
-        }
-        ///////////////////ここまで
-        eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
-            const eventTd = document.createElement('td');
-            // console.log(staff.event[setting.key]);
-            // const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
-
-            const currentEventData = staff.event ? staff.event.find(e => e.name === setting.key) : null;//要注意
-            const isFlag = currentEventData ? (currentEventData.value ?? currentEventData[setting.key]) : null;//要注意
-            // console.log(staff.event[name]);
+    //空白なら実行してじゃない動かないみたいにしたらいいと思う
 
 
-            if (isFlag === true) {
-                eventTd.textContent = setting.TrueText;
-            } else if (isFlag === false) {
-                eventTd.textContent = setting.FalseText;
-            } else {
-                eventTd.textContent = setting.NullText;
-            }
-            tr.appendChild(eventTd);
-        });
 
-        tbody2_sp.appendChild(tr);//コピー入れなくてはいけない
-    });
+    // for (let i = 1; i <= days; i++) {//日を入れている
+    //     const th = document.createElement('th')
+    //     const dateObj = new Date(ymdata.year, ymdata.month - 1, i);//曜日の計算
+    //     const dayOfWeek = dateObj.getDay();//曜日が数字として帰ってきて日なら0月なら1みたいにこれに配列を当てはめて曜日を出している
+    //     const dayStr = dayNames[dayOfWeek];
+
+    //     // ★ 2. 1つのセル（th）の中に日付と曜日を改行を入れてセット
+    //     th.innerHTML = `${i}<br><span class="day-label">${dayStr}</span>`;
+    //     if (dayOfWeek === 0) th.classList.add('sunday');
+    //     if (dayOfWeek === 6) th.classList.add('saturday');
+    //     headerTr.appendChild(th);
+    // }
+
+    // eventSetting.forEach(setting => {//イベントの処理
+    //     const the = document.createElement('th')
+    //     the.classList.add('yasumi');
+    //     the.textContent = setting.key;
+    //     headerTr.appendChild(the);
+    // });
+
+    // tbody_sp.appendChild(headerTr);//入れるとき同じのを入れると元のがなくなるためコピーを入れなくてはいけない
+
+
+    // date.forEach(staff => {//初期値がいる名前追加
+    //     // console.log(staff);
+    //     const td = document.createElement('td')
+    //     td.classList.add('staff-name');
+    //     const tr = document.createElement('tr')
+    //     td.textContent = staff.name;
+
+    //     if (staff.memo && staff.memo.trim() !== "")//メモがあるかとメモが空白だけではないかを確かめている
+    //     {
+
+    //         const memoText = staff.memo || "メモはありません"
+    //         td.classList.add('has-memo');
+    //         td.classList.add('memo-name');
+    //         td.setAttribute('data-memo', memoText)
+    //     };
+
+    //     tr.appendChild(td);
+    //     const shiftLookup = {};
+    //     if (staff.day != null) {
+    //         console.log("辞書処理");
+    //         staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+    //             shiftLookup[shift.date] = shift.mode;
+    //         });
+    //     }
+    //     for (let i = 1; i <= days; i++) {//曜日に出勤日と希望休を入れるところ//要調べてここに何日を表示するか
+    //         const shiftTd = document.createElement('td');
+    //         const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;//わかんない
+    //         const yer = shiftLookup[dateStr] || "";
+
+    //         if (!staff.line_id || staff.line_id === "null") {
+    //             console.log("動いたよstaff.line_idがnull" + staff.line_id);
+    //             const select = document.createElement('select');
+    //             select.classList.add('manual-shift-select');
+    //             select.setAttribute('data-staff-id', staff.id);
+    //             select.setAttribute('data-date', dateStr);
+
+    //             const options = ["", "日勤", "早番", "遅番", "夜勤", "休み"];
+    //             options.forEach(opt => {
+    //                 const option = document.createElement('option');
+    //                 option.value = opt;
+    //                 option.textContent = opt || "";
+    //                 if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
+    //                 select.appendChild(option);
+    //             });
+    //             select.addEventListener('change', (e) => {
+    //                 const selectedValue = e.target.value;
+    //                 const staffId = staff.id;
+    //                 const date = dateStr;
+    //                 console.log(`選択された値: ${dateStr}`);
+    //                 console.log(`スタッフID: ${staff.id}, 日付: ${date}, 選択された値: ${selectedValue}`);
+    //                 // ここでfetchを使ってサーバーに送信する処理を追加できます。
+    //                 fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&dateStr=${date}&selectedValue=${selectedValue}&year=${ymdata.year}&month=${ymdata.month}`, {
+    //                     method: 'POST',
+    //                     headers: {
+    //                         'ngrok-skip-browser-warning': 'true'
+    //                     }
+    //                 })
+    //                     .then(response => {
+    //                         if (!response.ok) throw new Error('ロールの更新に失敗しました');
+    //                         return response.json();
+    //                     })
+    //                     .then(data => {
+    //                         alert(data.message || '更新が完了しました');
+
+    //                     })
+    //                     .catch(error => {
+    //                         console.error('エラー:', error);
+    //                         alert('更新に失敗しました。');
+    //                     });
+    //             });
+    //             shiftTd.appendChild(select);
+    //         } else {
+    //             console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
+    //             shiftTd.textContent = yer;//要注意
+    //         }
+    //         tr.appendChild(shiftTd);
+
+    //     }
+    //     ///////////////////ここまで
+    //     eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+    //         const eventTd = document.createElement('td');
+    //         // console.log(staff.event[setting.key]);
+    //         // const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
+
+    //         const currentEventData = staff.event ? staff.event.find(e => e.name === setting.key) : null;//要注意
+    //         const isFlag = currentEventData ? (currentEventData.value ?? currentEventData[setting.key]) : null;//要注意
+    //         // console.log(staff.event[name]);
+
+
+    //         if (isFlag === true) {
+    //             eventTd.textContent = setting.TrueText;
+    //         } else if (isFlag === false) {
+    //             eventTd.textContent = setting.FalseText;
+    //         } else {
+    //             eventTd.textContent = setting.NullText;
+    //         }
+    //         tr.appendChild(eventTd);
+    //     });
+
+    //     tbody2_sp.appendChild(tr);//コピー入れなくてはいけない
+    // });
 }
 
 
@@ -292,10 +283,6 @@ function CreateCalend(date, ymdata) {
     console.log(ymdata);
 
 
-    // const eventSetting = [
-    //     { key: 'isSubmitted', TrueText: 'OK', FalseText: 'NO' },
-    //     { key: 'isApproved', TrueText: 'OK', FalseText: 'NO' }
-    // ];
     const eventSetting = [];
     if (date.length > 0 && Array.isArray(date[0].event)) {
         date[0].event.forEach(event => {
@@ -486,7 +473,172 @@ function CreateCalend(date, ymdata) {
 }
 
 
+function CreateCalendDisplay_sp(count, date, ymdata) {
 
+    const yearAndDay_sp = document.getElementById('yearandday-sp');
+    yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月`;
+    const tbody_sp = document.getElementById('shift_name-sp');
+    const tbody2_sp = document.getElementById('shift_create-sp');
+    tbody_sp.innerHTML = ''; // 一度中身をクリア
+    tbody2_sp.innerHTML = '';//スタッフデータもクリア
+
+    const eventSetting = [];
+    if (date.length > 0 && Array.isArray(date[0].event)) {
+        date[0].event.forEach(event => {
+            const setting = {
+                key: event.name,
+                TrueText: 'OK',
+                FalseText: 'NO',
+                NullText: '未入力'
+            };
+            eventSetting.push(setting);
+        });
+    }
+
+    // // ヘッダー行 (tr) の作成
+    const headerTr = document.createElement('tr');//要注意
+    const thn = document.createElement('th')
+    thn.classList.add('name');
+    thn.textContent = "名前";
+    headerTr.appendChild(thn);
+
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    const currentWeekDays = weekList[count];
+    currentWeekDays.forEach(dayInfo => {
+        const th = document.createElement('th')
+        if (dayInfo.dayNum === "") {
+            th.textContent = "";
+        } else {
+
+            const dateObj = new Date(dayInfo.dateStr);
+            const dayOfWeek = dateObj.getDay();//曜日が数字として帰ってきて日なら0月なら1みたいにこれに配列を当てはめて曜日を出している
+            const dayStr = dayNames[dayOfWeek];
+
+            // ★ 2. 1つのセル（th）の中に日付と曜日を改行を入れてセット
+            th.innerHTML = `${dayInfo.dayNum}<br><span class="day-label">${dayStr}</span>`;
+            if (dayOfWeek === 0) th.classList.add('sunday');
+            if (dayOfWeek === 6) th.classList.add('saturday');
+        }
+        headerTr.appendChild(th);
+    })
+
+
+
+    eventSetting.forEach(setting => {//イベントの処理
+        const the = document.createElement('th')
+        the.classList.add('yasumi');
+        the.textContent = setting.key;
+        headerTr.appendChild(the);
+    });
+
+    tbody_sp.appendChild(headerTr);//入れるとき同じのを入れると元のがなくなるためコピーを入れなくてはいけない
+
+
+    date.forEach(staff => {//初期値がいる名前追加
+        // console.log(staff);
+        const td = document.createElement('td')
+        td.classList.add('staff-name');
+        const tr = document.createElement('tr')
+        td.textContent = staff.name;
+
+        if (staff.memo && staff.memo.trim() !== "")//メモがあるかとメモが空白だけではないかを確かめている
+        {
+
+            const memoText = staff.memo || "メモはありません"
+            td.classList.add('has-memo');
+            td.classList.add('memo-name');
+            td.setAttribute('data-memo', memoText)
+        };
+
+        tr.appendChild(td);
+        const shiftLookup = {};
+        if (staff.day != null) {
+            console.log("辞書処理");
+            staff.day.forEach(shift => {//currentMonthShiftsの中にdateとmodeがあるからshiftにその階層をさすようにforEachを書かなくてはいけない
+                shiftLookup[shift.date] = shift.mode;
+            });
+        }
+        currentWeekDays.forEach(dayInfo => {//曜日に出勤日と希望休を入れるところ//要調べてここに何日を表示するか
+            const shiftTd = document.createElement('td');
+            if (dayInfo.dayNum === "") {
+                shiftTd.textContent = "";//
+            } else {
+                const dateStr = `${ymdata.year}-${String(ymdata.month).padStart(2, '0')}-${String(dayInfo.dayNum).padStart(2, '0')}`;//わかんない
+                const yer = shiftLookup[dateStr] || "";
+
+                if (!staff.line_id || staff.line_id === "null") {
+                    console.log("動いたよstaff.line_idがnull" + staff.line_id);
+                    const select = document.createElement('select');
+                    select.classList.add('manual-shift-select');
+                    select.setAttribute('data-staff-id', staff.id);
+                    select.setAttribute('data-date', dateStr);
+
+                    const options = ["", "日勤", "早番", "遅番", "夜勤", "休み"];
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt || "";
+                        if (opt === yer) option.selected = true; // 既に値があれば選択状態にする
+                        select.appendChild(option);
+                    });
+                    select.addEventListener('change', (e) => {
+                        const selectedValue = e.target.value;
+                        const staffId = staff.id;
+                        const date = dateStr;
+                        console.log(`選択された値: ${dateStr}`);
+                        console.log(`スタッフID: ${staff.id}, 日付: ${date}, 選択された値: ${selectedValue}`);
+                        // ここでfetchを使ってサーバーに送信する処理を追加できます。
+                        fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/staffinshift?GetId=${staffId}&dateStr=${date}&selectedValue=${selectedValue}&year=${ymdata.year}&month=${ymdata.month}`, {
+                            method: 'POST',
+                            headers: {
+                                'ngrok-skip-browser-warning': 'true'
+                            }
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('ロールの更新に失敗しました');
+                                return response.json();
+                            })
+                            .then(data => {
+                                alert(data.message || '更新が完了しました');
+
+                            })
+                            .catch(error => {
+                                console.error('エラー:', error);
+                                alert('更新に失敗しました。');
+                            });
+                    });
+                    shiftTd.appendChild(select);
+                } else {
+                    console.log("動いたよstaff.line_idがnull以外" + staff.line_id);
+                    shiftTd.textContent = yer;//要注意
+                }
+            }
+            tr.appendChild(shiftTd);
+        })
+        ///////////////////ここまで
+        eventSetting.forEach(setting => {//イベントの参加か参加しないかの処理
+            const eventTd = document.createElement('td');
+            // console.log(staff.event[setting.key]);
+            // const currentEventData = staff.event.find(e => e.name === setting.key);//findを使うためには何かしらの条件を絶対に書かなくてはいけない
+
+            const currentEventData = staff.event ? staff.event.find(e => e.name === setting.key) : null;//要注意
+            const isFlag = currentEventData ? (currentEventData.value ?? currentEventData[setting.key]) : null;//要注意
+            // console.log(staff.event[name]);
+
+
+            if (isFlag === true) {
+                eventTd.textContent = setting.TrueText;
+            } else if (isFlag === false) {
+                eventTd.textContent = setting.FalseText;
+            } else {
+                eventTd.textContent = setting.NullText;
+            }
+            tr.appendChild(eventTd);
+        });
+
+        tbody2_sp.appendChild(tr);//コピー入れなくてはいけない
+    });
+}
 
 // 💡 画面を切り替えるためのJavaScriptスイッチ
 function switchPage(pageName) {
