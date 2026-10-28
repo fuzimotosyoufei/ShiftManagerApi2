@@ -280,6 +280,16 @@
      /* margin-top: 0; */
  }
 
+ .page-check-sp {
+     width: 100%;
+     table-layout: fixed;
+
+ }
+
+ .page-check-sp th {
+     width: 14%.28;
+ }
+
  .sp-staff-name {
 
      /* マウスカーソルをポインターにする場合 */
@@ -299,9 +309,6 @@
      color: #1890ff;
  }
 
- th {
-     width: 14%;
- }
 
  /* 青 */
 
