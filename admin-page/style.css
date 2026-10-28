@@ -312,16 +312,17 @@
  #change_button {
      display: flex;
      justify-content: space-around;
+     width: 100%;
  }
 
  .shift_change_left {
      position: absolute;
-     width: 14%;
+     width: 100%;
  }
 
  .shift_change_right {
      position: absolute;
-     width: 14%;
+     width: 100%;
  }
 
  /* 青 */
