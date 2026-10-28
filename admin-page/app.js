@@ -119,7 +119,7 @@ function CreateCalend_sp(date, ymdata) {
         weekList.push(allDay.slice(i, i + 7));
     }
 
-    CreateCalendDisplay_sp(0, date, ymdata);
+    CreateCalendDisplay_sp(1, date, ymdata);
 
 
     //空白なら実行してじゃない動かないみたいにしたらいいと思う
