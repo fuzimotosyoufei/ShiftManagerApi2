@@ -309,16 +309,20 @@
      color: #1890ff;
  }
 
-#change_button{
-    display: flex;
-    justify-content: space-between;
-}
-.shift_change_left{
-    position: absolute;
-}
-.shift_change_right {
-    position: absolute;
-}
+ #change_button {
+     display: flex;
+     justify-content: space-around;
+ }
+
+ .shift_change_left {
+     position: absolute;
+     width: 14%;
+ }
+
+ .shift_change_right {
+     position: absolute;
+     width: 14%;
+ }
 
  /* 青 */
 
