@@ -299,6 +299,10 @@
      color: #1890ff;
  }
 
+ th {
+     width: 30px;
+ }
+
  /* 青 */
 
  /* .staff-name {
