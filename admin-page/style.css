@@ -309,20 +309,20 @@
      color: #1890ff;
  }
 
- #change_button {
+ .change_button {
      display: flex;
      justify-content: space-around;
      width: 100%;
  }
 
- .shift_change_left {
-     position: absolute;
+ #shift_change_left {
      width: 100%;
+     padding: 10px;
  }
 
- .shift_change_right {
-     position: absolute;
+ #shift_change_right {
      width: 100%;
+     padding: 10px
  }
 
  /* 青 */
