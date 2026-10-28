@@ -313,7 +313,7 @@
      display: flex;
      justify-content: space-around;
      width: 100%;
-     gap: 40px 10px;
+     row-gap: 40px;
  }
 
  #shift_change_left {
