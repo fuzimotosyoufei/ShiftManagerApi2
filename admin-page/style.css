@@ -313,13 +313,13 @@
      display: flex;
      justify-content: space-between;
      width: 100%;
-     row-gap: 400px;
+     margin-bottom: 20px;
  }
 
  #shift_change_left {
      width: 15%;
      padding: 10px;
-     row-gap: 400px;
+
  }
 
  #shift_change_right {
