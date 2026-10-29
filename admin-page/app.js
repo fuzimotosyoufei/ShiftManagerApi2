@@ -136,8 +136,9 @@ function change_sp(check) {//スマホ用の画面の変更ボタン
         })
     ])
         .then(([ymdata, date]) => {
+            console.log(date,ymdata);
             // 両方のデータが揃ったら、ちゃんと weekcount（count）も一緒に画面を描き直す！
-            CreateCalendDisplay_sp(weekcount, date, ymdata);
+            CreateCalendDisplay_sp(date, ymdata);
         })
         .catch(error => {
             console.error('エラー:', error);
