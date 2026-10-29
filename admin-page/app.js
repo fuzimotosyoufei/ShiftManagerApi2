@@ -1,4 +1,5 @@
 let weekList = [];
+let weekcount = 0;
 const staffShifts = [
     {
         id: 1,
@@ -68,7 +69,6 @@ function CalendarData(ymdata) {
             console.log("できたよ4");
         })
         .then(date => {
-
             console.log('これデータ', date);
             console.log('これデータ', ymdata);
             CreateCalend(date, ymdata);
@@ -77,24 +77,6 @@ function CalendarData(ymdata) {
 
 }
 
-// function CalendarEvetn(){
-//     fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/Event',{
-//         headers: {
-//             'ngrok-skip-browser-warning' : 'true'
-//         }
-//     })
-//         .then(response => {
-//             if (response.ok){
-//                 return response.json();
-//             }
-//             throw new Error('通信エラー');
-//         })
-//         .then(event => {
-//             console.log(event);
-
-//         })
-// }
-//月の判定ができてないよ
 function CreateCalend_sp(date, ymdata) {
 
     const days = new Date(ymdata.year, ymdata.month, 0).getDate();
@@ -114,15 +96,53 @@ function CreateCalend_sp(date, ymdata) {
     while (allDay.length % 7 !== 0) {
         allDay.push({ dayNum: "", dateStr: "", isEmpty: false })
     }
+    weekcount = 0;
     weekList = [];
     for (let i = 0; i < allDay.length; i += 7) {
         weekList.push(allDay.slice(i, i + 7));
     }
 
-    CreateCalendDisplay_sp(1, date, ymdata);
+    CreateCalendDisplay_sp(date, ymdata);
 
 
-    
+
+}
+function change_sp(check) {//スマホ用の画面の変更ボタン
+    if (check === 'left') {
+        if (weekcount > 0) {
+            weekcount = weekcount - 1;
+        } else {
+            console.log("これ以上前の週はありません");
+            return; // 0より小さくならないようにここでストップ
+        }
+    } else {
+        if (weekcount < weekList.length - 1) {
+            weekcount = weekcount + 1;
+        } else {
+            console.log("これ以上前の週はありません");
+            return; // 0より小さくならないようにここでストップ
+        }
+    }
+    const headers = { 'ngrok-skip-browser-warning': 'true' };
+
+    Promise.all([
+        fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', { headers }).then(res => {
+            if (!res.ok) throw new Error('年月の通信エラー');
+            return res.json();
+        }),
+        fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', { headers }).then(res => {
+            if (!res.ok) throw new Error('カレンダーの通信エラー');
+            return res.json();
+        })
+    ])
+        .then(([ymdata, date]) => {
+            // 両方のデータが揃ったら、ちゃんと weekcount（count）も一緒に画面を描き直す！
+            CreateCalendDisplay_sp(weekcount, date, ymdata);
+        })
+        .catch(error => {
+            console.error('エラー:', error);
+            alert('データの取得に失敗しました。');
+        });
 }
 
 
@@ -261,7 +281,7 @@ function CreateCalend(date, ymdata) {
                 select.setAttribute('data-staff-id', staff.id);
                 select.setAttribute('data-date', dateStr);
 
-                const options = ["", "日勤", "早番", "遅番", "夜勤", "休み"];
+                const options = ["", "日勤", "早出", "遅出", "夜勤", "休み"];
                 options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt;
@@ -327,11 +347,11 @@ function CreateCalend(date, ymdata) {
         tbody2.appendChild(tr);
         // tbody2_sp.appendChild(tr.cloneNode(true));//コピー入れなくてはいけない      
     });
-   
+
 }
 
 
-function CreateCalendDisplay_sp(count, date, ymdata) {
+function CreateCalendDisplay_sp(date, ymdata) {
 
     const yearAndDay_sp = document.getElementById('yearandday-sp');
     yearAndDay_sp.innerHTML = `${ymdata.year}年${ymdata.month}月`;
@@ -361,7 +381,7 @@ function CreateCalendDisplay_sp(count, date, ymdata) {
     headerTr.appendChild(thn);
 
     const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-    const currentWeekDays = weekList[count];
+    const currentWeekDays = weekList[weekcount];
     currentWeekDays.forEach(dayInfo => {
         const th = document.createElement('th')
         if (dayInfo.dayNum === "") {
