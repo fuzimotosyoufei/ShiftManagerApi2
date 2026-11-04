@@ -1,5 +1,6 @@
 let weekList = [];
 let weekcount = 0;
+let month_count = 0;
 const staffShifts = [
     {
         id: 1,
@@ -51,11 +52,11 @@ function CalendarYearAndMonth() {
         })
         .then(ymdata => {
             console.log(ymdata.id);
-            CalendarData(ymdata);
+            CalendarData(ymdata, month_count);
         })
 }
-function CalendarData(ymdata) {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau', {
+function CalendarData(ymdata, month_count) {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/calendarnau?month_count=${month_count}`, {
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
@@ -75,6 +76,18 @@ function CalendarData(ymdata) {
             CreateCalend_sp(date, ymdata);
         })
 
+}
+
+
+function change_pc(check) {//PC用の画面の変更ボタン
+    if (check === 'left') {
+        month_count = month_count - 1;
+
+        CalendarYearAndMonth()
+    } else {
+        month_count = month_count + 1;
+        CalendarYearAndMonth()
+    }
 }
 
 function CreateCalend_sp(date, ymdata) {
@@ -136,7 +149,7 @@ function change_sp(check) {//スマホ用の画面の変更ボタン
         })
     ])
         .then(([ymdata, date]) => {
-            console.log(date,ymdata);
+
             // 両方のデータが揃ったら、ちゃんと weekcount（count）も一緒に画面を描き直す！
             CreateCalendDisplay_sp(date, ymdata);
         })
@@ -540,6 +553,7 @@ function switchPage(pageName) {
 }
 
 function refreshCalendar() {
+    month_count = 0;
     loadShifts();
     CalendarYearAndMonth();
 }
