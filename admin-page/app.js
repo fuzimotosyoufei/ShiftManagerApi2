@@ -38,7 +38,7 @@ const staffShifts = [
 ];
 
 function CalendarYearAndMonth() {
-    fetch('https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth', {
+    fetch(`https://overplay-patriarch-daffodil.ngrok-free.dev/api/admin/YearMonth?month_count=${month_count}`, {//処理に無駄があると思う
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
