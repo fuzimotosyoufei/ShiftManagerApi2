@@ -82,10 +82,12 @@ function CalendarData(ymdata, month_count) {
 function change_pc(check) {//PC用の画面の変更ボタン
     if (check === 'left') {
         month_count = month_count - 1;
-
         CalendarYearAndMonth()
-    } else {
+    } else if (check === 'right') {
         month_count = month_count + 1;
+        CalendarYearAndMonth()
+    } else if (check === 'main') {
+        month_count = 0;
         CalendarYearAndMonth()
     }
 }
@@ -164,7 +166,7 @@ function change_sp(check) {//スマホ用の画面の変更ボタン
 
 
 function CreateCalend(date, ymdata) {
-    alert(ymdata.year);
+
     const yearAndDay = document.getElementById('yearandday');
     // const yearAndDay_sp = document.getElementById('yearandday-sp');
 
