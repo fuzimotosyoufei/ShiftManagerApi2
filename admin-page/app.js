@@ -164,6 +164,7 @@ function change_sp(check) {//スマホ用の画面の変更ボタン
 
 
 function CreateCalend(date, ymdata) {
+    alert(ymdata.year);
     const yearAndDay = document.getElementById('yearandday');
     // const yearAndDay_sp = document.getElementById('yearandday-sp');
 
